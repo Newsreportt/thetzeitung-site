@@ -1,236 +1,86 @@
 <!DOCTYPE html>
-<html lang="yi" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>די צייטונג — די זעלבסטשטענדיגע אידישע צייטונג</title>
-  <meta name="description" content="די צייטונג — די זעלבסטשטענדיגע אידישע וועכנטליכע צייטונג, ערשיינט יעדע פרייטאג אין ברוקלין זינט 1988. נייעס, פאליטיק, היימישע נייעס, דער אידישער צייט און בילדער.">
+  <title>Di Tzeitung — News Report, The Yiddish Newspaper of Record</title>
+  <meta name="description" content="Di Tzeitung (News Report) is the independent Yiddish weekly newspaper published in Brooklyn every Friday since 1988.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Noto+Sans+Hebrew:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="covers/favicon.png">
 </head>
 <body>
 
-<div class="topstrip">
-  <div class="wrap">
-    <span class="bsd">בס"ד</span>
-    <span class="dates"><span id="hebrew-date"></span><span id="civil-date"></span></span>
-    <span class="quick"><a href="tel:7188516607">718-851-6607</a><a href="mailto:mail@ditzeitung.com">mail@ditzeitung.com</a></span>
-  </div>
-</div>
-
-<header class="masthead">
-  <div class="sub-top">News Report · The Yiddish Newspaper of Record · ברוקלין, נ.י. · זינט 1988</div>
-  <h1><a href="/">די צייטונג</a></h1>
-  <div class="sub-bottom">די זעלבסטשטענדיגע אידישע צייטונג · NEWS REPORT</div>
+<header class="site-header">
+  <span class="bsd">בס"ד</span>
+  <a class="logo" href="index.html">
+    <img src="covers/logo-yiddish.png" alt="Di Tzeitung — די צייטונג" width="1140" height="270">
+    <img class="nr" src="covers/logo-newsreport.png" alt="News Report — The Yiddish Newspaper of Record" width="600" height="165">
+  </a>
+  <div class="tag">The Independent Yiddish Newspaper · Est. 1988</div>
 </header>
-
 <nav class="nav">
-  <div class="wrap">
-    <button class="menu-btn" aria-label="מעניו">☰ מעניו</button>
-    <ul>
-      <li><a href="/">הויפט</a></li>
-      <li><a href="#sections">אפטיילונגען</a></li>
-      <li><a href="archive.html">ארכיוו</a></li>
-      <li><a href="about.html">וועגן אונז</a></li>
-      <li><a href="advertise.html">רעקלאמעס</a></li>
-      <li><a href="contact.html">קאנטאקט</a></li>
-    </ul>
-    <ul>
-      <li><a href="subscribe.html" class="cta">אבאנירט זיך</a></li>
-    </ul>
-  </div>
+  <button class="menu-btn" aria-label="Menu">☰ Menu</button>
+  <ul><li><a href="index.html">Home</a></li><li><a href="archive.html">Archives</a></li><li><a href="about.html">About</a></li><li><a href="advertise.html">Advertise</a></li><li><a href="subscribe.html">Subscriptions</a></li><li><a href="contact.html">Contact</a></li></ul>
 </nav>
 
-<!-- ===== HERO ===== -->
-<section class="hero">
-  <div class="wrap grid">
-    <div>
-      <span class="kicker">די וואך'ס אויסגאבע</span>
-      <h2>די שטימע פונעם היימישן ציבור — זינט 1988, יעדע פרייטאג.</h2>
-      <p>וועלט נייעס, אמעריקאנער פאליטיק, עקאנאמיע און היימישע נייעס — געברענגט מיט אן אומפארטייאישן בליק, אויף א רייכן און ריינעם אידיש. פלוס די צוויי באליבטע מוספים "אידישע צייט" און "חסידישע צייט".</p>
-      <div class="btn-row">
-        <a href="subscribe.html" class="btn red">באקומט עס אהיים</a>
-        <a href="advertise.html" class="btn ghost">רעקלאמירט ביי אונז</a>
-      </div>
-      <div class="facts">
-        <div><b>1988</b><span>געגרינדעט</span></div>
-        <div><b>40</b><span>יארגאנג</span></div>
-        <div><b>פרייטאג</b><span>יעדע וואך</span></div>
-      </div>
-    </div>
-    <div>
-      <img class="cover" src="covers/sec-a.jpg" alt="די צייטונג — די וואך'ס שער בלאט" width="912" height="990">
-    </div>
-  </div>
-</section>
+<div class="page">
 
-<!-- ===== SECTIONS ===== -->
-<section class="section" id="sections">
-  <div class="wrap">
-    <div class="sec-head">
-      <h2>וואס איר געפינט אין די צייטונג</h2>
-      <a href="subscribe.html">באקומט די פולע אויסגאבע ←</a>
-    </div>
-    <div class="cards">
-      <article class="card">
-        <span class="letter">א</span>
-        <span class="tag">הויפט אפטיילונג</span>
-        <h3>נייעס און פאליטיק</h3>
-        <p>אלגעמיינע פאליטיק, אמעריקאנער נייעס, וועלט נייעס און נייעס פונעם היימישן ציבור.</p>
-      </article>
-      <article class="card">
-        <span class="letter">ב</span>
-        <span class="tag">עקאנאמיע</span>
-        <h3>געשעפט און פינאנצן</h3>
-        <p>די עקאנאמיע, מארקעטן, ביזנעס נייעס און וואס עס מיינט פאר אייער שטוב און געשעפט.</p>
-      </article>
-      <article class="card">
-        <span class="letter">ג</span>
-        <span class="tag">היימיש</span>
-        <h3>קהילה נייעס</h3>
-        <p>וואס טוט זיך אין בארא פארק, וויליאמסבורג, קרית יואל און די אנדערע היימישע ישובים.</p>
-      </article>
-      <article class="card">
-        <span class="letter">ד</span>
-        <span class="tag">מוסף</span>
-        <h3>אידישע צייט</h3>
-        <p>דער וואכנטליכער מוסף מיט היסטארישע ארטיקלען, געשיכטע, און זכרונות פון אמאל.</p>
-      </article>
-      <article class="card">
-        <span class="letter">ה</span>
-        <span class="tag">מוסף</span>
-        <h3>חסידישע צייט</h3>
-        <p>חסידישע נייעס, די פאפולערע בילדער אפטיילונג פון רבי'ס און הויפן, און א בליק פון דער וואך.</p>
-      </article>
-      <article class="card">
-        <span class="letter">ו</span>
-        <span class="tag">מיינונג</span>
-        <h3>רעדאקציע און מיינונג</h3>
-        <p>קאלומנען, אנאליזן און א קלארער בליק אויף די ענינים פון דער וואך.</p>
-      </article>
-      <article class="card">
-        <span class="letter">ז</span>
-        <span class="tag">סערוויס</span>
-        <h3>רעקלאמעס און מודעות</h3>
-        <p>דער בעסטער וועג צו דערגרייכן דעם אידיש-רעדנדן ציבור אין ניו יארק יעדע וואך.</p>
-      </article>
-      <article class="card">
-        <span class="letter">ח</span>
-        <span class="tag">אבאנעמענט</span>
-        <h3>היים צושטעלונג</h3>
-        <p>באקומט די צייטונג יעדע פרייטאג גלייך צו אייער טיר, אין ברוקלין און איבער אמעריקע.</p>
-      </article>
-    </div>
+<section class="welcome"><div class="wrap grid">
+  <div class="fan">
+    <img src="covers/thumb-c.jpg" alt=""><img src="covers/thumb-a.jpg" alt=""><img src="covers/thumb-b.jpg" alt="">
   </div>
-</section>
+  <div>
+    <h2>Welcome!</h2>
+    <p>Di Tzeitung — <i>The Independent Yiddish Newspaper</i> — has been published every week in Brooklyn since 1988. Known as <b>News Report, The Yiddish Newspaper of Record</b>, it serves the Yiddish-speaking communities of Boro Park, Williamsburg, Kiryas Joel, Monsey and Lakewood, and reaches Yiddish readers across the United States, Canada, England, Belgium and Eretz Yisroel.</p>
+    <div class="btns"><a href="subscribe.html" class="btn green">Subscribe</a><a href="advertise.html" class="btn outline">Advertise</a></div>
+  </div>
+</div></section>
 
-<!-- ===== COVERS ===== -->
-<section class="section">
-  <div class="wrap">
-    <div class="sec-head">
-      <h2>די וואך'ס שער בלעטער</h2>
-      <a href="archive.html">צום ארכיוו ←</a>
-    </div>
-    <div class="covers">
-      <figure>
-        <a href="subscribe.html"><img src="covers/sec-a.jpg" alt="די צייטונג — הויפט אפטיילונג" width="912" height="990"></a>
-        <figcaption><b>די צייטונג</b>הויפט אפטיילונג · נייעס · פאליטיק · עקאנאמיע</figcaption>
-      </figure>
-      <figure>
-        <a href="subscribe.html"><img src="covers/sec-b.jpg" alt="אידישע צייט" width="935" height="998"></a>
-        <figcaption><b>אידישע צייט</b>מוסף · היסטאריע · געשיכטע · געדענקען</figcaption>
-      </figure>
-      <figure>
-        <a href="subscribe.html"><img src="covers/sec-c.jpg" alt="חסידישע צייט" width="935" height="997"></a>
-        <figcaption><b>חסידישע צייט</b>מוסף · חסידישע נייעס · בילדער · רבי'ס</figcaption>
-      </figure>
-        </div>
+<section class="carousel"><div class="wrap">
+  <div class="stage">
+    <img src="covers/sec-a.jpg" class="on" alt="Main Section">
+    <img src="covers/sec-b.jpg" alt="Yiddishe Tzeit">
+    <img src="covers/sec-c.jpg" alt="Chassidishe Tzeit">
+    <button class="arrow prev" aria-label="Previous">‹</button>
+    <button class="arrow next" aria-label="Next">›</button>
   </div>
-</section>
+  <div class="thumbs">
+    <img src="covers/thumb-a.jpg" class="on" data-i="0" alt="Main Section">
+    <img src="covers/thumb-b.jpg" data-i="1" alt="Yiddishe Tzeit">
+    <img src="covers/thumb-c.jpg" data-i="2" alt="Chassidishe Tzeit">
+  </div>
+</div></section>
 
-<!-- ===== ABOUT ===== -->
-<section class="section">
-  <div class="wrap split">
-    <div>
-      <span class="kicker">וועגן אונז</span>
-      <p class="lead">זינט 1988 ברענגט די צייטונג די וואכנטליכע נייעס צום אידיש-רעדנדן ציבור אין ברוקלין און איבער אמעריקע — אומפארטייאיש, ריין און היימיש.</p>
-      <p class="dropcap">די זעלבסטשטענדיגע אידישע צייטונג איז געגרינדעט געווארן אין בארא פארק אין יאר תשמ"ח (1988) דורך הרב אברהם פרידמאן, וועלכער פירט עס ביז היינט אלס הויפט רעדאקטאר. פון יענער צייט אן ערשיינט זי יעדע פרייטאג, און איז געווארן איינע פון די בולטע און היסטארישע אינסטיטוציעס פונעם אידיש-געדרוקטן ווארט אין אמעריקע.</p>
-      <p>אונזער שיטה איז פשוט: ברענגען די נייעס קלאר און ריכטיג, אן זיך אריינצומישן אין אינערליכע מחלוקת'ן, און האלטן גוטע באציאונגען מיט די לאקאלע און שטאטישע אינסטאנצן לטובת הכלל.</p>
-      <a href="about.html" class="btn ghost">לייענט מער וועגן אונז</a>
-    </div>
-    <div>
-      <ul class="feature-list">
-        <li><span class="num">01</span><div><b>אומפארטייאיש</b><span>מיר מישן זיך נישט אריין אין קהילה קריגערייען — נאר נייעס.</span></div></li>
-        <li><span class="num">02</span><div><b>יעדע פרייטאג</b><span>37+ יאר אן א וואך פארפעלט. פארלאזליך ווי א זייגער.</span></div></li>
-        <li><span class="num">03</span><div><b>ריינער אידיש</b><span>געשריבן אויף א רייכן אידיש וואס איז א מחיה צו לייענען.</span></div></li>
-        <li><span class="num">04</span><div><b>פאר די גאנצע שטוב</b><span>נייעס, תורה, היסטאריע און בילדער — פאר יעדן איינעם אין שטוב.</span></div></li>
-        <li><span class="num">05</span><div><b>דערגרייכט אלעמען</b><span>בארא פארק, וויליאמסבורג, קרית יואל, מאנסי, לעיקוואד און ווייטער.</span></div></li>
-      </ul>
-    </div>
-  </div>
-</section>
+<hr class="rule">
 
-<!-- ===== SUBSCRIBE BAND ===== -->
-<section class="band" id="subscribe">
-  <div class="wrap grid">
-    <div>
-      <span class="kicker">נוזלעטער</span>
-      <h2>באקומט די שער בלעטער יעדע וואך אין אייער אימעיל</h2>
-      <p>שרייבט זיך איין און מיר שיקן אייך יעדע פרייטאג די שער בלעטער פון די נייע אויסגאבע, פלוס ספעציעלע אנזאגן. אומזיסט, און איר קענט זיך אויסשרייבן ווען איר ווילט.</p>
-    </div>
-    <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thanks.html">
-      <input type="hidden" name="form-name" value="newsletter">
-      <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
-      <input type="text" name="name" placeholder="אייער נאמען" required>
-      <input type="email" name="email" placeholder="אייער אימעיל אדרעס" required>
-      <button class="btn" type="submit">שרייבט מיך איין</button>
-      <span class="note">מיר טיילן קיינמאל נישט אייער אימעיל מיט קיינעם.</span>
-    </form>
+<section class="sections"><div class="wrap">
+  
+  <div class="section-item">
+    <h3>Main Section — Di Tzeitung</h3>
+    <a href="subscribe.html"><img src="covers/sec-a.jpg" alt="Main Section — Di Tzeitung" loading="lazy"></a>
+    <p class="desc">General news & politics, American and world news, the economy, and news from the heimishe community. The Yiddish newspaper of record, every Friday.</p>
   </div>
-</section>
+  <div class="section-item">
+    <h3>Yiddishe Tzeit — אידישע צייט</h3>
+    <a href="subscribe.html"><img src="covers/sec-b.jpg" alt="Yiddishe Tzeit — אידישע צייט" loading="lazy"></a>
+    <p class="desc">The weekly supplement of history, memoirs and heritage: the Jewish towns of yesteryear, great personalities, and stories passed down through generations.</p>
+  </div>
+  <div class="section-item">
+    <h3>Chassidishe Tzeit — חסידישע צייט</h3>
+    <a href="subscribe.html"><img src="covers/sec-c.jpg" alt="Chassidishe Tzeit — חסידישע צייט" loading="lazy"></a>
+    <p class="desc">Chassidishe news from around the world, with the popular picture section of Rebbes, chassidishe courts, simchos and events.</p>
+  </div>
+</div></section>
 
-<!-- ===== FOOTER ===== -->
-<footer>
-  <div class="wrap">
-    <div class="grid">
-      <div>
-        <div class="brand">די צייטונג</div>
-        <p>די זעלבסטשטענדיגע אידישע צייטונג<br>ערשיינט יעדע פרייטאג אין ברוקלין, נ.י. זינט 1988.</p>
-      </div>
-      <div>
-        <h4>קאנטאקט</h4>
-        <ul>
-          <li>1281 49th Street</li>
-          <li>Brooklyn, NY 11219</li>
-          <li><a href="tel:7188516607">718-851-6607</a></li>
-          <li><a href="mailto:mail@ditzeitung.com">mail@ditzeitung.com</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>די צייטונג</h4>
-        <ul>
-          <li><a href="about.html">וועגן אונז</a></li>
-          <li><a href="archive.html">ארכיוו</a></li>
-          <li><a href="#sections">אפטיילונגען</a></li>
-          <li><a href="contact.html">קאנטאקט</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>סערוויסעס</h4>
-        <ul>
-          <li><a href="subscribe.html">אבאנירט זיך</a></li>
-          <li><a href="advertise.html">רעקלאמעס</a></li>
-          <li><a href="contact.html">שיקט אריין מאטעריאל</a></li>
-          <li><a href="#subscribe">נוזלעטער</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="bottom">
-      <span>© <span id="year"></span> די צייטונג · אלע רעכטן רעזערווירט</span>
-      <span>ditzeitung.com</span>
-    </div>
-  </div>
+</div>
+
+<footer class="site-footer">
+  <a class="top" href="#">Back To Top</a>
+  <p>Di Tzeitung · News Report &nbsp;•&nbsp; 1281 49th Street, Brooklyn, N.Y. 11219 &nbsp;•&nbsp; <a href="tel:7188516607">718-851-6607</a> &nbsp;•&nbsp; <a href="mailto:mail@ditzeitung.com">mail@ditzeitung.com</a></p>
+  <div class="links"><a href="about.html">About</a><a href="advertise.html">Advertise</a><a href="subscribe.html">Subscribe</a><a href="contact.html">Contact</a></div>
+  <p style="margin-top:14px;font-size:12px">© <span id="year"></span> Di Tzeitung. All rights reserved.</p>
 </footer>
 
 <script src="site.js"></script>

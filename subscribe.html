@@ -1,148 +1,95 @@
 <!DOCTYPE html>
-<html lang="yi" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>אבאנירט זיך — די צייטונג</title>
-  <meta name="description" content="באקומט די צייטונג יעדע פרייטאג אהיים — היים צושטעלונג אין ברוקלין און איבער אמעריקע.">
+  <title>Subscriptions — Di Tzeitung</title>
+  <meta name="description" content="Subscribe to Di Tzeitung, delivered every Friday.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Noto+Sans+Hebrew:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="covers/favicon.png">
 </head>
 <body>
 
-<div class="topstrip">
-  <div class="wrap">
-    <span class="bsd">בס"ד</span>
-    <span class="dates"><span id="hebrew-date"></span><span id="civil-date"></span></span>
-    <span class="quick"><a href="tel:7188516607">718-851-6607</a><a href="mailto:mail@ditzeitung.com">mail@ditzeitung.com</a></span>
-  </div>
-</div>
-
-<header class="masthead">
-  <div class="sub-top">News Report · The Yiddish Newspaper of Record · ברוקלין, נ.י. · זינט 1988</div>
-  <h1><a href="/">די צייטונג</a></h1>
-  <div class="sub-bottom">די זעלבסטשטענדיגע אידישע צייטונג · NEWS REPORT</div>
+<header class="site-header">
+  <span class="bsd">בס"ד</span>
+  <a class="logo" href="index.html">
+    <img src="covers/logo-yiddish.png" alt="Di Tzeitung — די צייטונג" width="1140" height="270">
+    <img class="nr" src="covers/logo-newsreport.png" alt="News Report — The Yiddish Newspaper of Record" width="600" height="165">
+  </a>
+  <div class="tag">The Independent Yiddish Newspaper · Est. 1988</div>
 </header>
-
 <nav class="nav">
-  <div class="wrap">
-    <button class="menu-btn" aria-label="מעניו">☰ מעניו</button>
-    <ul>
-      <li><a href="/">הויפט</a></li>
-      <li><a href="index.html#sections">אפטיילונגען</a></li>
-      <li><a href="archive.html">ארכיוו</a></li>
-      <li><a href="about.html">וועגן אונז</a></li>
-      <li><a href="advertise.html">רעקלאמעס</a></li>
-      <li><a href="contact.html">קאנטאקט</a></li>
-    </ul>
-    <ul>
-      <li><a href="subscribe.html" class="cta">אבאנירט זיך</a></li>
-    </ul>
-  </div>
+  <button class="menu-btn" aria-label="Menu">☰ Menu</button>
+  <ul><li><a href="index.html">Home</a></li><li><a href="archive.html">Archives</a></li><li><a href="about.html">About</a></li><li><a href="advertise.html">Advertise</a></li><li><a href="subscribe.html">Subscriptions</a></li><li><a href="contact.html">Contact</a></li></ul>
 </nav>
 
-<section class="page-head"><div class="wrap"><h1>אבאנירט זיך</h1><p>באקומט די צייטונג יעדע פרייטאג גלייך צו אייער טיר — מיט אלע מוספים.</p></div></section>
-<section class="page-body"><div class="wrap">
-<div class="plans">
-  <div class="plan">
-    <div class="pname">חודש'ליך</div>
-    <div class="price">$18 <small>/ חודש</small></div>
-    <ul><li>4–5 אויסגאבעס א חודש</li><li>אידישע צייט + חסידישע צייט אריינגערעכנט</li><li>היים צושטעלונג אין ברוקלין</li><li>אפשטעלן ווען איר ווילט</li></ul>
-    <a href="#form" class="btn ghost">קלייבט דעם פלאן</a>
-  </div>
-  <div class="plan featured">
-    <span class="ribbon">מערסט פאפולער</span>
-    <div class="pname">יערליך</div>
-    <div class="price">$180 <small>/ יאר</small></div>
-    <ul><li>52 אויסגאבעס — 2 חדשים אומזיסט</li><li>אידישע צייט + חסידישע צייט אריינגערעכנט</li><li>היים צושטעלונג איבער אמעריקע</li><li>ערשטע צו באקומען ספעציעלע אויסגאבעס</li></ul>
-    <a href="#form" class="btn">קלייבט דעם פלאן</a>
-  </div>
-  <div class="plan">
-    <div class="pname">מתנה</div>
-    <div class="price">$180 <small>/ יאר</small></div>
-    <ul><li>שיקט א יאר צייטונג אלס מתנה</li><li>א שיינע באגריסונג קארטל</li><li>פאר א חתן-כלה, עלטערן, אדער א פריינד</li><li>מיר שטעלן צו אומעטום אין אמעריקע</li></ul>
-    <a href="#form" class="btn ghost">קלייבט דעם פלאן</a>
-  </div>
-</div>
-<p class="small muted" style="margin:14px 0 40px">* פרייזן זענען א דוגמא און קענען געענדערט ווערן. רופט <a href="tel:7188516607"><b>718-851-6607</b></a> פאר די אקטועלע פרייזן און גרופע אבאנעמענטן פאר מוסדות און געשעפטן.</p>
+<div class="page">
 
-<div class="two-col" id="form">
-  <div>
-    <h2 class="serif" style="font-size:30px;margin-bottom:6px">באשטעלט אייער אבאנעמענט</h2>
-    <p class="muted" style="margin-bottom:22px">פילט אויס די פארעם און מיר רופן אייך צוריק אין 1–2 ביזנעס טעג צו ענדיגן די באשטעלונג.</p>
-    <form class="form" name="subscribe" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thanks.html">
-      <input type="hidden" name="form-name" value="subscribe">
-      <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
-      <div class="row">
-        <div><label>פולער נאמען</label><input type="text" name="name" required></div>
-        <div><label>טעלעפאן</label><input type="tel" name="phone" required></div>
-      </div>
-      <div><label>אימעיל</label><input type="email" name="email"></div>
-      <div><label>אדרעס פאר צושטעלונג</label><input type="text" name="address" placeholder="גאס, שטאט, סטעיט, זיפ" required></div>
-      <div class="row">
-        <div><label>פלאן</label><select name="plan"><option>יערליך — $180</option><option>חודש'ליך — $18</option><option>מתנה — $180</option></select></div>
-        <div><label>ווי האט איר געהערט פון אונז?</label><select name="source"><option>א פריינד</option><option>געזען די צייטונג</option><option>אינטערנעט</option><option>אנדערש</option></select></div>
-      </div>
-      <div><label>הערות</label><textarea name="notes" style="min-height:90px"></textarea></div>
-      <button class="btn red" type="submit">שיקט די באשטעלונג</button>
-    </form>
+<section class="page-head"><div class="wrap"><h1>Subscriptions</h1><p>Receive Di Tzeitung every Friday, delivered to your home anywhere in the United States.</p></div></section>
+<section class="page-body"><div class="wrap">
+  <div class="products">
+    <div class="product">
+      <div class="img"><img src="covers/sec-a.jpg" alt=""></div>
+      <h3>Yearly Subscription — Mail</h3>
+      <div class="price"><b>$180.00</b> every 12 months</div>
+      <a href="#order" class="btn">Subscribe</a>
+    </div>
+    <div class="product">
+      <div class="img"><img src="covers/sec-b.jpg" alt=""></div>
+      <h3>Half Year Subscription — Mail</h3>
+      <div class="price"><b>$95.00</b> every 6 months</div>
+      <a href="#order" class="btn">Subscribe</a>
+    </div>
+    <div class="product">
+      <div class="img"><img src="covers/sec-c.jpg" alt=""></div>
+      <h3>2 Year Subscription — Mail</h3>
+      <div class="price"><b>$340.00</b> one time</div>
+      <a href="#order" class="btn">Subscribe</a>
+    </div>
   </div>
-  <aside class="aside">
-    <h3>ליבערשט אויפן טעלעפאן?</h3>
-    <p>רופט אונז און מיר שטעלן אייך אויף אין צוויי מינוט.</p>
-    <p style="font-family:var(--serif);font-size:28px;font-weight:900"><a href="tel:7188516607">718-851-6607</a></p>
-    <div class="line"></div>
-    <h3>וואו שטעלן מיר צו?</h3>
-    <p>בארא פארק, וויליאמסבורג, פלעטבוש, קרית יואל, מאנסי, לעיקוואד — און דורך דער פאסט אומעטום אין אמעריקע.</p>
-    <div class="line"></div>
-    <h3>געשעפטן און מוסדות</h3>
-    <p>ספעציעלע פרייזן פאר ביהמ"דים, ישיבות, אפיסעס און געשעפטן וואס ווילן מערערע קאפיעס. <a href="contact.html" class="red"><b>פרעגט אונז</b></a>.</p>
-  </aside>
-</div>
+  <p class="center" style="margin:30px 0 60px;font-size:13px;color:var(--muted)">Prices are placeholders pending confirmation. All subscriptions include the Main Section, Yiddishe Tzeit and Chassidishe Tzeit. For group rates for shuls, yeshivos and businesses, call <a href="tel:7188516607"><b>718-851-6607</b></a>.</p>
+
+  <div class="two-col" id="order">
+    <div>
+      <h2 style="color:var(--accent);text-transform:uppercase;letter-spacing:2px;font-size:22px;margin-bottom:6px">Order Your Subscription</h2>
+      <p style="margin-bottom:22px;color:var(--muted)">Complete the form and we will call you within 1–2 business days to finalize your order.</p>
+      <form class="form" name="subscribe" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thanks.html">
+        <input type="hidden" name="form-name" value="subscribe">
+        <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
+        <div class="row"><div><label>Full name</label><input type="text" name="name" required></div><div><label>Phone</label><input type="tel" name="phone" required></div></div>
+        <div><label>Email</label><input type="email" name="email"></div>
+        <div><label>Delivery address</label><input type="text" name="address" placeholder="Street, City, State, ZIP" required></div>
+        <div class="row">
+          <div><label>Plan</label><select name="plan"><option>Yearly — $180</option><option>Half Year — $95</option><option>2 Year — $340</option></select></div>
+          <div><label>How did you hear about us?</label><select name="source"><option>A friend</option><option>Saw the paper</option><option>Online</option><option>Other</option></select></div>
+        </div>
+        <div><label>Notes</label><textarea name="notes" style="min-height:90px"></textarea></div>
+        <button class="btn green" type="submit">Submit Order</button>
+      </form>
+    </div>
+    <aside class="aside">
+      <h3>Prefer the phone?</h3>
+      <p>Call us and we'll set you up in two minutes.</p>
+      <p style="font-family:var(--sans);font-size:26px;font-weight:800"><a href="tel:7188516607">718-851-6607</a></p>
+      <div class="line"></div>
+      <h3>Where we deliver</h3>
+      <p>Boro Park, Williamsburg, Flatbush, Kiryas Joel, Monsey, Lakewood — and by mail anywhere in the United States.</p>
+      <div class="line"></div>
+      <h3>Gift subscriptions</h3>
+      <p>Send a year of Di Tzeitung to a chosson-kallah, parents or a friend. Note "gift" in the form and we'll include a card.</p>
+    </aside>
+  </div>
 </div></section>
 
-<!-- ===== FOOTER ===== -->
-<footer>
-  <div class="wrap">
-    <div class="grid">
-      <div>
-        <div class="brand">די צייטונג</div>
-        <p>די זעלבסטשטענדיגע אידישע צייטונג<br>ערשיינט יעדע פרייטאג אין ברוקלין, נ.י. זינט 1988.</p>
-      </div>
-      <div>
-        <h4>קאנטאקט</h4>
-        <ul>
-          <li>1281 49th Street</li>
-          <li>Brooklyn, NY 11219</li>
-          <li><a href="tel:7188516607">718-851-6607</a></li>
-          <li><a href="mailto:mail@ditzeitung.com">mail@ditzeitung.com</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>די צייטונג</h4>
-        <ul>
-          <li><a href="about.html">וועגן אונז</a></li>
-          <li><a href="archive.html">ארכיוו</a></li>
-          <li><a href="index.html#sections">אפטיילונגען</a></li>
-          <li><a href="contact.html">קאנטאקט</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>סערוויסעס</h4>
-        <ul>
-          <li><a href="subscribe.html">אבאנירט זיך</a></li>
-          <li><a href="advertise.html">רעקלאמעס</a></li>
-          <li><a href="contact.html">שיקט אריין מאטעריאל</a></li>
-          <li><a href="index.html#subscribe">נוזלעטער</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="bottom">
-      <span>© <span id="year"></span> די צייטונג · אלע רעכטן רעזערווירט</span>
-      <span>ditzeitung.com</span>
-    </div>
-  </div>
+</div>
+
+<footer class="site-footer">
+  <a class="top" href="#">Back To Top</a>
+  <p>Di Tzeitung · News Report &nbsp;•&nbsp; 1281 49th Street, Brooklyn, N.Y. 11219 &nbsp;•&nbsp; <a href="tel:7188516607">718-851-6607</a> &nbsp;•&nbsp; <a href="mailto:mail@ditzeitung.com">mail@ditzeitung.com</a></p>
+  <div class="links"><a href="about.html">About</a><a href="advertise.html">Advertise</a><a href="subscribe.html">Subscribe</a><a href="contact.html">Contact</a></div>
+  <p style="margin-top:14px;font-size:12px">© <span id="year"></span> Di Tzeitung. All rights reserved.</p>
 </footer>
 
 <script src="site.js"></script>

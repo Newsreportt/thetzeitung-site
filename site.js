@@ -1,28 +1,26 @@
-// ===== די צײַטונג — shared scripts =====
+// ===== Di Tzeitung — shared scripts =====
 (function () {
-  var d = new Date();
-  var days = ['זונטאג','מאנטאג','דינסטאג','מיטוואך','דאנערשטאג','פרייטאג','שבת'];
-  var months = ['יאנואר','פעברואר','מערץ','אפריל','מאי','יוני','יולי','אויגוסט','סעפטעמבער','אקטאבער','נאוועמבער','דעצעמבער'];
-
-  var civil = days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
-  var hebrew = '';
-  try {
-    hebrew = new Intl.DateTimeFormat('he-u-ca-hebrew', { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
-  } catch (e) {}
-
-  var c = document.getElementById('civil-date'); if (c) c.textContent = civil;
-  var h = document.getElementById('hebrew-date'); if (h) h.textContent = hebrew;
-  var y = document.getElementById('year'); if (y) y.textContent = d.getFullYear();
+  var y = document.getElementById('year'); if (y) y.textContent = new Date().getFullYear();
 
   // mobile menu
-  var btn = document.querySelector('.menu-btn');
-  var ul = document.querySelector('.nav ul');
+  var btn = document.querySelector('.menu-btn'), ul = document.querySelector('.nav ul');
   if (btn && ul) btn.addEventListener('click', function () { ul.classList.toggle('open'); });
 
-  // mark active nav link
+  // active nav
   var here = location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav a').forEach(function (a) {
-    var href = a.getAttribute('href');
-    if (href === here || (here === 'index.html' && href === '/')) a.classList.add('active');
-  });
+  document.querySelectorAll('.nav a').forEach(function (a) { if (a.getAttribute('href') === here) a.classList.add('active'); });
+
+  // carousel
+  var stage = document.querySelector('.carousel .stage');
+  if (stage) {
+    var imgs = stage.querySelectorAll('img'), thumbs = document.querySelectorAll('.carousel .thumbs img'), i = 0;
+    function show(n) {
+      i = (n + imgs.length) % imgs.length;
+      imgs.forEach(function (im, k) { im.classList.toggle('on', k === i); });
+      thumbs.forEach(function (t, k) { t.classList.toggle('on', k === i); });
+    }
+    stage.querySelector('.prev').addEventListener('click', function () { show(i - 1); });
+    stage.querySelector('.next').addEventListener('click', function () { show(i + 1); });
+    thumbs.forEach(function (t) { t.addEventListener('click', function () { show(+t.dataset.i); }); });
+  }
 })();
