@@ -226,12 +226,12 @@ advertise = '''
         <tr class="hl"><td>Front Cover Box</td><td>2" × 2"</td><td>$150</td></tr>
       </tbody>
     </table>
-    <p class="note"><b>No extra charge for color.</b> Ad deadline: Wednesday, 5:00 PM. &nbsp;·&nbsp; <a href="Di-Tzeitung-Ad-Rates.pdf" target="_blank">Download rate card (PDF) ↗</a></p>
+    <p class="note"><b>No extra charge for color.</b> Ad deadline: Tuesday, 12:00 PM. &nbsp;·&nbsp; <a href="Di-Tzeitung-Ad-Rates.pdf" target="_blank">Download rate card (PDF) ↗</a></p>
   </div>
   <div class="two-col">
     <div>
       <h2 style="color:var(--accent);text-transform:uppercase;letter-spacing:2px;font-size:22px;margin-bottom:6px">Request Rates &amp; Deadlines</h2>
-      <p style="margin-bottom:22px;color:var(--muted)">Tell us what you'd like to advertise and we'll confirm placement and specifications. Ad deadline: <b>Monday, 5:00 PM</b>.</p>
+      <p style="margin-bottom:22px;color:var(--muted)">Tell us what you'd like to advertise and we'll confirm placement and specifications. Ad deadline: <b>Tuesday, 12:00 PM</b>.</p>
       <form class="form" name="advertise" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thanks.html">
         <input type="hidden" name="form-name" value="advertise">
         <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
@@ -287,7 +287,7 @@ contact = '''
     <p><b>Editor &amp; Letters to the Editor (בריוו):</b><br><a href="mailto:yt@thetzeitung.com">yt@thetzeitung.com</a></p>
     <p><b>Billing &amp; subscriptions:</b><br><a href="mailto:billing@thetzeitung.com">billing@thetzeitung.com</a></p>
     <div class="line"></div>
-    <p style="font-size:13px;color:var(--muted)">Office hours: Sunday–Thursday, 9:00 AM – 6:00 PM. Editorial deadline: Monday 5:00 PM.</p>
+    <p style="font-size:13px;color:var(--muted)">Office hours: Sunday–Thursday, 9:00 AM – 6:00 PM. Editorial deadline: Tuesday 12:00 PM.</p>
   </aside>
 </div></section>
 '''
