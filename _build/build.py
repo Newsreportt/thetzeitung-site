@@ -105,7 +105,7 @@ home = f'''
 </div></section>
 '''
 write("index.html", shell("Di Tzeitung — News Report, The Yiddish Newspaper of Record",
-  "Di Tzeitung (News Report) is the independent Yiddish weekly newspaper published in Brooklyn every Friday since 1988.", home))
+  "Di Tzeitung (News Report) is the independent Yiddish weekly newspaper published in Brooklyn for 40 years, read by thousands around the world.", home))
 
 # ---------------- ABOUT ----------------
 about = '''
@@ -132,7 +132,7 @@ about = '''
   </div>
 </div></section>
 '''
-write("about.html", shell("About — Di Tzeitung", "The history and mission of Di Tzeitung, the independent Yiddish newspaper founded in 1988.", about))
+write("about.html", shell("About — Di Tzeitung", "The history and mission of Di Tzeitung, the independent Yiddish newspaper, 40 years in print.", about))
 
 # ---------------- SUBSCRIPTIONS ----------------
 subscribe = '''
@@ -194,7 +194,7 @@ subscribe = '''
   </div>
 </div></section>
 '''
-write("subscribe.html", shell("Subscriptions — Di Tzeitung", "Subscribe to Di Tzeitung, delivered every Friday.", subscribe))
+write("subscribe.html", shell("Subscriptions — Di Tzeitung", "Subscribe to Di Tzeitung, delivered every week.", subscribe))
 
 # ---------------- ADVERTISE ----------------
 advertise = '''
@@ -260,7 +260,7 @@ advertise = '''
   </div>
 </div></section>
 '''
-write("advertise.html", shell("Advertise — Di Tzeitung", "Advertise in Di Tzeitung and reach the Yiddish-speaking community every Friday.", advertise))
+write("advertise.html", shell("Advertise — Di Tzeitung", "Advertise in Di Tzeitung and reach thousands of Yiddish-speaking readers every week.", advertise))
 
 # ---------------- CONTACT ----------------
 contact = '''
