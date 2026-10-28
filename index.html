@@ -3,143 +3,236 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>די צײַטונג</title>
-  <meta name="description" content="די צײַטונג — קומט באַלד.">
+  <title>די צייטונג — די זעלבסטשטענדיגע אידישע צייטונג</title>
+  <meta name="description" content="די צייטונג — די זעלבסטשטענדיגע אידישע וועכנטליכע צייטונג, ערשיינט יעדע מיטוואך אין ברוקלין זינט 1988. נייעס, פאליטיק, היימישע נייעס, דער אידישער צייט און בילדער.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Noto+Sans+Hebrew:wght@300;400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --ink: #1a1814;
-      --paper: #f6f1e7;
-      --paper-dark: #ece4d4;
-      --rule: #1a1814;
-      --accent: #8b1e1e;
-      --muted: #6b6559;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
-    body {
-      background: var(--paper);
-      color: var(--ink);
-      font-family: 'Frank Ruhl Libre', 'Noto Sans Hebrew', serif;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background-image:
-        radial-gradient(ellipse at top, rgba(255,255,255,.5), transparent 60%),
-        repeating-linear-gradient(0deg, transparent 0 2px, rgba(0,0,0,.015) 2px 3px);
-    }
-    .masthead {
-      text-align: center;
-      padding: 48px 20px 24px;
-      border-bottom: 4px double var(--rule);
-      margin: 0 24px;
-    }
-    .masthead .date {
-      font-family: 'Noto Sans Hebrew', sans-serif;
-      font-size: 13px;
-      letter-spacing: .12em;
-      color: var(--muted);
-      margin-bottom: 18px;
-    }
-    .masthead h1 {
-      font-weight: 900;
-      font-size: clamp(56px, 11vw, 132px);
-      line-height: .95;
-      letter-spacing: -.01em;
-    }
-    .masthead .tagline {
-      margin-top: 14px;
-      font-size: 17px;
-      color: var(--muted);
-      font-weight: 300;
-    }
-    main {
-      flex: 1;
-      display: grid;
-      place-items: center;
-      padding: 40px 24px;
-    }
-    .notice {
-      max-width: 620px;
-      text-align: center;
-      border-top: 1px solid var(--rule);
-      border-bottom: 1px solid var(--rule);
-      padding: 44px 24px;
-    }
-    .notice .kicker {
-      display: inline-block;
-      background: var(--accent);
-      color: var(--paper);
-      font-family: 'Noto Sans Hebrew', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: .18em;
-      padding: 6px 14px;
-      margin-bottom: 22px;
-    }
-    .notice h2 {
-      font-size: clamp(34px, 6vw, 56px);
-      font-weight: 700;
-      line-height: 1.1;
-      margin-bottom: 18px;
-    }
-    .notice p {
-      font-size: 19px;
-      line-height: 1.7;
-      color: var(--muted);
-      font-weight: 300;
-    }
-    .contact {
-      margin-top: 34px;
-      font-family: 'Noto Sans Hebrew', sans-serif;
-      font-size: 15px;
-    }
-    .contact a {
-      color: var(--ink);
-      text-decoration: none;
-      border-bottom: 1px solid var(--accent);
-      padding-bottom: 2px;
-    }
-    .contact a:hover { color: var(--accent); }
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-family: 'Noto Sans Hebrew', sans-serif;
-      font-size: 12px;
-      color: var(--muted);
-      border-top: 1px solid rgba(0,0,0,.15);
-      margin: 0 24px;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Noto+Sans+Hebrew:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="masthead">
-    <div class="date" id="today"></div>
-    <h1>די צײַטונג</h1>
-    <div class="tagline">נײַעס · געמיינדע · מיינונג</div>
-  </header>
 
-  <main>
-    <section class="notice">
-      <span class="kicker">אין אַרבעט</span>
-      <h2>מיר קומען באַלד</h2>
-      <p>די צײַטונג גרייט זיך צו. אונדזער וועבסײַט איז אין מיטן בויען — קומט צוריק אין קורצן.</p>
-      <div class="contact">
-        פֿאַר פֿראַגעס: <a href="mailto:info@ditzeitung.com">info@ditzeitung.com</a>
+<div class="topstrip">
+  <div class="wrap">
+    <span class="bsd">בס"ד</span>
+    <span class="dates"><span id="hebrew-date"></span><span id="civil-date"></span></span>
+    <span class="quick"><a href="tel:7188516607">718-851-6607</a><a href="mailto:mail@ditzeitung.com">mail@ditzeitung.com</a></span>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="sub-top">ערשיינט יעדע מיטוואך · ברוקלין, נ.י. · זינט 1988</div>
+  <h1><a href="/">די צייטונג</a></h1>
+  <div class="sub-bottom">די זעלבסטשטענדיגע אידישע צייטונג</div>
+</header>
+
+<nav class="nav">
+  <div class="wrap">
+    <button class="menu-btn" aria-label="מעניו">☰ מעניו</button>
+    <ul>
+      <li><a href="/">הויפט</a></li>
+      <li><a href="#sections">אפטיילונגען</a></li>
+      <li><a href="archive.html">ארכיוו</a></li>
+      <li><a href="about.html">וועגן אונז</a></li>
+      <li><a href="advertise.html">רעקלאמעס</a></li>
+      <li><a href="contact.html">קאנטאקט</a></li>
+    </ul>
+    <ul>
+      <li><a href="subscribe.html" class="cta">אבאנירט זיך</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="wrap grid">
+    <div>
+      <span class="kicker">די וואך'ס אויסגאבע</span>
+      <h2>די שטימע פונעם היימישן ציבור — זינט 1988, יעדע מיטוואך.</h2>
+      <p>וועלט נייעס, אמעריקאנער פאליטיק, עקאנאמיע און היימישע נייעס — געברענגט מיט אן אומפארטייאישן בליק, אויף א רייכן און ריינעם אידיש. פלוס דער באליבטער מוסף "דער אידישער צייט" און די בילדער אפטיילונג.</p>
+      <div class="btn-row">
+        <a href="subscribe.html" class="btn red">באקומט עס אהיים</a>
+        <a href="advertise.html" class="btn ghost">רעקלאמירט ביי אונז</a>
       </div>
-    </section>
-  </main>
+      <div class="facts">
+        <div><b>1988</b><span>געגרינדעט</span></div>
+        <div><b>37+</b><span>יאר אין דרוק</span></div>
+        <div><b>מיטוואך</b><span>יעדע וואך</span></div>
+      </div>
+    </div>
+    <div>
+      <img class="cover" src="covers/cover-main.svg" alt="די צייטונג — די וואך'ס שער בלאט" width="440" height="600">
+    </div>
+  </div>
+</section>
 
-  <footer>© <span id="year"></span> די צײַטונג · ditzeitung.com</footer>
+<!-- ===== SECTIONS ===== -->
+<section class="section" id="sections">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>וואס איר געפינט אין די צייטונג</h2>
+      <a href="subscribe.html">באקומט די פולע אויסגאבע ←</a>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <span class="letter">א</span>
+        <span class="tag">הויפט אפטיילונג</span>
+        <h3>נייעס און פאליטיק</h3>
+        <p>אלגעמיינע פאליטיק, אמעריקאנער נייעס, וועלט נייעס און נייעס פונעם היימישן ציבור.</p>
+      </article>
+      <article class="card">
+        <span class="letter">ב</span>
+        <span class="tag">עקאנאמיע</span>
+        <h3>געשעפט און פינאנצן</h3>
+        <p>די עקאנאמיע, מארקעטן, ביזנעס נייעס און וואס עס מיינט פאר אייער שטוב און געשעפט.</p>
+      </article>
+      <article class="card">
+        <span class="letter">ג</span>
+        <span class="tag">היימיש</span>
+        <h3>קהילה נייעס</h3>
+        <p>וואס טוט זיך אין בארא פארק, וויליאמסבורג, קרית יואל און די אנדערע היימישע ישובים.</p>
+      </article>
+      <article class="card">
+        <span class="letter">ד</span>
+        <span class="tag">מוסף</span>
+        <h3>דער אידישער צייט</h3>
+        <p>היסטארישע ארטיקלען, חסידישע מעשיות, תורני'שע קולומס און השקפה ארטיקלען.</p>
+      </article>
+      <article class="card">
+        <span class="letter">ה</span>
+        <span class="tag">בילדער</span>
+        <h3>בילדער אפטיילונג</h3>
+        <p>די פאפולערע גאלעריעס פון רבי'ס, חסידישע הויפן, שמחות און אירועים.</p>
+      </article>
+      <article class="card">
+        <span class="letter">ו</span>
+        <span class="tag">מיינונג</span>
+        <h3>רעדאקציע און מיינונג</h3>
+        <p>קאלומנען, אנאליזן און א קלארער בליק אויף די ענינים פון דער וואך.</p>
+      </article>
+      <article class="card">
+        <span class="letter">ז</span>
+        <span class="tag">סערוויס</span>
+        <h3>רעקלאמעס און מודעות</h3>
+        <p>דער בעסטער וועג צו דערגרייכן דעם אידיש-רעדנדן ציבור אין ניו יארק יעדע וואך.</p>
+      </article>
+      <article class="card">
+        <span class="letter">ח</span>
+        <span class="tag">אבאנעמענט</span>
+        <h3>היים צושטעלונג</h3>
+        <p>באקומט די צייטונג יעדע מיטוואך גלייך צו אייער טיר, אין ברוקלין און איבער אמעריקע.</p>
+      </article>
+    </div>
+  </div>
+</section>
 
-  <script>
-    var d = new Date();
-    document.getElementById('year').textContent = d.getFullYear();
-    var days = ['זונטיק','מאָנטיק','דינסטיק','מיטוואָך','דאָנערשטיק','פֿרײַטיק','שבת'];
-    var months = ['יאַנואַר','פֿעברואַר','מאַרץ','אַפּריל','מײַ','יוני','יולי','אויגוסט','סעפּטעמבער','אָקטאָבער','נאָוועמבער','דעצעמבער'];
-    document.getElementById('today').textContent =
-      days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
-  </script>
+<!-- ===== COVERS ===== -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>די וואך'ס שער בלעטער</h2>
+      <a href="archive.html">צום ארכיוו ←</a>
+    </div>
+    <div class="covers">
+      <figure>
+        <a href="subscribe.html"><img src="covers/cover-main.svg" alt="הויפט אפטיילונג" width="440" height="600"></a>
+        <figcaption><b>הויפט אפטיילונג</b>נייעס · פאליטיק · עקאנאמיע</figcaption>
+      </figure>
+      <figure>
+        <a href="subscribe.html"><img src="covers/cover-yidishe-tzeit.svg" alt="דער אידישער צייט" width="440" height="600"></a>
+        <figcaption><b>דער אידישער צייט</b>היסטאריע · תורה · חסידות</figcaption>
+      </figure>
+      <figure>
+        <a href="subscribe.html"><img src="covers/cover-bilder.svg" alt="בילדער אפטיילונג" width="440" height="600"></a>
+        <figcaption><b>בילדער אפטיילונג</b>רבי'ס · חסידישע הויפן · אירועים</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="section">
+  <div class="wrap split">
+    <div>
+      <span class="kicker">וועגן אונז</span>
+      <p class="lead">זינט 1988 ברענגט די צייטונג די וואכנטליכע נייעס צום אידיש-רעדנדן ציבור אין ברוקלין און איבער אמעריקע — אומפארטייאיש, ריין און היימיש.</p>
+      <p class="dropcap">די זעלבסטשטענדיגע אידישע צייטונג איז געגרינדעט געווארן אין בארא פארק אין יאר תשמ"ח (1988) דורך הרב אברהם פרידמאן, וועלכער פירט עס ביז היינט אלס הויפט רעדאקטאר. פון יענער צייט אן ערשיינט זי יעדע מיטוואך, און איז געווארן איינע פון די בולטע און היסטארישע אינסטיטוציעס פונעם אידיש-געדרוקטן ווארט אין אמעריקע.</p>
+      <p>אונזער שיטה איז פשוט: ברענגען די נייעס קלאר און ריכטיג, אן זיך אריינצומישן אין אינערליכע מחלוקת'ן, און האלטן גוטע באציאונגען מיט די לאקאלע און שטאטישע אינסטאנצן לטובת הכלל.</p>
+      <a href="about.html" class="btn ghost">לייענט מער וועגן אונז</a>
+    </div>
+    <div>
+      <ul class="feature-list">
+        <li><span class="num">01</span><div><b>אומפארטייאיש</b><span>מיר מישן זיך נישט אריין אין קהילה קריגערייען — נאר נייעס.</span></div></li>
+        <li><span class="num">02</span><div><b>יעדע מיטוואך</b><span>37+ יאר אן א וואך פארפעלט. פארלאזליך ווי א זייגער.</span></div></li>
+        <li><span class="num">03</span><div><b>ריינער אידיש</b><span>געשריבן אויף א רייכן אידיש וואס איז א מחיה צו לייענען.</span></div></li>
+        <li><span class="num">04</span><div><b>פאר די גאנצע שטוב</b><span>נייעס, תורה, היסטאריע און בילדער — פאר יעדן איינעם אין שטוב.</span></div></li>
+        <li><span class="num">05</span><div><b>דערגרייכט אלעמען</b><span>בארא פארק, וויליאמסבורג, קרית יואל, מאנסי, לעיקוואד און ווייטער.</span></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SUBSCRIBE BAND ===== -->
+<section class="band" id="subscribe">
+  <div class="wrap grid">
+    <div>
+      <span class="kicker">נוזלעטער</span>
+      <h2>באקומט די שער בלעטער יעדע וואך אין אייער אימעיל</h2>
+      <p>שרייבט זיך איין און מיר שיקן אייך יעדע מיטוואך די שער בלעטער פון די נייע אויסגאבע, פלוס ספעציעלע אנזאגן. אומזיסט, און איר קענט זיך אויסשרייבן ווען איר ווילט.</p>
+    </div>
+    <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thanks.html">
+      <input type="hidden" name="form-name" value="newsletter">
+      <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
+      <input type="text" name="name" placeholder="אייער נאמען" required>
+      <input type="email" name="email" placeholder="אייער אימעיל אדרעס" required>
+      <button class="btn" type="submit">שרייבט מיך איין</button>
+      <span class="note">מיר טיילן קיינמאל נישט אייער אימעיל מיט קיינעם.</span>
+    </form>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <div class="brand">די צייטונג</div>
+        <p>די זעלבסטשטענדיגע אידישע צייטונג<br>ערשיינט יעדע מיטוואך אין ברוקלין, נ.י. זינט 1988.</p>
+      </div>
+      <div>
+        <h4>קאנטאקט</h4>
+        <ul>
+          <li>1281 49th Street</li>
+          <li>Brooklyn, NY 11219</li>
+          <li><a href="tel:7188516607">718-851-6607</a></li>
+          <li><a href="mailto:mail@ditzeitung.com">mail@ditzeitung.com</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>די צייטונג</h4>
+        <ul>
+          <li><a href="about.html">וועגן אונז</a></li>
+          <li><a href="archive.html">ארכיוו</a></li>
+          <li><a href="#sections">אפטיילונגען</a></li>
+          <li><a href="contact.html">קאנטאקט</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>סערוויסעס</h4>
+        <ul>
+          <li><a href="subscribe.html">אבאנירט זיך</a></li>
+          <li><a href="advertise.html">רעקלאמעס</a></li>
+          <li><a href="contact.html">שיקט אריין מאטעריאל</a></li>
+          <li><a href="#subscribe">נוזלעטער</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="bottom">
+      <span>© <span id="year"></span> די צייטונג · אלע רעכטן רעזערווירט</span>
+      <span>ditzeitung.com</span>
+    </div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
 </body>
 </html>

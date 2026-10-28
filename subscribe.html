@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="yi" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>אבאנירט זיך — די צייטונג</title>
+  <meta name="description" content="באקומט די צייטונג יעדע מיטוואך אהיים — היים צושטעלונג אין ברוקלין און איבער אמעריקע.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Noto+Sans+Hebrew:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topstrip">
+  <div class="wrap">
+    <span class="bsd">בס"ד</span>
+    <span class="dates"><span id="hebrew-date"></span><span id="civil-date"></span></span>
+    <span class="quick"><a href="tel:7188516607">718-851-6607</a><a href="mailto:mail@ditzeitung.com">mail@ditzeitung.com</a></span>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="sub-top">ערשיינט יעדע מיטוואך · ברוקלין, נ.י. · זינט 1988</div>
+  <h1><a href="/">די צייטונג</a></h1>
+  <div class="sub-bottom">די זעלבסטשטענדיגע אידישע צייטונג</div>
+</header>
+
+<nav class="nav">
+  <div class="wrap">
+    <button class="menu-btn" aria-label="מעניו">☰ מעניו</button>
+    <ul>
+      <li><a href="/">הויפט</a></li>
+      <li><a href="index.html#sections">אפטיילונגען</a></li>
+      <li><a href="archive.html">ארכיוו</a></li>
+      <li><a href="about.html">וועגן אונז</a></li>
+      <li><a href="advertise.html">רעקלאמעס</a></li>
+      <li><a href="contact.html">קאנטאקט</a></li>
+    </ul>
+    <ul>
+      <li><a href="subscribe.html" class="cta">אבאנירט זיך</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="page-head"><div class="wrap"><h1>אבאנירט זיך</h1><p>באקומט די צייטונג יעדע מיטוואך גלייך צו אייער טיר — מיט אלע מוספים.</p></div></section>
+<section class="page-body"><div class="wrap">
+<div class="plans">
+  <div class="plan">
+    <div class="pname">חודש'ליך</div>
+    <div class="price">$18 <small>/ חודש</small></div>
+    <ul><li>4–5 אויסגאבעס א חודש</li><li>אלע מוספים אריינגערעכנט</li><li>היים צושטעלונג אין ברוקלין</li><li>אפשטעלן ווען איר ווילט</li></ul>
+    <a href="#form" class="btn ghost">קלייבט דעם פלאן</a>
+  </div>
+  <div class="plan featured">
+    <span class="ribbon">מערסט פאפולער</span>
+    <div class="pname">יערליך</div>
+    <div class="price">$180 <small>/ יאר</small></div>
+    <ul><li>52 אויסגאבעס — 2 חדשים אומזיסט</li><li>אלע מוספים אריינגערעכנט</li><li>היים צושטעלונג איבער אמעריקע</li><li>ערשטע צו באקומען ספעציעלע אויסגאבעס</li></ul>
+    <a href="#form" class="btn">קלייבט דעם פלאן</a>
+  </div>
+  <div class="plan">
+    <div class="pname">מתנה</div>
+    <div class="price">$180 <small>/ יאר</small></div>
+    <ul><li>שיקט א יאר צייטונג אלס מתנה</li><li>א שיינע באגריסונג קארטל</li><li>פאר א חתן-כלה, עלטערן, אדער א פריינד</li><li>מיר שטעלן צו אומעטום אין אמעריקע</li></ul>
+    <a href="#form" class="btn ghost">קלייבט דעם פלאן</a>
+  </div>
+</div>
+<p class="small muted" style="margin:14px 0 40px">* פרייזן זענען א דוגמא און קענען געענדערט ווערן. רופט <a href="tel:7188516607"><b>718-851-6607</b></a> פאר די אקטועלע פרייזן און גרופע אבאנעמענטן פאר מוסדות און געשעפטן.</p>
+
+<div class="two-col" id="form">
+  <div>
+    <h2 class="serif" style="font-size:30px;margin-bottom:6px">באשטעלט אייער אבאנעמענט</h2>
+    <p class="muted" style="margin-bottom:22px">פילט אויס די פארעם און מיר רופן אייך צוריק אין 1–2 ביזנעס טעג צו ענדיגן די באשטעלונג.</p>
+    <form class="form" name="subscribe" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thanks.html">
+      <input type="hidden" name="form-name" value="subscribe">
+      <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
+      <div class="row">
+        <div><label>פולער נאמען</label><input type="text" name="name" required></div>
+        <div><label>טעלעפאן</label><input type="tel" name="phone" required></div>
+      </div>
+      <div><label>אימעיל</label><input type="email" name="email"></div>
+      <div><label>אדרעס פאר צושטעלונג</label><input type="text" name="address" placeholder="גאס, שטאט, סטעיט, זיפ" required></div>
+      <div class="row">
+        <div><label>פלאן</label><select name="plan"><option>יערליך — $180</option><option>חודש'ליך — $18</option><option>מתנה — $180</option></select></div>
+        <div><label>ווי האט איר געהערט פון אונז?</label><select name="source"><option>א פריינד</option><option>געזען די צייטונג</option><option>אינטערנעט</option><option>אנדערש</option></select></div>
+      </div>
+      <div><label>הערות</label><textarea name="notes" style="min-height:90px"></textarea></div>
+      <button class="btn red" type="submit">שיקט די באשטעלונג</button>
+    </form>
+  </div>
+  <aside class="aside">
+    <h3>ליבערשט אויפן טעלעפאן?</h3>
+    <p>רופט אונז און מיר שטעלן אייך אויף אין צוויי מינוט.</p>
+    <p style="font-family:var(--serif);font-size:28px;font-weight:900"><a href="tel:7188516607">718-851-6607</a></p>
+    <div class="line"></div>
+    <h3>וואו שטעלן מיר צו?</h3>
+    <p>בארא פארק, וויליאמסבורג, פלעטבוש, קרית יואל, מאנסי, לעיקוואד — און דורך דער פאסט אומעטום אין אמעריקע.</p>
+    <div class="line"></div>
+    <h3>געשעפטן און מוסדות</h3>
+    <p>ספעציעלע פרייזן פאר ביהמ"דים, ישיבות, אפיסעס און געשעפטן וואס ווילן מערערע קאפיעס. <a href="contact.html" class="red"><b>פרעגט אונז</b></a>.</p>
+  </aside>
+</div>
+</div></section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <div class="brand">די צייטונג</div>
+        <p>די זעלבסטשטענדיגע אידישע צייטונג<br>ערשיינט יעדע מיטוואך אין ברוקלין, נ.י. זינט 1988.</p>
+      </div>
+      <div>
+        <h4>קאנטאקט</h4>
+        <ul>
+          <li>1281 49th Street</li>
+          <li>Brooklyn, NY 11219</li>
+          <li><a href="tel:7188516607">718-851-6607</a></li>
+          <li><a href="mailto:mail@ditzeitung.com">mail@ditzeitung.com</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>די צייטונג</h4>
+        <ul>
+          <li><a href="about.html">וועגן אונז</a></li>
+          <li><a href="archive.html">ארכיוו</a></li>
+          <li><a href="index.html#sections">אפטיילונגען</a></li>
+          <li><a href="contact.html">קאנטאקט</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>סערוויסעס</h4>
+        <ul>
+          <li><a href="subscribe.html">אבאנירט זיך</a></li>
+          <li><a href="advertise.html">רעקלאמעס</a></li>
+          <li><a href="contact.html">שיקט אריין מאטעריאל</a></li>
+          <li><a href="index.html#subscribe">נוזלעטער</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="bottom">
+      <span>© <span id="year"></span> די צייטונג · אלע רעכטן רעזערווירט</span>
+      <span>ditzeitung.com</span>
+    </div>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>
