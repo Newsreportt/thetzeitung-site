@@ -55,7 +55,7 @@ def shell(title, desc, body):
 {body}
 
 <footer class="site-footer">
-  <div class="lattice"></div>
+  
   <div class="wrap">
     <div class="grid">
       <div>
@@ -93,7 +93,7 @@ def write(fname, html):
 def band(h1, p):
     return f'''<section class="band">
   <div class="wall" data-wall="{WALL}" data-rows="1" aria-hidden="true"></div>
-  <div class="veil"></div><div class="lattice"></div>
+  <div class="veil"></div>
   <div class="wrap"><h1>{h1}</h1><p>{p}</p></div>
 </section>'''
 
@@ -134,7 +134,7 @@ home = f'''
 <section class="hero">
   <div class="wall" data-wall="{WALL}" data-rows="2" aria-hidden="true"></div>
   <div class="veil"></div>
-  <div class="lattice"></div>
+  
   <div class="wrap"><div class="inner">
     <div class="wordmark"><img src="covers/logo-yiddish.png" alt="The Tzeitung — די צייטונג" width="1140" height="270"></div>
     <img class="nr" src="covers/logo-newsreport.png" alt="News Report — The Yiddish Newspaper of Record" width="600" height="165">
@@ -161,7 +161,7 @@ home = f'''
 </section>
 
 <section class="statement">
-  <div class="lattice"></div>
+  
   <div class="wrap">
     <div class="rule"></div>
     <p>Forty years in print. Thousands of readers around the world. A fresh edition in the stores every Wednesday morning.</p>

@@ -20,7 +20,6 @@
   --hebrew: 'Frank Ruhl Libre', 'David', serif;
   --max: 1180px;
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  --lattice: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M0 16 L16 0 L32 16 L16 32 Z' fill='none' stroke='%23C9A85C' stroke-opacity='.16' stroke-width='.7'/%3E%3C/svg%3E");
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -92,7 +91,6 @@ p { max-width: 62ch; }
     linear-gradient(90deg, var(--forest) 0%, rgba(10,46,30,.97) 26%, rgba(10,46,30,.86) 46%, rgba(10,46,30,.45) 68%, rgba(10,46,30,.3) 100%),
     linear-gradient(180deg, rgba(10,46,30,.55) 0%, rgba(10,46,30,.08) 22%, rgba(10,46,30,.08) 72%, var(--forest) 100%);
 }
-.hero .lattice { position: absolute; inset: 0; background: var(--lattice); opacity: .55; pointer-events: none; }
 .hero .wrap { position: relative; width: 100%; padding-top: 88px; padding-bottom: 96px; }
 .hero .inner { max-width: 600px; animation: rise .9s ease-out both; }
 .hero .wordmark img { width: min(520px, 92%); height: auto; }
@@ -110,7 +108,6 @@ p { max-width: 62ch; }
     linear-gradient(90deg, var(--forest) 0%, rgba(10,46,30,.96) 30%, rgba(10,46,30,.78) 55%, rgba(10,46,30,.55) 100%),
     linear-gradient(180deg, rgba(10,46,30,.3), rgba(10,46,30,.1) 40%, var(--forest) 100%);
 }
-.band .lattice { position: absolute; inset: 0; background: var(--lattice); opacity: .5; pointer-events: none; }
 .band .wrap { position: relative; padding-top: 74px; padding-bottom: 70px; }
 .band h1 { font-size: clamp(40px, 5vw, 62px); font-weight: 500; color: var(--ivory); }
 .band p { color: var(--sage); font-size: 18px; margin-top: 12px; max-width: 56ch; }
@@ -161,7 +158,6 @@ p { max-width: 62ch; }
 
 /* ---- statement band ---- */
 .statement { background: var(--forest-2); color: var(--ivory); position: relative; overflow: hidden; text-align: center; padding: 76px 0; }
-.statement .lattice { position: absolute; inset: 0; background: var(--lattice); opacity: .6; }
 .statement .wrap { position: relative; }
 .statement p { font-family: var(--display); font-style: italic; font-weight: 500; font-size: clamp(26px, 3.2vw, 38px); line-height: 1.35; max-width: 30ch; margin: 28px auto; }
 .statement .rule { width: 56px; height: 1px; background: var(--gold); margin: 0 auto; }
@@ -250,7 +246,6 @@ p { max-width: 62ch; }
 
 /* ---- footer ---- */
 .site-footer { background: var(--forest); color: var(--sage); position: relative; overflow: hidden; }
-.site-footer .lattice { position: absolute; inset: 0; background: var(--lattice); opacity: .35; }
 .site-footer .wrap { position: relative; padding-top: 70px; padding-bottom: 40px; }
 .site-footer .grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 48px; padding-bottom: 44px; border-bottom: 1px solid rgba(201,168,92,.35); }
 .site-footer .wordmark img { height: 46px; width: auto; }
