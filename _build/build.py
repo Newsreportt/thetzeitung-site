@@ -27,7 +27,7 @@ def shell(title, desc, body, extra_js=""):
     <img src="covers/logo-yiddish.png" alt="Di Tzeitung — די צייטונג" width="1140" height="270">
     <img class="nr" src="covers/logo-newsreport.png" alt="News Report — The Yiddish Newspaper of Record" width="600" height="165">
   </a>
-  <div class="tag">The Independent Yiddish Newspaper · Est. 1988</div>
+  <div class="tag">The Independent Yiddish Newspaper · 40 Years</div>
 </header>
 <nav class="nav">
   <button class="menu-btn" aria-label="Menu">☰ Menu</button>
@@ -54,7 +54,7 @@ def write(fname, html):
     open(os.path.join(ROOT, fname), "w", encoding="utf-8").write(html); print("wrote", fname)
 
 SECTIONS = [
-  ("sec-a.jpg", "Main Section — Di Tzeitung", "General news & politics, American and world news, the economy, and news from the heimishe community. The Yiddish newspaper of record, every Friday."),
+  ("sec-a.jpg", "Main Section — Di Tzeitung", "General news & politics, American and world news, the economy, and news from the heimishe community. The Yiddish newspaper of record, in stores every Wednesday morning."),
   ("sec-b.jpg", "Yiddishe Tzeit — אידישע צייט", "The weekly supplement of history, memoirs and heritage: the Jewish towns of yesteryear, great personalities, and stories passed down through generations."),
   ("sec-c.jpg", "Chassidishe Tzeit — חסידישע צייט", "Chassidishe news from around the world, with the popular picture section of Rebbes, chassidishe courts, simchos and events."),
 ]
@@ -74,7 +74,7 @@ home = f'''
   </div>
   <div>
     <h2>Welcome!</h2>
-    <p>Di Tzeitung — <i>The Independent Yiddish Newspaper</i> — has been published every week in Brooklyn since 1988. Known as <b>News Report, The Yiddish Newspaper of Record</b>, it serves the Yiddish-speaking communities of Boro Park, Williamsburg, Kiryas Joel, Monsey and Lakewood, and reaches Yiddish readers across the United States, Canada, England, Belgium and Eretz Yisroel.</p>
+    <p>Di Tzeitung — <i>The Independent Yiddish Newspaper</i> — has been published every week in Brooklyn for 40 years. Known as <b>News Report, The Yiddish Newspaper of Record</b>, it is read by thousands of readers around the world — in Boro Park, Williamsburg, Kiryas Joel, Monsey and Lakewood, and across the United States, Canada, England, Belgium and Eretz Yisroel. A fresh edition is in stores every Wednesday morning.</p>
     <div class="btns"><a href="subscribe.html" class="btn green">Subscribe</a><a href="advertise.html" class="btn outline">Advertise</a></div>
   </div>
 </div></section>
@@ -109,25 +109,25 @@ write("index.html", shell("Di Tzeitung — News Report, The Yiddish Newspaper of
 
 # ---------------- ABOUT ----------------
 about = '''
-<section class="page-head"><div class="wrap"><h1>About</h1><p>The Independent Yiddish Newspaper — every Friday since 1988.</p></div></section>
+<section class="page-head"><div class="wrap"><h1>About</h1><p>The Independent Yiddish Newspaper — 40 years, thousands of readers around the world.</p></div></section>
 <section class="page-body"><div class="wrap">
   <div class="stats">
-    <div><b>1988</b><span>Founded</span></div>
-    <div><b>40</b><span>Volumes</span></div>
-    <div><b>Friday</b><span>Every week</span></div>
+    <div><b>40</b><span>Years in print</span></div>
+    <div><b>1000s</b><span>Readers worldwide</span></div>
+    <div><b>Wed.</b><span>In stores every week</span></div>
     <div><b>3</b><span>Sections weekly</span></div>
   </div>
   <div class="prose">
-    <p>Di Tzeitung — <i>Di Zelbstshtendige Yiddishe Tzeitung</i>, the Independent Yiddish Newspaper — was founded in Boro Park, Brooklyn, in 1988 by Rabbi Avrohom Friedman, who continues to lead it today as founder and editor-in-chief. Published every Friday in the Yiddish language, and known in English as <b>News Report, The Yiddish Newspaper of Record</b>, it has grown into one of the prominent and historic institutions of the Yiddish printed word in America.</p>
+    <p>Di Tzeitung — <i>Di Zelbstshtendige Yiddishe Tzeitung</i>, the Independent Yiddish Newspaper — was founded in Brooklyn 40 years ago by Rabbi Avrohom Friedman, who continues to lead it today as founder and editor-in-chief. Published every week in the Yiddish language and in stores every Wednesday morning, and known in English as <b>News Report, The Yiddish Newspaper of Record</b>, it has grown into one of the prominent and historic institutions of the Yiddish printed word in America.</p>
     <h2>Who We Serve</h2>
-    <p>Di Tzeitung serves the Yiddish-speaking communities of Brooklyn — Boro Park, Williamsburg and Flatbush — as well as Kiryas Joel, Monsey, Lakewood and other heimishe communities throughout the United States. Copies are also distributed in Canada, London, Belgium and Eretz Yisroel.</p>
+    <p>Thousands of readers around the world turn to Di Tzeitung every week: the Yiddish-speaking communities of Brooklyn — Boro Park, Williamsburg and Flatbush — as well as Kiryas Joel, Monsey, Lakewood and other heimishe communities throughout the United States, along with readers in Canada, London, Belgium and Eretz Yisroel.</p>
     <h2>Our Approach</h2>
     <p>Our stated mission is to bring the news with an impartial eye. Di Tzeitung never involves itself in internal community disputes. We believe our readers deserve clear, accurate reporting — and nothing more. In general American politics the paper keeps a measured tone, with the goal of maintaining good relations with local, city and federal agencies for the benefit of the community.</p>
     <h2>What's Inside Every Week</h2>
     <p><b>Main Section</b> — General politics, American and world news, business and the economy, and news from the heimishe community.</p>
     <p><b>Yiddishe Tzeit (אידישע צייט)</b> — The beloved weekly supplement of history, memoirs and heritage: the Jewish towns of yesteryear, great personalities and the stories of generations past.</p>
     <p><b>Chassidishe Tzeit (חסידישע צייט)</b> — Chassidishe news from around the world, and the popular picture section featuring Rebbes, chassidishe courts, simchos and events.</p>
-    <h2>Forty Years Later</h2>
+    <h2>Forty Years</h2>
     <p>Like every printed newspaper, Di Tzeitung has weathered rising paper and printing costs and the transformation of the media landscape. Through it all, it remains one of the enduring voices of the Yiddish-speaking community — and we are proud that you are part of it.</p>
   </div>
 </div></section>
@@ -136,7 +136,7 @@ write("about.html", shell("About — Di Tzeitung", "The history and mission of D
 
 # ---------------- SUBSCRIPTIONS ----------------
 subscribe = '''
-<section class="page-head"><div class="wrap"><h1>Subscriptions</h1><p>Receive Di Tzeitung every Friday, delivered to your home anywhere in the United States.</p></div></section>
+<section class="page-head"><div class="wrap"><h1>Subscriptions</h1><p>Receive Di Tzeitung every week, delivered to your home anywhere in the United States.</p></div></section>
 <section class="page-body"><div class="wrap">
   <div class="promo" style="margin-bottom:50px"><img src="ads/promo-2.jpg" alt="יעדע וואך פונדאסניי — א פרישער געשמאק צום טיר! Subscribe to Di Tzeitung"></div>
   <div class="products">
@@ -198,11 +198,12 @@ write("subscribe.html", shell("Subscriptions — Di Tzeitung", "Subscribe to Di 
 
 # ---------------- ADVERTISE ----------------
 advertise = '''
-<section class="page-head"><div class="wrap"><h1>Advertise</h1><p>The most direct way to reach thousands of heimishe households every Friday — since 1988.</p></div></section>
+<section class="page-head"><div class="wrap"><h1>Advertise</h1><p>The most direct way to reach thousands of heimishe households around the world every week — for 40 years.</p></div></section>
 <section class="page-body"><div class="wrap">
   <div class="stats">
-    <div><b>37+</b><span>Years of trust</span></div>
-    <div><b>Friday</b><span>In every home</span></div>
+    <div><b>40</b><span>Years of trust</span></div>
+    <div><b>1000s</b><span>Readers worldwide</span></div>
+    <div><b>Wed.</b><span>In stores every week</span></div>
     <div><b>3</b><span>Sections weekly</span></div>
     <div><b>100%</b><span>Yiddish-speaking readers</span></div>
   </div>
@@ -230,7 +231,7 @@ advertise = '''
   <div class="two-col">
     <div>
       <h2 style="color:var(--accent);text-transform:uppercase;letter-spacing:2px;font-size:22px;margin-bottom:6px">Request Rates &amp; Deadlines</h2>
-      <p style="margin-bottom:22px;color:var(--muted)">Tell us what you'd like to advertise and we'll confirm placement and specifications. Ad deadline: <b>Wednesday, 5:00 PM</b>.</p>
+      <p style="margin-bottom:22px;color:var(--muted)">Tell us what you'd like to advertise and we'll confirm placement and specifications. Ad deadline: <b>Monday, 5:00 PM</b>.</p>
       <form class="form" name="advertise" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thanks.html">
         <input type="hidden" name="form-name" value="advertise">
         <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
@@ -286,7 +287,7 @@ contact = '''
     <p><b>Editor &amp; Letters to the Editor (בריוו):</b><br><a href="mailto:yt@thetzeitung.com">yt@thetzeitung.com</a></p>
     <p><b>Billing &amp; subscriptions:</b><br><a href="mailto:billing@thetzeitung.com">billing@thetzeitung.com</a></p>
     <div class="line"></div>
-    <p style="font-size:13px;color:var(--muted)">Office hours: Sunday–Thursday, 9:00 AM – 6:00 PM. Editorial deadline: Wednesday 5:00 PM.</p>
+    <p style="font-size:13px;color:var(--muted)">Office hours: Sunday–Thursday, 9:00 AM – 6:00 PM. Editorial deadline: Monday 5:00 PM.</p>
   </aside>
 </div></section>
 '''
@@ -295,9 +296,9 @@ write("contact.html", shell("Contact — Di Tzeitung", "Contact Di Tzeitung.", c
 # ---------------- ARCHIVES ----------------
 figs = "".join(f'<figure><a href="subscribe.html"><img src="covers/{img}" alt="{t}" loading="lazy"></a><figcaption>{t}</figcaption></figure>' for img,t,_ in SECTIONS)
 archive = f'''
-<section class="page-head"><div class="wrap"><h1>Archives</h1><p>Covers from recent editions. Subscribers may request back issues from our office.</p></div></section>
+<section class="page-head"><div class="wrap"><h1>Archives</h1><p>Covers from recent editions — a new edition every Wednesday. Subscribers may request back issues from our office.</p></div></section>
 <section class="page-body"><div class="wrap">
-  <h2 style="color:var(--accent);text-transform:uppercase;letter-spacing:3px;font-size:16px;text-align:center;margin-bottom:26px">Vol. 40 · No. 6 — October 30, 2026</h2>
+  <h2 style="color:var(--accent);text-transform:uppercase;letter-spacing:3px;font-size:16px;text-align:center;margin-bottom:26px">Vol. 40 · No. 6 — Week of October 28, 2026</h2>
   <div class="archive-grid">{figs}</div>
   <div class="aside" style="margin:50px auto 0;max-width:720px;text-align:center">
     <h3>Need a specific issue?</h3>
