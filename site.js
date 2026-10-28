@@ -15,6 +15,33 @@
     if (a.getAttribute('href') === here && !a.classList.contains('cta')) a.classList.add('active');
   });
 
+  // cover wall: rows of shuffled covers drifting right-to-left behind the text
+  document.querySelectorAll('.wall[data-wall]').forEach(function (wall) {
+    var list = wall.getAttribute('data-wall').split(',').filter(Boolean);
+    if (!list.length) return;
+    var rows = +wall.getAttribute('data-rows') || 1;
+
+    function shuffle(a) {
+      for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+      return a;
+    }
+    for (var r = 0; r < rows; r++) {
+      var seq = [];
+      while (seq.length < 16) {                       // enough covers to span any screen
+        var batch = shuffle(list.slice());
+        if (seq.length && batch[0] === seq[seq.length - 1]) batch.push(batch.shift());
+        seq = seq.concat(batch);
+      }
+      var row = document.createElement('div'); row.className = 'row';
+      var track = document.createElement('div'); track.className = 'track';
+      track.style.setProperty('--dur', Math.round(110 + r * 35 + Math.random() * 20) + 's');
+      seq.concat(seq).forEach(function (src) {          // twice over, so the loop never jumps
+        var im = new Image(); im.src = src; im.alt = ''; im.decoding = 'async'; track.appendChild(im);
+      });
+      row.appendChild(track); wall.appendChild(row);
+    }
+  });
+
   // cover showcase: fades from one cover to the next on its own
   var showcase = document.getElementById('showcase');
   if (showcase) {

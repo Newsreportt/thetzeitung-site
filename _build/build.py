@@ -5,6 +5,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 NAV = [("index.html", "Home"), ("archive.html", "Archives"), ("about.html", "About"),
        ("advertise.html", "Advertise"), ("contact.html", "Contact")]
 
+import glob
+WALL = ",".join("covers/wall/" + os.path.basename(f) for f in sorted(glob.glob(os.path.join(ROOT, "covers", "wall", "*.jpg"))))
+
 PHONE = '<a href="tel:7188516607">718-851-6607</a>'
 ADDRESS = "445 Park Avenue, Suite 202<br>Brooklyn, NY 11205"
 
@@ -89,7 +92,8 @@ def write(fname, html):
 
 def band(h1, p):
     return f'''<section class="band">
-  <div class="photo"></div><div class="lattice"></div>
+  <div class="wall" data-wall="{WALL}" data-rows="1" aria-hidden="true"></div>
+  <div class="veil"></div><div class="lattice"></div>
   <div class="wrap"><h1>{h1}</h1><p>{p}</p></div>
 </section>'''
 
@@ -128,7 +132,8 @@ inside_html = "".join(f'''
 
 home = f'''
 <section class="hero">
-  <div class="photo"></div>
+  <div class="wall" data-wall="{WALL}" data-rows="2" aria-hidden="true"></div>
+  <div class="veil"></div>
   <div class="lattice"></div>
   <div class="wrap"><div class="inner">
     <div class="wordmark"><img src="covers/logo-yiddish.png" alt="The Tzeitung — די צייטונג" width="1140" height="270"></div>
