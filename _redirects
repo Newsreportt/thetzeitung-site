@@ -1,0 +1,6 @@
+# thetzeitung.com is the primary domain. The old ditzeitung.com stays registered
+# and pointed here, but every visit is sent on to thetzeitung.com.
+https://ditzeitung.com/*      https://thetzeitung.com/:splat  301!
+https://www.ditzeitung.com/*  https://thetzeitung.com/:splat  301!
+http://ditzeitung.com/*       https://thetzeitung.com/:splat  301!
+http://www.ditzeitung.com/*   https://thetzeitung.com/:splat  301!
