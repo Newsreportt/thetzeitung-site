@@ -38,6 +38,17 @@ ORG_JSONLD = """<script type="application/ld+json">
   "areaServed": "Worldwide",
   "knowsLanguage": ["yi", "en"]
 }
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "The Tzeitung",
+  "alternateName": ["TheTzeitung.com", "Di Tzeitung", "די צייטונג"],
+  "url": "https://thetzeitung.com/",
+  "inLanguage": "en",
+  "publisher": {"@type": "NewsMediaOrganization", "name": "The Tzeitung", "url": "https://thetzeitung.com/"}
+}
 </script>"""
 
 def shell(title, desc, body, page="index.html"):
@@ -105,7 +116,7 @@ def shell(title, desc, body, page="index.html"):
       </div>
     </div>
     <div class="bottom">
-      <span>© <span id="year"></span> The Tzeitung. All rights reserved.</span>
+      <span>© <span id="year"></span> The Tzeitung · TheTzeitung.com</span>
       <span><a href="advertise.html">Advertise</a> &nbsp;&nbsp; <a href="subscribe.html">Subscribe</a> &nbsp;&nbsp; <a href="contact.html">Contact</a></span>
     </div>
   </div>
