@@ -3,49 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Archives — Di Tzeitung</title>
-  <meta name="description" content="Archive of past editions of Di Tzeitung.">
+  <title>Archives — The Tzeitung</title>
+  <meta name="description" content="Covers from recent editions of The Tzeitung.">
+  <meta name="theme-color" content="#0E7C3F">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@400;500&family=Frank+Ruhl+Libre:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="covers/favicon.png">
 </head>
 <body>
 
-<header class="site-header">
+<header class="top">
   <span class="bsd">בס"ד</span>
-  <a class="logo" href="index.html">
-    <img src="covers/logo-yiddish.png" alt="Di Tzeitung — די צייטונג" width="1140" height="270">
-    <img class="nr" src="covers/logo-newsreport.png" alt="News Report — The Yiddish Newspaper of Record" width="600" height="165">
-  </a>
-  <div class="tag">The Independent Yiddish Newspaper · 40 Years</div>
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="covers/logo-yiddish.png" alt="The Tzeitung — די צייטונג" width="1140" height="270">
+      <span>News Report<br>The Yiddish Newspaper of Record</span>
+    </a>
+    <button class="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav id="nav">
+      <ul><li><a href="index.html">Home</a></li><li><a href="archive.html">Archives</a></li><li><a href="about.html">About</a></li><li><a href="advertise.html">Advertise</a></li><li><a href="contact.html">Contact</a></li><li><a class="cta" href="subscribe.html">Subscribe</a></li></ul>
+    </nav>
+  </div>
 </header>
-<nav class="nav">
-  <button class="menu-btn" aria-label="Menu">☰ Menu</button>
-  <ul><li><a href="index.html">Home</a></li><li><a href="archive.html">Archives</a></li><li><a href="about.html">About</a></li><li><a href="advertise.html">Advertise</a></li><li><a href="subscribe.html">Subscriptions</a></li><li><a href="contact.html">Contact</a></li></ul>
-</nav>
 
-<div class="page">
-
-<section class="page-head"><div class="wrap"><h1>Archives</h1><p>Covers from recent editions — a new edition every Wednesday. Subscribers may request back issues from our office.</p></div></section>
-<section class="page-body"><div class="wrap">
-  <h2 style="color:var(--accent);text-transform:uppercase;letter-spacing:3px;font-size:16px;text-align:center;margin-bottom:26px">Vol. 40 · No. 6 — Week of October 28, 2026</h2>
-  <div class="archive-grid"><figure><a href="subscribe.html"><img src="covers/sec-a.jpg" alt="Main Section — Di Tzeitung" loading="lazy"></a><figcaption>Main Section — Di Tzeitung</figcaption></figure><figure><a href="subscribe.html"><img src="covers/sec-b.jpg" alt="Yiddishe Tzeit — אידישע צייט" loading="lazy"></a><figcaption>Yiddishe Tzeit — אידישע צייט</figcaption></figure><figure><a href="subscribe.html"><img src="covers/sec-c.jpg" alt="Chassidishe Tzeit — חסידישע צייט" loading="lazy"></a><figcaption>Chassidishe Tzeit — חסידישע צייט</figcaption></figure></div>
-  <div class="aside" style="margin:50px auto 0;max-width:720px;text-align:center">
-    <h3>Need a specific issue?</h3>
-    <p>For back issues, special editions or a copy of a specific article, call <a href="tel:7188516607"><b>718-851-6607</b></a> or write to <a href="mailto:mk@thetzeitung.com"><b>mk@thetzeitung.com</b></a>.</p>
+<section class="band">
+  <div class="photo"></div><div class="lattice"></div>
+  <div class="wrap"><h1>Archives</h1><p>Covers from recent editions. Subscribers may request back issues from the office.</p></div>
+</section>
+<section class="page-body surface parchment"><div class="wrap">
+  <div class="sec-head"><h2>Volume 40, number 6</h2><p>The week of October 28, 2026</p></div>
+  <div class="archive-grid"><figure><a href="covers/sec-a.jpg" data-zoom="covers/sec-a.jpg"><img src="covers/sec-a.jpg" alt="The main section" width="1064" height="1158" loading="lazy"></a><figcaption>The main section<span>די צייטונג</span></figcaption></figure><figure><a href="covers/sec-b.jpg" data-zoom="covers/sec-b.jpg"><img src="covers/sec-b.jpg" alt="Yiddishe Tzeit" width="1064" height="1158" loading="lazy"></a><figcaption>Yiddishe Tzeit<span>אידישע צייט</span></figcaption></figure><figure><a href="covers/sec-c.jpg" data-zoom="covers/sec-c.jpg"><img src="covers/sec-c.jpg" alt="Chassidishe Tzeit" width="1064" height="1158" loading="lazy"></a><figcaption>Chassidishe Tzeit<span>חסידישע צייט</span></figcaption></figure></div>
+  <div class="aside" style="margin:70px auto 0;max-width:720px;text-align:center">
+    <h3>Looking for a particular issue?</h3>
+    <p>For back issues, special editions or a copy of a specific article, call <a href="tel:7188516607">718-851-6607</a> or write to <a href="mailto:mk@thetzeitung.com"><b>mk@thetzeitung.com</b></a>.</p>
   </div>
 </div></section>
 
-</div>
 
 <footer class="site-footer">
-  <a class="top" href="#">Back To Top</a>
-  <p>Di Tzeitung · News Report &nbsp;•&nbsp; 445 Park Avenue #202, Brooklyn, N.Y. 11205 &nbsp;•&nbsp; <a href="tel:7188516607">718-851-6607</a> &nbsp;•&nbsp; <a href="mailto:mk@thetzeitung.com">mk@thetzeitung.com</a></p>
-  <div class="links"><a href="about.html">About</a><a href="advertise.html">Advertise</a><a href="subscribe.html">Subscribe</a><a href="contact.html">Contact</a></div>
-  <p style="margin-top:14px;font-size:12px">© <span id="year"></span> Di Tzeitung. All rights reserved.</p>
+  <div class="lattice"></div>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <a class="wordmark" href="index.html"><img src="covers/logo-yiddish.png" alt="The Tzeitung" width="1140" height="270"></a>
+        <img class="nr" src="covers/logo-newsreport.png" alt="News Report — The Yiddish Newspaper of Record" width="600" height="165">
+        <p style="margin-top:18px">The independent Yiddish newspaper. Printed in Brooklyn every week for forty years, read by thousands of families around the world.</p>
+      </div>
+      <div>
+        <h4>Visit or call</h4>
+        <p>445 Park Avenue, Suite 202<br>Brooklyn, NY 11205<br><span class="em"><a href="tel:7188516607">718-851-6607</a></span></p>
+      </div>
+      <div>
+        <h4>Write to us</h4>
+        <p>General inquiries<br><a class="em" href="mailto:mk@thetzeitung.com">mk@thetzeitung.com</a></p>
+        <p>Editor and letters<br><a class="em" href="mailto:yt@thetzeitung.com">yt@thetzeitung.com</a></p>
+        <p>Billing<br><a class="em" href="mailto:billing@thetzeitung.com">billing@thetzeitung.com</a></p>
+      </div>
+    </div>
+    <div class="bottom">
+      <span>© <span id="year"></span> The Tzeitung. All rights reserved.</span>
+      <span><a href="advertise.html">Advertise</a> &nbsp;&nbsp; <a href="subscribe.html">Subscribe</a> &nbsp;&nbsp; <a href="contact.html">Contact</a></span>
+    </div>
+  </div>
 </footer>
 
+<div class="lightbox" role="dialog" aria-label="Cover preview"><img src="" alt=""></div>
 <script src="site.js"></script>
 </body>
 </html>

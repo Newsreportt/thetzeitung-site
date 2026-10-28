@@ -3,62 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About — Di Tzeitung</title>
-  <meta name="description" content="The history and mission of Di Tzeitung, the independent Yiddish newspaper, 40 years in print.">
+  <title>About — The Tzeitung</title>
+  <meta name="description" content="The history and mission of The Tzeitung, the independent Yiddish newspaper, forty years in print.">
+  <meta name="theme-color" content="#0E7C3F">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@400;500&family=Frank+Ruhl+Libre:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="covers/favicon.png">
 </head>
 <body>
 
-<header class="site-header">
+<header class="top">
   <span class="bsd">בס"ד</span>
-  <a class="logo" href="index.html">
-    <img src="covers/logo-yiddish.png" alt="Di Tzeitung — די צייטונג" width="1140" height="270">
-    <img class="nr" src="covers/logo-newsreport.png" alt="News Report — The Yiddish Newspaper of Record" width="600" height="165">
-  </a>
-  <div class="tag">The Independent Yiddish Newspaper · 40 Years</div>
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="covers/logo-yiddish.png" alt="The Tzeitung — די צייטונג" width="1140" height="270">
+      <span>News Report<br>The Yiddish Newspaper of Record</span>
+    </a>
+    <button class="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav id="nav">
+      <ul><li><a href="index.html">Home</a></li><li><a href="archive.html">Archives</a></li><li><a href="about.html">About</a></li><li><a href="advertise.html">Advertise</a></li><li><a href="contact.html">Contact</a></li><li><a class="cta" href="subscribe.html">Subscribe</a></li></ul>
+    </nav>
+  </div>
 </header>
-<nav class="nav">
-  <button class="menu-btn" aria-label="Menu">☰ Menu</button>
-  <ul><li><a href="index.html">Home</a></li><li><a href="archive.html">Archives</a></li><li><a href="about.html">About</a></li><li><a href="advertise.html">Advertise</a></li><li><a href="subscribe.html">Subscriptions</a></li><li><a href="contact.html">Contact</a></li></ul>
-</nav>
 
-<div class="page">
-
-<section class="page-head"><div class="wrap"><h1>About</h1><p>The Independent Yiddish Newspaper — 40 years, thousands of readers around the world.</p></div></section>
-<section class="page-body"><div class="wrap">
-  <div class="stats">
-    <div><b>40</b><span>Years in print</span></div>
-    <div><b>1000s</b><span>Readers worldwide</span></div>
-    <div><b>Wed.</b><span>In stores every week</span></div>
-    <div><b>3</b><span>Sections weekly</span></div>
-  </div>
+<section class="band">
+  <div class="photo"></div><div class="lattice"></div>
+  <div class="wrap"><h1>About The Tzeitung</h1><p>Forty years of the independent Yiddish newspaper.</p></div>
+</section>
+<section class="page-body surface parchment"><div class="wrap two-col">
   <div class="prose">
-    <p>Di Tzeitung — <i>Di Zelbstshtendige Yiddishe Tzeitung</i>, the Independent Yiddish Newspaper — was founded in Brooklyn 40 years ago by Rabbi Avrohom Friedman, who continues to lead it today as founder and editor-in-chief. Published every week in the Yiddish language and in stores every Wednesday morning, and known in English as <b>News Report, The Yiddish Newspaper of Record</b>, it has grown into one of the prominent and historic institutions of the Yiddish printed word in America.</p>
-    <h2>Who We Serve</h2>
-    <p>Thousands of readers around the world turn to Di Tzeitung every week: the Yiddish-speaking communities of Brooklyn — Boro Park, Williamsburg and Flatbush — as well as Kiryas Joel, Monsey, Lakewood and other heimishe communities throughout the United States, along with readers in Canada, London, Belgium and Eretz Yisroel.</p>
-    <h2>Our Approach</h2>
-    <p>Our stated mission is to bring the news with an impartial eye. Di Tzeitung never involves itself in internal community disputes. We believe our readers deserve clear, accurate reporting — and nothing more. In general American politics the paper keeps a measured tone, with the goal of maintaining good relations with local, city and federal agencies for the benefit of the community.</p>
-    <h2>What's Inside Every Week</h2>
-    <p><b>Main Section</b> — General politics, American and world news, business and the economy, and news from the heimishe community.</p>
-    <p><b>Yiddishe Tzeit (אידישע צייט)</b> — The beloved weekly supplement of history, memoirs and heritage: the Jewish towns of yesteryear, great personalities and the stories of generations past.</p>
-    <p><b>Chassidishe Tzeit (חסידישע צייט)</b> — Chassidishe news from around the world, and the popular picture section featuring Rebbes, chassidishe courts, simchos and events.</p>
-    <h2>Forty Years</h2>
-    <p>Like every printed newspaper, Di Tzeitung has weathered rising paper and printing costs and the transformation of the media landscape. Through it all, it remains one of the enduring voices of the Yiddish-speaking community — and we are proud that you are part of it.</p>
+    <p class="lead">The Tzeitung, known in Yiddish as Di Zelbstshtendige Yiddishe Tzeitung, the independent Yiddish newspaper, was founded in Brooklyn forty years ago by Rabbi Avrohom Friedman, who leads it to this day as founder and editor-in-chief.</p>
+    <p>Published every week in Yiddish and known in English as News Report, The Yiddish Newspaper of Record, it has become one of the enduring institutions of the Yiddish printed word in America. A fresh edition reaches the stores every Wednesday morning.</p>
+    <h2>Who reads it</h2>
+    <p>Thousands of readers around the world: the Yiddish-speaking communities of Brooklyn, in Boro Park, Williamsburg and Flatbush, together with Kiryas Joel, Monsey, Lakewood and other heimishe communities across the United States, and readers in Canada, London, Belgium and Eretz Yisroel.</p>
+    <h2>How we report</h2>
+    <p>Our mission is to bring the news with an impartial eye. The Tzeitung does not take sides in internal community disputes. Readers deserve clear, accurate reporting, and nothing more. In general American politics the paper keeps a measured tone, with the aim of maintaining good relations with local, city and federal agencies for the benefit of the community.</p>
+    <h2>Inside every edition</h2>
+    <p><b>The main section.</b> General news and politics, news from America and around the world, business and the economy, and what is happening in the heimishe community.</p>
+    <p><b>Yiddishe Tzeit.</b> The weekly supplement of history and heritage: the Jewish towns of yesteryear, great personalities, and memoirs passed down through the generations.</p>
+    <p><b>Chassidishe Tzeit.</b> Chassidishe news from around the world, with the popular picture section of Rebbes, chassidishe courts, simchos and events.</p>
+    <h2>Forty years</h2>
+    <p>Like every printed newspaper, The Tzeitung has weathered rising paper and printing costs and a changing media landscape. Through it all it remains one of the enduring voices of the Yiddish-speaking community, and we are grateful that you are part of it.</p>
   </div>
+  <aside class="aside">
+  <h3>The office</h3>
+  <p>445 Park Avenue, Suite 202<br>Brooklyn, NY 11205</p>
+  <p class="big"><a href="tel:7188516607">718-851-6607</a></p>
+  <div class="line"></div>
+  <p>General inquiries<br><a href="mailto:mk@thetzeitung.com"><b>mk@thetzeitung.com</b></a></p>
+  <p>Editor and letters to the editor<br><a href="mailto:yt@thetzeitung.com"><b>yt@thetzeitung.com</b></a></p>
+  <p>Billing and subscriptions<br><a href="mailto:billing@thetzeitung.com"><b>billing@thetzeitung.com</b></a></p>
+  <div class="line"></div>
+  <p>Office hours are Sunday to Thursday, 9 AM to 6 PM. Material for the coming edition is due Tuesday at 12 PM.</p>
+</aside>
 </div></section>
 
-</div>
 
 <footer class="site-footer">
-  <a class="top" href="#">Back To Top</a>
-  <p>Di Tzeitung · News Report &nbsp;•&nbsp; 445 Park Avenue #202, Brooklyn, N.Y. 11205 &nbsp;•&nbsp; <a href="tel:7188516607">718-851-6607</a> &nbsp;•&nbsp; <a href="mailto:mk@thetzeitung.com">mk@thetzeitung.com</a></p>
-  <div class="links"><a href="about.html">About</a><a href="advertise.html">Advertise</a><a href="subscribe.html">Subscribe</a><a href="contact.html">Contact</a></div>
-  <p style="margin-top:14px;font-size:12px">© <span id="year"></span> Di Tzeitung. All rights reserved.</p>
+  <div class="lattice"></div>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <a class="wordmark" href="index.html"><img src="covers/logo-yiddish.png" alt="The Tzeitung" width="1140" height="270"></a>
+        <img class="nr" src="covers/logo-newsreport.png" alt="News Report — The Yiddish Newspaper of Record" width="600" height="165">
+        <p style="margin-top:18px">The independent Yiddish newspaper. Printed in Brooklyn every week for forty years, read by thousands of families around the world.</p>
+      </div>
+      <div>
+        <h4>Visit or call</h4>
+        <p>445 Park Avenue, Suite 202<br>Brooklyn, NY 11205<br><span class="em"><a href="tel:7188516607">718-851-6607</a></span></p>
+      </div>
+      <div>
+        <h4>Write to us</h4>
+        <p>General inquiries<br><a class="em" href="mailto:mk@thetzeitung.com">mk@thetzeitung.com</a></p>
+        <p>Editor and letters<br><a class="em" href="mailto:yt@thetzeitung.com">yt@thetzeitung.com</a></p>
+        <p>Billing<br><a class="em" href="mailto:billing@thetzeitung.com">billing@thetzeitung.com</a></p>
+      </div>
+    </div>
+    <div class="bottom">
+      <span>© <span id="year"></span> The Tzeitung. All rights reserved.</span>
+      <span><a href="advertise.html">Advertise</a> &nbsp;&nbsp; <a href="subscribe.html">Subscribe</a> &nbsp;&nbsp; <a href="contact.html">Contact</a></span>
+    </div>
+  </div>
 </footer>
 
+<div class="lightbox" role="dialog" aria-label="Cover preview"><img src="" alt=""></div>
 <script src="site.js"></script>
 </body>
 </html>

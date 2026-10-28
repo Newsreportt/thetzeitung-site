@@ -3,66 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact — Di Tzeitung</title>
-  <meta name="description" content="Contact Di Tzeitung.">
+  <title>Contact — The Tzeitung</title>
+  <meta name="description" content="Contact The Tzeitung.">
+  <meta name="theme-color" content="#0E7C3F">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@400;500&family=Frank+Ruhl+Libre:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="covers/favicon.png">
 </head>
 <body>
 
-<header class="site-header">
+<header class="top">
   <span class="bsd">בס"ד</span>
-  <a class="logo" href="index.html">
-    <img src="covers/logo-yiddish.png" alt="Di Tzeitung — די צייטונג" width="1140" height="270">
-    <img class="nr" src="covers/logo-newsreport.png" alt="News Report — The Yiddish Newspaper of Record" width="600" height="165">
-  </a>
-  <div class="tag">The Independent Yiddish Newspaper · 40 Years</div>
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="covers/logo-yiddish.png" alt="The Tzeitung — די צייטונג" width="1140" height="270">
+      <span>News Report<br>The Yiddish Newspaper of Record</span>
+    </a>
+    <button class="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav id="nav">
+      <ul><li><a href="index.html">Home</a></li><li><a href="archive.html">Archives</a></li><li><a href="about.html">About</a></li><li><a href="advertise.html">Advertise</a></li><li><a href="contact.html">Contact</a></li><li><a class="cta" href="subscribe.html">Subscribe</a></li></ul>
+    </nav>
+  </div>
 </header>
-<nav class="nav">
-  <button class="menu-btn" aria-label="Menu">☰ Menu</button>
-  <ul><li><a href="index.html">Home</a></li><li><a href="archive.html">Archives</a></li><li><a href="about.html">About</a></li><li><a href="advertise.html">Advertise</a></li><li><a href="subscribe.html">Subscriptions</a></li><li><a href="contact.html">Contact</a></li></ul>
-</nav>
 
-<div class="page">
-
-<section class="page-head"><div class="wrap"><h1>Contact</h1><p>Editorial, letters to the editor, subscriptions, advertising — or to submit articles and photos.</p></div></section>
-<section class="page-body"><div class="wrap two-col">
-  <div>
+<section class="band">
+  <div class="photo"></div><div class="lattice"></div>
+  <div class="wrap"><h1>Contact</h1><p>For the editor, letters, subscriptions and advertising, or to send in articles and photos.</p></div>
+</section>
+<section class="page-body surface parchment"><div class="wrap two-col">
+  <div class="panel">
+    <h3>Send a message</h3>
+    <p class="hint">We read everything and reply as soon as we can.</p>
     <form class="form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thanks.html">
-      <input type="hidden" name="form-name" value="contact">
-      <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
-      <div class="row"><div><label>Name</label><input type="text" name="name" required></div><div><label>Phone</label><input type="tel" name="phone"></div></div>
-      <div><label>Email</label><input type="email" name="email" required></div>
-      <div><label>Subject</label><select name="topic"><option>General</option><option>Letter to the Editor (בריוו)</option><option>Editorial / news tip</option><option>Submit an article</option><option>Submit photos</option><option>Subscription</option><option>Advertising</option><option>Correction</option></select></div>
-      <div><label>Message</label><textarea name="message" required></textarea></div>
-      <button class="btn green" type="submit">Send</button>
+      <input type="hidden" name="form-name" value="contact"><p style="display:none"><label>Leave this empty: <input name="bot-field"></label></p>
+      <div class="row">
+        <div><label for="c-name">Name</label><input id="c-name" type="text" name="name" required></div>
+        <div><label for="c-phone">Phone</label><input id="c-phone" type="tel" name="phone"></div>
+      </div>
+      <div><label for="c-email">Email</label><input id="c-email" type="email" name="email" required></div>
+      <div><label for="c-topic">This is about</label><select id="c-topic" name="topic"><option>A general question</option><option>A letter to the editor</option><option>A news tip</option><option>Sending in an article</option><option>Sending in photos</option><option>My subscription</option><option>Advertising</option><option>A correction</option></select></div>
+      <div><label for="c-msg">Message</label><textarea id="c-msg" name="message" required></textarea></div>
+      <button class="btn" type="submit">Send message</button>
     </form>
   </div>
   <aside class="aside">
-    <h3>Editorial &amp; Office</h3>
-    <p><b>Di Tzeitung</b><br>445 Park Avenue #202<br>Brooklyn, NY 11205</p>
-    <div class="line"></div>
-    <p><b>Phone:</b> <a href="tel:7188516607">718-851-6607</a></p>
-    <div class="line"></div>
-    <p><b>General inquiries:</b><br><a href="mailto:mk@thetzeitung.com">mk@thetzeitung.com</a></p>
-    <p><b>Editor &amp; Letters to the Editor (בריוו):</b><br><a href="mailto:yt@thetzeitung.com">yt@thetzeitung.com</a></p>
-    <p><b>Billing &amp; subscriptions:</b><br><a href="mailto:billing@thetzeitung.com">billing@thetzeitung.com</a></p>
-    <div class="line"></div>
-    <p style="font-size:13px;color:var(--muted)">Office hours: Sunday–Thursday, 9:00 AM – 6:00 PM. Editorial deadline: Tuesday 12:00 PM.</p>
-  </aside>
+  <h3>The office</h3>
+  <p>445 Park Avenue, Suite 202<br>Brooklyn, NY 11205</p>
+  <p class="big"><a href="tel:7188516607">718-851-6607</a></p>
+  <div class="line"></div>
+  <p>General inquiries<br><a href="mailto:mk@thetzeitung.com"><b>mk@thetzeitung.com</b></a></p>
+  <p>Editor and letters to the editor<br><a href="mailto:yt@thetzeitung.com"><b>yt@thetzeitung.com</b></a></p>
+  <p>Billing and subscriptions<br><a href="mailto:billing@thetzeitung.com"><b>billing@thetzeitung.com</b></a></p>
+  <div class="line"></div>
+  <p>Office hours are Sunday to Thursday, 9 AM to 6 PM. Material for the coming edition is due Tuesday at 12 PM.</p>
+</aside>
 </div></section>
 
-</div>
 
 <footer class="site-footer">
-  <a class="top" href="#">Back To Top</a>
-  <p>Di Tzeitung · News Report &nbsp;•&nbsp; 445 Park Avenue #202, Brooklyn, N.Y. 11205 &nbsp;•&nbsp; <a href="tel:7188516607">718-851-6607</a> &nbsp;•&nbsp; <a href="mailto:mk@thetzeitung.com">mk@thetzeitung.com</a></p>
-  <div class="links"><a href="about.html">About</a><a href="advertise.html">Advertise</a><a href="subscribe.html">Subscribe</a><a href="contact.html">Contact</a></div>
-  <p style="margin-top:14px;font-size:12px">© <span id="year"></span> Di Tzeitung. All rights reserved.</p>
+  <div class="lattice"></div>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <a class="wordmark" href="index.html"><img src="covers/logo-yiddish.png" alt="The Tzeitung" width="1140" height="270"></a>
+        <img class="nr" src="covers/logo-newsreport.png" alt="News Report — The Yiddish Newspaper of Record" width="600" height="165">
+        <p style="margin-top:18px">The independent Yiddish newspaper. Printed in Brooklyn every week for forty years, read by thousands of families around the world.</p>
+      </div>
+      <div>
+        <h4>Visit or call</h4>
+        <p>445 Park Avenue, Suite 202<br>Brooklyn, NY 11205<br><span class="em"><a href="tel:7188516607">718-851-6607</a></span></p>
+      </div>
+      <div>
+        <h4>Write to us</h4>
+        <p>General inquiries<br><a class="em" href="mailto:mk@thetzeitung.com">mk@thetzeitung.com</a></p>
+        <p>Editor and letters<br><a class="em" href="mailto:yt@thetzeitung.com">yt@thetzeitung.com</a></p>
+        <p>Billing<br><a class="em" href="mailto:billing@thetzeitung.com">billing@thetzeitung.com</a></p>
+      </div>
+    </div>
+    <div class="bottom">
+      <span>© <span id="year"></span> The Tzeitung. All rights reserved.</span>
+      <span><a href="advertise.html">Advertise</a> &nbsp;&nbsp; <a href="subscribe.html">Subscribe</a> &nbsp;&nbsp; <a href="contact.html">Contact</a></span>
+    </div>
+  </div>
 </footer>
 
+<div class="lightbox" role="dialog" aria-label="Cover preview"><img src="" alt=""></div>
 <script src="site.js"></script>
 </body>
 </html>
