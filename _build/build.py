@@ -20,8 +20,29 @@ SECTIONS = [
    "Chassidishe news from around the world, with the popular picture section of Rebbes, chassidishe courts, simchos and events."),
 ]
 
-def shell(title, desc, body):
+SITE = "https://thetzeitung.com/"
+
+ORG_JSONLD = """<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsMediaOrganization",
+  "name": "The Tzeitung",
+  "alternateName": ["Di Tzeitung", "Dee Tzeitung", "The Tzeitung Newspaper", "News Report", "The Yiddish Newspaper of Record", "די צייטונג", "די זעלבסטשטענדיגע אידישע צייטונג"],
+  "url": "https://thetzeitung.com/",
+  "logo": "https://thetzeitung.com/covers/favicon.png",
+  "image": "https://thetzeitung.com/covers/sec-a.jpg",
+  "description": "The Tzeitung (Di Tzeitung, News Report) is the independent Yiddish weekly newspaper, printed in Brooklyn for forty years and read by thousands around the world.",
+  "telephone": "+1-718-851-6607",
+  "email": "mk@thetzeitung.com",
+  "address": {"@type": "PostalAddress", "streetAddress": "445 Park Avenue, Suite 202", "addressLocality": "Brooklyn", "addressRegion": "NY", "postalCode": "11205", "addressCountry": "US"},
+  "areaServed": "Worldwide",
+  "knowsLanguage": ["yi", "en"]
+}
+</script>"""
+
+def shell(title, desc, body, page="index.html"):
     nav = "".join(f'<li><a href="{h}">{t}</a></li>' for h, t in NAV)
+    url = SITE if page == "index.html" else SITE + page
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,6 +50,15 @@ def shell(title, desc, body):
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{title}</title>
   <meta name="description" content="{desc}">
+  <link rel="canonical" href="{url}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Tzeitung">
+  <meta property="og:title" content="{title}">
+  <meta property="og:description" content="{desc}">
+  <meta property="og:url" content="{url}">
+  <meta property="og:image" content="{SITE}covers/sec-a.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  {ORG_JSONLD}
   <meta name="theme-color" content="#0E7C3F">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -209,14 +239,14 @@ home = f'''
   </div>
 </section>
 '''
-write("index.html", shell("The Tzeitung — News Report, The Yiddish Newspaper of Record",
-  "The Tzeitung (News Report) is the independent Yiddish weekly newspaper, printed in Brooklyn for forty years and read by thousands around the world.", home))
+write("index.html", shell("The Tzeitung (Di Tzeitung, די צייטונג) — News Report, the Yiddish newspaper of record",
+  "The Tzeitung, also written Di Tzeitung or Dee Tzeitung (די צייטונג), is News Report, the independent Yiddish weekly newspaper printed in Brooklyn for forty years and read by thousands around the world. Subscriptions, advertising and this week's covers.", home))
 
 # ======================= ABOUT =======================
 about = band("About The Tzeitung", "Forty years of the independent Yiddish newspaper.") + f'''
 <section class="page-body surface parchment"><div class="wrap two-col">
   <div class="prose">
-    <p class="lead">The Tzeitung, known in Yiddish as Di Zelbstshtendige Yiddishe Tzeitung, the independent Yiddish newspaper, was founded in Brooklyn forty years ago by Rabbi Avrohom Friedman, who leads it to this day as founder and editor-in-chief.</p>
+    <p class="lead">The Tzeitung, written in Yiddish as די צייטונג and often spelled Di Tzeitung or Dee Tzeitung, is Di Zelbstshtendige Yiddishe Tzeitung, the independent Yiddish newspaper. It was founded in Brooklyn forty years ago by Rabbi Avrohom Friedman, who leads it to this day as founder and editor-in-chief.</p>
     <p>Published every week in Yiddish and known in English as News Report, The Yiddish Newspaper of Record, it has become one of the enduring institutions of the Yiddish printed word in America. A fresh edition reaches the stores every Wednesday morning.</p>
     <h2>Who reads it</h2>
     <p>Thousands of readers around the world: the Yiddish-speaking communities of Brooklyn, in Boro Park, Williamsburg and Flatbush, together with Kiryas Joel, Monsey, Lakewood and other heimishe communities across the United States, and readers in Canada, London, Belgium and Eretz Yisroel.</p>
@@ -232,7 +262,7 @@ about = band("About The Tzeitung", "Forty years of the independent Yiddish newsp
   {CONTACT_ASIDE}
 </div></section>
 '''
-write("about.html", shell("About — The Tzeitung", "The history and mission of The Tzeitung, the independent Yiddish newspaper, forty years in print.", about))
+write("about.html", shell("About — The Tzeitung", "The history and mission of The Tzeitung, the independent Yiddish newspaper, forty years in print.", about, page="about.html"))
 
 # ======================= SUBSCRIPTIONS =======================
 subscribe = band("Subscriptions", "Every edition, with both supplements, mailed to your home anywhere in the United States.") + f'''
@@ -291,7 +321,7 @@ subscribe = band("Subscriptions", "Every edition, with both supplements, mailed 
   </div>
 </div></section>
 '''
-write("subscribe.html", shell("Subscriptions — The Tzeitung", "Subscribe to The Tzeitung and have every edition delivered to your home.", subscribe))
+write("subscribe.html", shell("Subscriptions — The Tzeitung", "Subscribe to The Tzeitung and have every edition delivered to your home.", subscribe, page="subscribe.html"))
 
 # ======================= ADVERTISE =======================
 advertise = band("Advertise", "Reach thousands of heimishe households around the world every week, in a newspaper that stays on the table all week long.") + f'''
@@ -352,7 +382,7 @@ advertise = band("Advertise", "Reach thousands of heimishe households around the
   </div>
 </div></section>
 '''
-write("advertise.html", shell("Advertise — The Tzeitung", "Advertising rates and sizes for The Tzeitung, read by thousands of Yiddish-speaking families every week.", advertise))
+write("advertise.html", shell("Advertise — The Tzeitung", "Advertising rates and sizes for The Tzeitung, read by thousands of Yiddish-speaking families every week.", advertise, page="advertise.html"))
 
 # ======================= CONTACT =======================
 contact = band("Contact", "For the editor, letters, subscriptions and advertising, or to send in articles and photos.") + f'''
@@ -375,7 +405,7 @@ contact = band("Contact", "For the editor, letters, subscriptions and advertisin
   {CONTACT_ASIDE}
 </div></section>
 '''
-write("contact.html", shell("Contact — The Tzeitung", "Contact The Tzeitung.", contact))
+write("contact.html", shell("Contact — The Tzeitung", "Contact The Tzeitung.", contact, page="contact.html"))
 
 # ======================= ARCHIVES =======================
 figs = "".join(f'<figure><a href="covers/{img}" data-zoom="covers/{img}"><img src="covers/{img}" alt="{t}" width="1064" height="1158" loading="lazy"></a><figcaption>{t}<span>{heb}</span></figcaption></figure>' for img, t, heb, _ in SECTIONS)
@@ -389,7 +419,7 @@ archive = band("Archives", "Covers from recent editions. Subscribers may request
   </div>
 </div></section>
 '''
-write("archive.html", shell("Archives — The Tzeitung", "Covers from recent editions of The Tzeitung.", archive))
+write("archive.html", shell("Archives — The Tzeitung", "Covers from recent editions of The Tzeitung.", archive, page="archive.html"))
 
 # ======================= THANKS =======================
 thanks = band("Thank you", "We received your message and will be in touch shortly.") + '''
@@ -397,4 +427,4 @@ thanks = band("Thank you", "We received your message and will be in touch shortl
   <div class="btn-row"><a href="index.html" class="btn">Back to the home page</a><a href="subscribe.html" class="btn ghost-dark">See subscriptions</a></div>
 </div></section>
 '''
-write("thanks.html", shell("Thank you — The Tzeitung", "Thank you.", thanks))
+write("thanks.html", shell("Thank you — The Tzeitung", "Thank you.", thanks, page="thanks.html"))
