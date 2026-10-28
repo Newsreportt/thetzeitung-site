@@ -89,11 +89,9 @@ p { max-width: 62ch; }
 .veil { position: absolute; inset: 0; pointer-events: none; }
 .hero .veil {
   background:
-    linear-gradient(90deg, rgba(10,46,30,.82) 0%, rgba(10,46,30,.78) 32%, rgba(10,46,30,.6) 56%, rgba(10,46,30,.38) 80%, rgba(10,46,30,.3) 100%),
-    linear-gradient(180deg, rgba(10,46,30,.45) 0%, rgba(10,46,30,.04) 20%, rgba(10,46,30,.04) 76%, var(--forest) 100%);
+    linear-gradient(90deg, var(--forest) 0%, rgba(10,46,30,.97) 26%, rgba(10,46,30,.86) 46%, rgba(10,46,30,.45) 68%, rgba(10,46,30,.3) 100%),
+    linear-gradient(180deg, rgba(10,46,30,.55) 0%, rgba(10,46,30,.08) 22%, rgba(10,46,30,.08) 72%, var(--forest) 100%);
 }
-.hero .wordmark img, .hero .nr { filter: drop-shadow(0 4px 22px rgba(0,0,0,.45)); }
-.hero h1, .hero p { text-shadow: 0 2px 20px rgba(0,0,0,.45); }
 .hero .lattice { position: absolute; inset: 0; background: var(--lattice); opacity: .55; pointer-events: none; }
 .hero .wrap { position: relative; width: 100%; padding-top: 88px; padding-bottom: 96px; }
 .hero .inner { max-width: 600px; animation: rise .9s ease-out both; }
@@ -109,10 +107,9 @@ p { max-width: 62ch; }
 .band .wall .row { height: 100%; }
 .band .veil {
   background:
-    linear-gradient(90deg, rgba(10,46,30,.86) 0%, rgba(10,46,30,.8) 35%, rgba(10,46,30,.62) 65%, rgba(10,46,30,.5) 100%),
-    linear-gradient(180deg, rgba(10,46,30,.3), rgba(10,46,30,.05) 40%, var(--forest) 100%);
+    linear-gradient(90deg, var(--forest) 0%, rgba(10,46,30,.96) 30%, rgba(10,46,30,.78) 55%, rgba(10,46,30,.55) 100%),
+    linear-gradient(180deg, rgba(10,46,30,.3), rgba(10,46,30,.1) 40%, var(--forest) 100%);
 }
-.band h1, .band p { text-shadow: 0 2px 20px rgba(0,0,0,.45); }
 .band .lattice { position: absolute; inset: 0; background: var(--lattice); opacity: .5; pointer-events: none; }
 .band .wrap { position: relative; padding-top: 74px; padding-bottom: 70px; }
 .band h1 { font-size: clamp(40px, 5vw, 62px); font-weight: 500; color: var(--ivory); }
