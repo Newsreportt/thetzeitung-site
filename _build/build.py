@@ -40,7 +40,7 @@ def shell(title, desc, body):
   <div class="wrap">
     <a class="brand" href="index.html">
       <img src="covers/logo-yiddish.png" alt="The Tzeitung — די צייטונג" width="1140" height="270">
-      <span>News Report<br>The Yiddish Newspaper of Record</span>
+      <span>News Report<br>Independent for forty years</span>
     </a>
     <button class="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button>
     <nav id="nav">
