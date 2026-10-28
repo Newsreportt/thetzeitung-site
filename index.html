@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="yi" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>די צײַטונג</title>
+  <meta name="description" content="די צײַטונג — קומט באַלד.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Noto+Sans+Hebrew:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1814;
+      --paper: #f6f1e7;
+      --paper-dark: #ece4d4;
+      --rule: #1a1814;
+      --accent: #8b1e1e;
+      --muted: #6b6559;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Frank Ruhl Libre', 'Noto Sans Hebrew', serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse at top, rgba(255,255,255,.5), transparent 60%),
+        repeating-linear-gradient(0deg, transparent 0 2px, rgba(0,0,0,.015) 2px 3px);
+    }
+    .masthead {
+      text-align: center;
+      padding: 48px 20px 24px;
+      border-bottom: 4px double var(--rule);
+      margin: 0 24px;
+    }
+    .masthead .date {
+      font-family: 'Noto Sans Hebrew', sans-serif;
+      font-size: 13px;
+      letter-spacing: .12em;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .masthead h1 {
+      font-weight: 900;
+      font-size: clamp(56px, 11vw, 132px);
+      line-height: .95;
+      letter-spacing: -.01em;
+    }
+    .masthead .tagline {
+      margin-top: 14px;
+      font-size: 17px;
+      color: var(--muted);
+      font-weight: 300;
+    }
+    main {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 40px 24px;
+    }
+    .notice {
+      max-width: 620px;
+      text-align: center;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      padding: 44px 24px;
+    }
+    .notice .kicker {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--paper);
+      font-family: 'Noto Sans Hebrew', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      padding: 6px 14px;
+      margin-bottom: 22px;
+    }
+    .notice h2 {
+      font-size: clamp(34px, 6vw, 56px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+    .notice p {
+      font-size: 19px;
+      line-height: 1.7;
+      color: var(--muted);
+      font-weight: 300;
+    }
+    .contact {
+      margin-top: 34px;
+      font-family: 'Noto Sans Hebrew', sans-serif;
+      font-size: 15px;
+    }
+    .contact a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 2px;
+    }
+    .contact a:hover { color: var(--accent); }
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-family: 'Noto Sans Hebrew', sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid rgba(0,0,0,.15);
+      margin: 0 24px;
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="date" id="today"></div>
+    <h1>די צײַטונג</h1>
+    <div class="tagline">נײַעס · געמיינדע · מיינונג</div>
+  </header>
+
+  <main>
+    <section class="notice">
+      <span class="kicker">אין אַרבעט</span>
+      <h2>מיר קומען באַלד</h2>
+      <p>די צײַטונג גרייט זיך צו. אונדזער וועבסײַט איז אין מיטן בויען — קומט צוריק אין קורצן.</p>
+      <div class="contact">
+        פֿאַר פֿראַגעס: <a href="mailto:info@ditzeitung.com">info@ditzeitung.com</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>© <span id="year"></span> די צײַטונג · ditzeitung.com</footer>
+
+  <script>
+    var d = new Date();
+    document.getElementById('year').textContent = d.getFullYear();
+    var days = ['זונטיק','מאָנטיק','דינסטיק','מיטוואָך','דאָנערשטיק','פֿרײַטיק','שבת'];
+    var months = ['יאַנואַר','פֿעברואַר','מאַרץ','אַפּריל','מײַ','יוני','יולי','אויגוסט','סעפּטעמבער','אָקטאָבער','נאָוועמבער','דעצעמבער'];
+    document.getElementById('today').textContent =
+      days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+  </script>
+</body>
+</html>
