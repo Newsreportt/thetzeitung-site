@@ -47,19 +47,33 @@
       <h2>This week's edition</h2>
       <p>Volume 40, number 6, for the week of October 28, 2026</p>
     </div>
-    <div class="covers">
-      <figure>
-        <a href="covers/sec-a.jpg" data-zoom="covers/sec-a.jpg"><img src="covers/sec-a.jpg" alt="The main section" width="1064" height="1158"></a>
-        <figcaption><b>The main section</b><span class="heb">די צייטונג</span></figcaption>
-      </figure>
-      <figure>
-        <a href="covers/sec-b.jpg" data-zoom="covers/sec-b.jpg"><img src="covers/sec-b.jpg" alt="Yiddishe Tzeit" width="1064" height="1158"></a>
-        <figcaption><b>Yiddishe Tzeit</b><span class="heb">אידישע צייט</span></figcaption>
-      </figure>
-      <figure>
-        <a href="covers/sec-c.jpg" data-zoom="covers/sec-c.jpg"><img src="covers/sec-c.jpg" alt="Chassidishe Tzeit" width="1064" height="1158"></a>
-        <figcaption><b>Chassidishe Tzeit</b><span class="heb">חסידישע צייט</span></figcaption>
-      </figure>
+    <div class="showcase" id="showcase">
+      <div class="stage">
+        <a class="slide on" href="covers/sec-a.jpg" data-zoom="covers/sec-a.jpg" data-i="0" aria-label="The main section">
+          <img src="covers/sec-a.jpg" alt="The main section" width="1064" height="1158">
+        </a>
+        <a class="slide" href="covers/sec-b.jpg" data-zoom="covers/sec-b.jpg" data-i="1" aria-label="Yiddishe Tzeit">
+          <img src="covers/sec-b.jpg" alt="Yiddishe Tzeit" width="1064" height="1158" loading="lazy">
+        </a>
+        <a class="slide" href="covers/sec-c.jpg" data-zoom="covers/sec-c.jpg" data-i="2" aria-label="Chassidishe Tzeit">
+          <img src="covers/sec-c.jpg" alt="Chassidishe Tzeit" width="1064" height="1158" loading="lazy">
+        </a>
+      </div>
+      <div class="picker">
+        <button class="pick on" data-i="0" type="button">
+          <b>The main section</b><span class="heb">די צייטונג</span>
+          <i class="bar"></i>
+        </button>
+        <button class="pick" data-i="1" type="button">
+          <b>Yiddishe Tzeit</b><span class="heb">אידישע צייט</span>
+          <i class="bar"></i>
+        </button>
+        <button class="pick" data-i="2" type="button">
+          <b>Chassidishe Tzeit</b><span class="heb">חסידישע צייט</span>
+          <i class="bar"></i>
+        </button>
+        <p class="pick-note">Each section, every week. Tap a cover to see it full size.</p>
+      </div>
     </div>
   </div>
 </section>

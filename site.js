@@ -15,6 +15,38 @@
     if (a.getAttribute('href') === here && !a.classList.contains('cta')) a.classList.add('active');
   });
 
+  // cover showcase: fades from one cover to the next on its own
+  var showcase = document.getElementById('showcase');
+  if (showcase) {
+    var slides = showcase.querySelectorAll('.slide');
+    var picks = showcase.querySelectorAll('.pick');
+    var at = 0, timer = null;
+    var HOLD = 5000;
+    var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function show(n) {
+      at = (n + slides.length) % slides.length;
+      slides.forEach(function (s, k) { s.classList.toggle('on', k === at); });
+      picks.forEach(function (p, k) {
+        p.classList.remove('on');
+        if (k === at) { void p.offsetWidth; p.classList.add('on'); }
+      });
+    }
+    function play() { stop(); if (!still) timer = setInterval(function () { show(at + 1); }, HOLD); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+    picks.forEach(function (p) {
+      p.addEventListener('click', function () { show(+p.dataset.i); play(); });
+    });
+
+    // pause while the reader is hovering or has the tab in the background
+    showcase.addEventListener('mouseenter', stop);
+    showcase.addEventListener('mouseleave', play);
+    document.addEventListener('visibilitychange', function () { document.hidden ? stop() : play(); });
+
+    show(0); play();
+  }
+
   // cover lightbox
   var box = document.querySelector('.lightbox');
   if (box) {
@@ -23,7 +55,8 @@
       a.addEventListener('click', function (e) {
         e.preventDefault();
         big.src = a.getAttribute('data-zoom');
-        big.alt = a.querySelector('img') ? a.querySelector('img').alt : '';
+        var inner = a.querySelector('img');
+        big.alt = inner ? inner.alt : '';
         box.classList.add('on');
       });
     });

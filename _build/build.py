@@ -108,11 +108,16 @@ CONTACT_ASIDE = f'''<aside class="aside">
 HONEYPOT = '<p style="display:none"><label>Leave this empty: <input name="bot-field"></label></p>'
 
 # ======================= HOME =======================
-covers_html = "".join(f'''
-      <figure>
-        <a href="covers/{img}" data-zoom="covers/{img}"><img src="covers/{img}" alt="{t}" width="1064" height="1158"></a>
-        <figcaption><b>{t}</b><span class="heb">{heb}</span></figcaption>
-      </figure>''' for img, t, heb, _ in SECTIONS)
+slides_html = "".join(f'''
+        <a class="slide{" on" if i==0 else ""}" href="covers/{img}" data-zoom="covers/{img}" data-i="{i}" aria-label="{t}">
+          <img src="covers/{img}" alt="{t}" width="1064" height="1158"{"" if i==0 else ' loading="lazy"'}>
+        </a>''' for i, (img, t, heb, _) in enumerate(SECTIONS))
+
+picker_html = "".join(f'''
+        <button class="pick{" on" if i==0 else ""}" data-i="{i}" type="button">
+          <b>{t}</b><span class="heb">{heb}</span>
+          <i class="bar"></i>
+        </button>''' for i, (img, t, heb, _) in enumerate(SECTIONS))
 
 inside_html = "".join(f'''
       <article>
@@ -140,7 +145,12 @@ home = f'''
       <h2>This week's edition</h2>
       <p>Volume 40, number 6, for the week of October 28, 2026</p>
     </div>
-    <div class="covers">{covers_html}
+    <div class="showcase" id="showcase">
+      <div class="stage">{slides_html}
+      </div>
+      <div class="picker">{picker_html}
+        <p class="pick-note">Each section, every week. Tap a cover to see it full size.</p>
+      </div>
     </div>
   </div>
 </section>
