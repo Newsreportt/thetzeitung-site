@@ -40,7 +40,7 @@ def shell(title, desc, body, extra_js=""):
 
 <footer class="site-footer">
   <a class="top" href="#">Back To Top</a>
-  <p>Di Tzeitung · News Report &nbsp;•&nbsp; 1281 49th Street, Brooklyn, N.Y. 11219 &nbsp;•&nbsp; <a href="tel:7188516607">718-851-6607</a> &nbsp;•&nbsp; <a href="mailto:mail@ditzeitung.com">mail@ditzeitung.com</a></p>
+  <p>Di Tzeitung · News Report &nbsp;•&nbsp; 445 Park Avenue #202, Brooklyn, N.Y. 11205 &nbsp;•&nbsp; <a href="tel:7188516607">718-851-6607</a> &nbsp;•&nbsp; <a href="mailto:mk@thetzeitung.com">mk@thetzeitung.com</a></p>
   <div class="links"><a href="about.html">About</a><a href="advertise.html">Advertise</a><a href="subscribe.html">Subscribe</a><a href="contact.html">Contact</a></div>
   <p style="margin-top:14px;font-size:12px">© <span id="year"></span> Di Tzeitung. All rights reserved.</p>
 </footer>
@@ -178,6 +178,7 @@ subscribe = '''
       <h3>Prefer the phone?</h3>
       <p>Call us and we'll set you up in two minutes.</p>
       <p style="font-family:var(--sans);font-size:26px;font-weight:800"><a href="tel:7188516607">718-851-6607</a></p>
+      <p>Billing questions: <a href="mailto:billing@thetzeitung.com"><b>billing@thetzeitung.com</b></a></p>
       <div class="line"></div>
       <h3>Where we deliver</h3>
       <p>Boro Park, Williamsburg, Flatbush, Kiryas Joel, Monsey, Lakewood — and by mail anywhere in the United States.</p>
@@ -226,7 +227,8 @@ advertise = '''
     <aside class="aside">
       <h3>Advertising Department</h3>
       <p><b>Phone:</b> <a href="tel:7188516607">718-851-6607</a></p>
-      <p><b>Email:</b> <a href="mailto:mail@ditzeitung.com">mail@ditzeitung.com</a></p>
+      <p><b>Email:</b> <a href="mailto:mk@thetzeitung.com">mk@thetzeitung.com</a></p>
+      <p><b>Billing:</b> <a href="mailto:billing@thetzeitung.com">billing@thetzeitung.com</a></p>
       <div class="line"></div>
       <h3>Why Di Tzeitung?</h3>
       <p>A newspaper that sits on the table all week — at home, in shul and in the store — not an ad that disappears in a second.</p>
@@ -241,7 +243,7 @@ write("advertise.html", shell("Advertise — Di Tzeitung", "Advertise in Di Tzei
 
 # ---------------- CONTACT ----------------
 contact = '''
-<section class="page-head"><div class="wrap"><h1>Contact</h1><p>Editorial, subscriptions, advertising — or to submit articles and photos.</p></div></section>
+<section class="page-head"><div class="wrap"><h1>Contact</h1><p>Editorial, letters to the editor, subscriptions, advertising — or to submit articles and photos.</p></div></section>
 <section class="page-body"><div class="wrap two-col">
   <div>
     <form class="form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="thanks.html">
@@ -249,17 +251,20 @@ contact = '''
       <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
       <div class="row"><div><label>Name</label><input type="text" name="name" required></div><div><label>Phone</label><input type="tel" name="phone"></div></div>
       <div><label>Email</label><input type="email" name="email" required></div>
-      <div><label>Subject</label><select name="topic"><option>General</option><option>Editorial / news tip</option><option>Submit an article</option><option>Submit photos</option><option>Subscription</option><option>Advertising</option><option>Correction</option></select></div>
+      <div><label>Subject</label><select name="topic"><option>General</option><option>Letter to the Editor (בריוו)</option><option>Editorial / news tip</option><option>Submit an article</option><option>Submit photos</option><option>Subscription</option><option>Advertising</option><option>Correction</option></select></div>
       <div><label>Message</label><textarea name="message" required></textarea></div>
       <button class="btn green" type="submit">Send</button>
     </form>
   </div>
   <aside class="aside">
     <h3>Editorial &amp; Office</h3>
-    <p><b>Di Tzeitung</b><br>1281 49th Street<br>Brooklyn, NY 11219</p>
+    <p><b>Di Tzeitung</b><br>445 Park Avenue #202<br>Brooklyn, NY 11205</p>
     <div class="line"></div>
     <p><b>Phone:</b> <a href="tel:7188516607">718-851-6607</a></p>
-    <p><b>Email:</b> <a href="mailto:mail@ditzeitung.com">mail@ditzeitung.com</a></p>
+    <div class="line"></div>
+    <p><b>General inquiries:</b><br><a href="mailto:mk@thetzeitung.com">mk@thetzeitung.com</a></p>
+    <p><b>Editor &amp; Letters to the Editor (בריוו):</b><br><a href="mailto:yt@thetzeitung.com">yt@thetzeitung.com</a></p>
+    <p><b>Billing &amp; subscriptions:</b><br><a href="mailto:billing@thetzeitung.com">billing@thetzeitung.com</a></p>
     <div class="line"></div>
     <p style="font-size:13px;color:var(--muted)">Office hours: Sunday–Thursday, 9:00 AM – 6:00 PM. Editorial deadline: Wednesday 5:00 PM.</p>
   </aside>
@@ -276,7 +281,7 @@ archive = f'''
   <div class="archive-grid">{figs}</div>
   <div class="aside" style="margin:50px auto 0;max-width:720px;text-align:center">
     <h3>Need a specific issue?</h3>
-    <p>For back issues, special editions or a copy of a specific article, call <a href="tel:7188516607"><b>718-851-6607</b></a> or write to <a href="mailto:mail@ditzeitung.com"><b>mail@ditzeitung.com</b></a>.</p>
+    <p>For back issues, special editions or a copy of a specific article, call <a href="tel:7188516607"><b>718-851-6607</b></a> or write to <a href="mailto:mk@thetzeitung.com"><b>mk@thetzeitung.com</b></a>.</p>
   </div>
 </div></section>
 '''
