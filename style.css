@@ -113,7 +113,7 @@ h1, h2, h3 { font-family: var(--sans); font-weight: 800; letter-spacing: .02em; 
 .form textarea { min-height: 150px; resize: vertical; }
 
 /* ---- products (subscriptions) ---- */
-.products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+.products { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; max-width: 760px; margin: 0 auto; }
 .product { text-align: center; }
 .product .img { background: #f3f3f3; aspect-ratio: 1; display: grid; place-items: center; margin-bottom: 16px; overflow: hidden; }
 .product .img img { width: 70%; box-shadow: 0 12px 28px -14px rgba(0,0,0,.5); }

@@ -139,23 +139,17 @@ subscribe = '''
     <div class="product">
       <div class="img"><img src="covers/sec-a.jpg" alt=""></div>
       <h3>Yearly Subscription — Mail</h3>
-      <div class="price"><b>$180.00</b> every 12 months</div>
+      <div class="price"><b>$400.00</b> every 12 months</div>
       <a href="#order" class="btn">Subscribe</a>
     </div>
     <div class="product">
-      <div class="img"><img src="covers/sec-b.jpg" alt=""></div>
+      <div class="img"><img src="covers/sec-a.jpg" alt=""></div>
       <h3>Half Year Subscription — Mail</h3>
-      <div class="price"><b>$95.00</b> every 6 months</div>
-      <a href="#order" class="btn">Subscribe</a>
-    </div>
-    <div class="product">
-      <div class="img"><img src="covers/sec-c.jpg" alt=""></div>
-      <h3>2 Year Subscription — Mail</h3>
-      <div class="price"><b>$340.00</b> one time</div>
+      <div class="price"><b>$200.00</b> every 6 months</div>
       <a href="#order" class="btn">Subscribe</a>
     </div>
   </div>
-  <p class="center" style="margin:30px 0 60px;font-size:13px;color:var(--muted)">Prices are placeholders pending confirmation. All subscriptions include the Main Section, Yiddishe Tzeit and Chassidishe Tzeit. For group rates for shuls, yeshivos and businesses, call <a href="tel:7188516607"><b>718-851-6607</b></a>.</p>
+  <p class="center" style="margin:30px 0 60px;font-size:13px;color:var(--muted)">All subscriptions include the Main Section, Yiddishe Tzeit and Chassidishe Tzeit. For group rates for shuls, yeshivos and businesses, call <a href="tel:7188516607"><b>718-851-6607</b></a>.</p>
 
   <div class="two-col" id="order">
     <div>
@@ -168,7 +162,7 @@ subscribe = '''
         <div><label>Email</label><input type="email" name="email"></div>
         <div><label>Delivery address</label><input type="text" name="address" placeholder="Street, City, State, ZIP" required></div>
         <div class="row">
-          <div><label>Plan</label><select name="plan"><option>Yearly — $180</option><option>Half Year — $95</option><option>2 Year — $340</option></select></div>
+          <div><label>Plan</label><select name="plan"><option>Yearly — $400</option><option>Half Year — $200</option></select></div>
           <div><label>How did you hear about us?</label><select name="source"><option>A friend</option><option>Saw the paper</option><option>Online</option><option>Other</option></select></div>
         </div>
         <div><label>Notes</label><textarea name="notes" style="min-height:90px"></textarea></div>
