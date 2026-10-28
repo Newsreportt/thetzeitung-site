@@ -48,7 +48,7 @@
     var slides = showcase.querySelectorAll('.slide');
     var picks = showcase.querySelectorAll('.pick');
     var at = 0, timer = null;
-    var HOLD = 5000;
+    var HOLD = 3000;
     var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     function show(n) {
@@ -66,9 +66,7 @@
       p.addEventListener('click', function () { show(+p.dataset.i); play(); });
     });
 
-    // pause while the reader is hovering or has the tab in the background
-    showcase.addEventListener('mouseenter', stop);
-    showcase.addEventListener('mouseleave', play);
+    // keep cycling; only rest while the tab is in the background
     document.addEventListener('visibilitychange', function () { document.hidden ? stop() : play(); });
 
     show(0); play();

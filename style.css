@@ -155,7 +155,7 @@ p { max-width: 62ch; }
 .pick.on b { color: var(--forest); }
 .pick.on .heb { opacity: 1; }
 .pick .bar { position: absolute; left: 0; bottom: -1px; height: 2px; width: 0; background: var(--gold-deep); }
-.pick.on .bar { animation: fill 5s linear forwards; }
+.pick.on .bar { animation: fill 3s linear forwards; }
 @keyframes fill { from { width: 0; } to { width: 100%; } }
 .pick-note { margin-top: 20px; font-size: 14.5px; color: var(--ink-2); opacity: .8; }
 
