@@ -94,6 +94,10 @@ home = f'''
   </div>
 </div></section>
 
+<section class="promo"><div class="wrap">
+  <a href="subscribe.html"><img src="ads/promo-1.jpg" alt="געשמאק צו ליינען פאר די חסידישע משפחה — Di Tzeitung" loading="lazy"></a>
+</div></section>
+
 <hr class="rule">
 
 <section class="sections"><div class="wrap">
@@ -134,6 +138,7 @@ write("about.html", shell("About — Di Tzeitung", "The history and mission of D
 subscribe = '''
 <section class="page-head"><div class="wrap"><h1>Subscriptions</h1><p>Receive Di Tzeitung every Friday, delivered to your home anywhere in the United States.</p></div></section>
 <section class="page-body"><div class="wrap">
+  <div class="promo" style="margin-bottom:50px"><img src="ads/promo-2.jpg" alt="יעדע וואך פונדאסניי — א פרישער געשמאק צום טיר! Subscribe to Di Tzeitung"></div>
   <div class="products">
     <div class="product">
       <div class="img"><img src="covers/sec-a.jpg" alt=""></div>

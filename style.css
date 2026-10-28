@@ -22,20 +22,20 @@ h1, h2, h3 { font-family: var(--sans); font-weight: 800; letter-spacing: .02em; 
 .center { text-align: center; }
 
 /* ---- header ---- */
-.site-header { background: var(--black); color: #fff; text-align: center; padding: 26px 20px 0; position: relative; }
+.site-header { background: var(--green); color: #fff; text-align: center; padding: 26px 20px 0; position: relative; }
 .site-header .logo { display: inline-block; }
 .site-header .logo img { height: 84px; width: auto; margin: 0 auto; }
 .site-header .logo .nr { height: 30px; margin: 10px auto 0; opacity: .95; }
 .site-header .bsd { position: absolute; top: 8px; right: 14px; font-size: 11px; opacity: .6; font-family: var(--sans); }
 
-.nav { background: var(--black); }
+.nav { background: var(--green); }
 .nav ul { list-style: none; display: flex; justify-content: center; flex-wrap: wrap; padding: 14px 0 22px; }
 .nav li a {
   display: block; padding: 8px 12px; color: #fff;
   font-family: var(--sans); font-weight: 700; font-size: 12.5px; letter-spacing: 2px; text-transform: uppercase;
   border-bottom: 2px solid transparent; transition: border-color .15s, color .15s;
 }
-.nav li a:hover { color: #9be0b4; }
+.nav li a:hover { color: #c9f0d6; }
 .nav li a.active { border-bottom-color: #fff; }
 .nav .menu-btn { display: none; }
 
@@ -55,11 +55,11 @@ h1, h2, h3 { font-family: var(--sans); font-weight: 800; letter-spacing: .02em; 
 .welcome .btns { margin-top: 22px; display: flex; gap: 12px; flex-wrap: wrap; }
 .btn {
   display: inline-block; font-family: var(--sans); font-weight: 700; font-size: 12.5px; letter-spacing: 2px; text-transform: uppercase;
-  padding: 13px 26px; border: 2px solid var(--black); background: var(--black); color: #fff; transition: all .15s; cursor: pointer;
+  padding: 13px 26px; border: 2px solid var(--green); background: var(--green); color: #fff; transition: all .15s; cursor: pointer;
 }
-.btn:hover { background: #fff; color: var(--black); }
-.btn.outline { background: transparent; color: var(--black); }
-.btn.outline:hover { background: var(--black); color: #fff; }
+.btn:hover { background: #fff; color: var(--green); }
+.btn.outline { background: transparent; color: var(--green); }
+.btn.outline:hover { background: var(--green); color: #fff; }
 .btn.green { background: var(--green); border-color: var(--green); }
 .btn.green:hover { background: #fff; color: var(--green); }
 
@@ -76,6 +76,11 @@ h1, h2, h3 { font-family: var(--sans); font-weight: 800; letter-spacing: .02em; 
 .carousel .thumbs { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
 .carousel .thumbs img { height: 70px; width: auto; border: 2px solid transparent; cursor: pointer; opacity: .75; }
 .carousel .thumbs img.on { border-color: var(--green); opacity: 1; }
+
+/* ---- promo ---- */
+.promo { padding: 30px 0 10px; }
+.promo img { margin: 0 auto; max-width: 960px; width: 100%; box-shadow: 0 20px 44px -24px rgba(0,0,0,.45); }
+.promo a img { transition: transform .2s; } .promo a:hover img { transform: translateY(-3px); }
 
 .rule { border: 0; border-top: 1px solid var(--line); margin: 20px auto; max-width: var(--max); }
 
