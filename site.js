@@ -34,7 +34,7 @@
       }
       var row = document.createElement('div'); row.className = 'row';
       var track = document.createElement('div'); track.className = 'track';
-      track.style.setProperty('--dur', Math.round(110 + r * 35 + Math.random() * 20) + 's');
+      track.style.setProperty('--dur', Math.round(170 + r * 50 + Math.random() * 20) + 's');
       seq.concat(seq).forEach(function (src) {          // twice over, so the loop never jumps
         var im = new Image(); im.src = src; im.alt = ''; im.decoding = 'async'; track.appendChild(im);
       });
