@@ -15,7 +15,9 @@
     if (a.getAttribute('href') === here && !a.classList.contains('cta')) a.classList.add('active');
   });
 
-  // cover wall: rows of shuffled covers drifting right-to-left behind the text
+  // cover wall: rows of covers drifting right-to-left behind the text.
+  // Covers are grouped by section (file name starts with a-, b- or c-) and
+  // dealt out so that two covers of the same section never sit side by side.
   document.querySelectorAll('.wall[data-wall]').forEach(function (wall) {
     var list = wall.getAttribute('data-wall').split(',').filter(Boolean);
     if (!list.length) return;
@@ -25,16 +27,37 @@
       for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
       return a;
     }
-    for (var r = 0; r < rows; r++) {
-      var seq = [];
-      while (seq.length < 16) {                       // enough covers to span any screen
-        var batch = shuffle(list.slice());
-        if (seq.length && batch[0] === seq[seq.length - 1]) batch.push(batch.shift());
-        seq = seq.concat(batch);
+    function kind(src) { return src.split('/').pop().charAt(0); }
+
+    var groups = {};
+    list.forEach(function (src) { (groups[kind(src)] = groups[kind(src)] || []).push(src); });
+    var kinds = Object.keys(groups);
+
+    function deal(count) {
+      var queues = {}, seq = [], last = null;
+      kinds.forEach(function (k) { queues[k] = shuffle(groups[k].slice()); });
+      for (var n = 0; n < count; n++) {
+        var cands = kinds.length > 1 ? kinds.filter(function (k) { return k !== last; }) : kinds;
+        // weight by how many are still waiting, so every section gets its turn
+        var total = 0; cands.forEach(function (k) { total += queues[k].length || groups[k].length; });
+        var r = Math.random() * total, pick = cands[cands.length - 1];
+        for (var c = 0; c < cands.length; c++) {
+          r -= queues[cands[c]].length || groups[cands[c]].length;
+          if (r < 0) { pick = cands[c]; break; }
+        }
+        if (!queues[pick].length) queues[pick] = shuffle(groups[pick].slice());
+        seq.push(queues[pick].shift()); last = pick;
       }
+      // the track loops, so the last cover meets the first: keep those apart too
+      while (seq.length > 2 && kind(seq[0]) === kind(seq[seq.length - 1])) seq.pop();
+      return seq;
+    }
+
+    for (var r = 0; r < rows; r++) {
+      var seq = deal(24);
       var row = document.createElement('div'); row.className = 'row';
       var track = document.createElement('div'); track.className = 'track';
-      track.style.setProperty('--dur', Math.round(170 + r * 50 + Math.random() * 20) + 's');
+      track.style.setProperty('--dur', Math.round(230 + r * 60 + Math.random() * 20) + 's');
       seq.concat(seq).forEach(function (src) {          // twice over, so the loop never jumps
         var im = new Image(); im.src = src; im.alt = ''; im.decoding = 'async'; track.appendChild(im);
       });
