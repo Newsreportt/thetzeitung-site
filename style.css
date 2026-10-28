@@ -8,9 +8,9 @@
   --paper-3: #e4dac5;
   --rule: #15130f;
   --rule-soft: rgba(21,19,15,.18);
-  --red: #8f1d1d;
-  --red-2: #6e1414;
-  --gold: #b48a2e;
+  --red: #0e7c3f;
+  --red-2: #0a5c2f;
+  --gold: #d8b14a;
   --serif: 'Frank Ruhl Libre', 'David', 'Times New Roman', serif;
   --sans: 'Noto Sans Hebrew', 'Arial Hebrew', Arial, sans-serif;
   --max: 1180px;
@@ -92,6 +92,7 @@ h1,h2,h3,h4 { font-family: var(--serif); font-weight: 700; line-height: 1.15; }
 .hero { padding: 36px 0 28px; border-bottom: 1px solid var(--rule); }
 .hero .grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 42px; align-items: center; }
 .hero .cover {
+  max-width: 470px; margin-inline-start: auto;
   box-shadow: 0 24px 50px -22px rgba(0,0,0,.5), 0 2px 0 var(--paper-3);
   border: 1px solid var(--rule-soft);
   background: #fff;
@@ -241,7 +242,8 @@ footer .bottom { border-top: 1px solid var(--rule-soft); padding-top: 16px; disp
   .plans { grid-template-columns: 1fr; }
   footer .grid { grid-template-columns: 1fr 1fr; }
   .hero .grid, .split, .band .grid, .two-col { grid-template-columns: 1fr; gap: 30px; }
-  .hero .cover { transform: none; max-width: 420px; margin: 0 auto; }
+  .hero .cover {
+  max-width: 470px; margin-inline-start: auto; transform: none; max-width: 420px; margin: 0 auto; }
 }
 @media (max-width: 640px) {
   body { font-size: 16px; }
