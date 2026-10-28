@@ -267,6 +267,9 @@ p { max-width: 62ch; }
 .lightbox img { max-height: 94vh; max-width: 96vw; width: auto; box-shadow: 0 40px 100px rgba(0,0,0,.6); }
 
 /* ---- responsive ---- */
+@media (max-width: 1180px) {
+  .top .brand span { display: none; }
+}
 @media (max-width: 1000px) {
   .showcase { grid-template-columns: 1fr; gap: 34px; }
   .stage { max-width: 420px; }
