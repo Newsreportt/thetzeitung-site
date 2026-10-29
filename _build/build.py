@@ -42,6 +42,12 @@ SECTIONS = [
 
 SITE = "https://thetzeitung.com/"
 
+# a short fingerprint of the stylesheet and script, so browsers fetch fresh copies after every change
+import hashlib
+def _fp(name):
+    return hashlib.md5(open(os.path.join(ROOT, name), "rb").read()).hexdigest()[:8]
+CSS_V, JS_V = _fp("style.css"), _fp("site.js")
+
 ORG_JSONLD = """<script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -94,7 +100,7 @@ def shell(title, desc, body, page="index.html"):
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@400;500&family=Frank+Ruhl+Libre:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v={CSS_V}">
   <link rel="icon" href="covers/favicon.png">
 </head>
 <body>
@@ -148,7 +154,7 @@ def shell(title, desc, body, page="index.html"):
   <figure><img src="" alt=""><figcaption></figcaption></figure>
   <button class="lb-next" type="button" aria-label="Next cover">&#8250;</button>
 </div>
-<script src="site.js"></script>
+<script src="site.js?v={JS_V}"></script>
 </body>
 </html>
 '''
