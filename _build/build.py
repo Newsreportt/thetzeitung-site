@@ -9,7 +9,7 @@ import glob
 WALL = ",".join("covers/wall/" + os.path.basename(f) for f in sorted(glob.glob(os.path.join(ROOT, "covers", "wall", "*.jpg"))))
 
 # Editions come from _build/editions.json (filled by _build/import_covers.py).
-import json
+import json, re
 from datetime import date, timedelta
 EDITIONS = json.load(open(os.path.join(ROOT, "_build", "editions.json"), encoding="utf-8"))
 EDITION_KEYS = sorted(EDITIONS, reverse=True)          # newest first
@@ -477,7 +477,7 @@ write("contact.html", shell("Contact — The Tzeitung", "Contact The Tzeitung.",
 SECTION_NAME = {k: (t, heb) for k, t, heb, _ in SECTIONS}
 def edition_block(ed):
     figs = "".join(f'''
-      <figure data-k="{k}">
+      <figure data-k="{k}" data-s="{search_blob(ed, k).replace('"', "&quot;")}">
         <a href="{ed["covers"][k]}" data-zoom="{ed["covers"][k]}" aria-label="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}"><img src="{ed["covers"][k]}" alt="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}" width="900" height="980" loading="lazy"></a>
         <figcaption>{SECTION_NAME[k][0]}<span class="heb">{SECTION_NAME[k][1]}</span></figcaption>
       </figure>''' for k in ("a", "b", "c", "d") if k in ed["covers"])
@@ -512,6 +512,22 @@ def vol_span(keys):
     a, b = nice_date(keys[-1]), nice_date(keys[0])
     return f"{a} to {b}"
 
+# words that appear on most covers of a section are masthead boilerplate, not worth searching
+from collections import Counter
+def _norm(w): return re.sub(r"[\"״׳']", "", w.lower())
+_freq = {sec: Counter() for sec in "abcd"}; _count = {sec: 0 for sec in "abcd"}
+for ed in EDITIONS.values():
+    for sec, txt in ed.get("texts", {}).items():
+        _count[sec] += 1; _freq[sec].update(set(_norm(w) for w in txt.split()))
+BOILER = {sec: {w for w, n in _freq[sec].items() if _count[sec] >= 5 and n > 0.4 * _count[sec]} for sec in "abcd"}
+
+def search_blob(ed, sec):
+    words = [w for w in ed.get("texts", {}).get(sec, "").split() if _norm(w) not in BOILER[sec]]
+    bits = [SECTION_NAME[sec][0], SECTION_NAME[sec][1], nice_date(ed["date"]), ed["date"], ed.get("hdate", ""),
+            (ed.get("parsha") or "").replace(", ", "-"), (ed.get("parsha") or "").replace("פ' ", ""),
+            f"volume {ed['vol']} number {ed['no']} {ed['vol']}/{ed['no']} #{ed['no']}" if ed.get("vol") else ""]
+    return " ".join(bits + words)
+
 archive_body = "".join(f'''
   <div class="volume" id="volume-{vol}">
     <div class="vol-head"><h2>Volume {vol}</h2><p>{len(keys)} editions, {vol_span(keys)}</p></div>
@@ -523,6 +539,10 @@ total_covers = sum(len(e["covers"]) for e in EDITIONS.values())
 
 archive = band("Archives", "You may request back issues or a copy of a past article from the office.") + f'''
 <section class="page-body surface parchment"><div class="wrap">
+  <div class="archive-search">
+    <input id="cover-search" type="search" placeholder="Search the covers: a date, a parsha, a headline, a name" autocomplete="off" aria-label="Search the covers">
+    <span class="hits" id="search-hits"></span>
+  </div>
   <div class="archive-tools">
     <div class="filters" role="group" aria-label="Show">
       <button class="on" data-k="all" type="button">All sections</button>

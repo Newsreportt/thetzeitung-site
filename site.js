@@ -97,24 +97,37 @@
     show(0); play();
   }
 
-  // archive filters: show one section's covers, or all
-  var filters = document.querySelector('.filters');
-  if (filters) {
-    filters.addEventListener('click', function (e) {
-      var btn = e.target.closest('button'); if (!btn) return;
-      var k = btn.dataset.k;
-      filters.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
-      document.querySelectorAll('.edition').forEach(function (ed) {
-        var any = false;
-        ed.querySelectorAll('figure').forEach(function (f) {
-          var show = k === 'all' || f.dataset.k === k; f.classList.toggle('hide', !show); any = any || show;
-        });
-        ed.classList.toggle('hide', !any);
-      });
-      document.querySelectorAll('.volume').forEach(function (v) {
-        v.classList.toggle('hide', !v.querySelector('.edition:not(.hide)'));
-      });
+  // archive: section filter + search box work together
+  var filters = document.querySelector('.filters'), search = document.getElementById('cover-search');
+  if (filters || search) {
+    var hits = document.getElementById('search-hits');
+    var norm = function (s) { return s.toLowerCase().replace(/[\u0591-\u05c7]/g, '').replace(/["\u05f4\u05f3'\u2019\u201c\u201d]/g, ''); };
+    var figs = Array.prototype.slice.call(document.querySelectorAll('.edition figure')).map(function (f) {
+      return { el: f, k: f.dataset.k, s: norm(f.dataset.s || '') };
     });
+    var kind = 'all';
+    function apply() {
+      var q = search ? norm(search.value.trim()) : '';
+      var terms = q ? q.split(/\s+/) : [];
+      var shown = 0;
+      figs.forEach(function (f) {
+        var ok = (kind === 'all' || f.k === kind) && terms.every(function (t) { return f.s.indexOf(t) !== -1; });
+        f.el.classList.toggle('hide', !ok); if (ok) shown++;
+      });
+      document.querySelectorAll('.edition').forEach(function (ed) { ed.classList.toggle('hide', !ed.querySelector('figure:not(.hide)')); });
+      document.querySelectorAll('.volume').forEach(function (v) { v.classList.toggle('hide', !v.querySelector('.edition:not(.hide)')); });
+      if (hits) hits.textContent = terms.length ? (shown ? shown + (shown === 1 ? ' cover' : ' covers') : 'No covers match') : '';
+    }
+    if (filters) filters.addEventListener('click', function (e) {
+      var btn = e.target.closest('button'); if (!btn) return;
+      kind = btn.dataset.k;
+      filters.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
+      apply();
+    });
+    if (search) {
+      search.addEventListener('input', apply);
+      search.addEventListener('keydown', function (e) { if (e.key === 'Escape') { search.value = ''; apply(); } });
+    }
   }
 
   // cover lightbox: opens a cover full size; arrows, keys and swipes move through the others

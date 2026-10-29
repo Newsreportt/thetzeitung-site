@@ -165,6 +165,21 @@ def parsha_of(text):
     m = re.search(r"(פ'|פרשת)\s*([א-ת]+(?:\s[א-ת]+)?)", text)
     return f"פ' {m.group(2).strip()}" if m else None
 
+def cover_text(text):
+    """A compact, searchable version of a cover's text: distinct words, Hebrew and Latin,
+    in reading order, without punctuation. Glyph-coded covers are decoded first."""
+    if looks_garbled(text) or not re.search(r"[\u05d0-\u05ea]{2,}", text):
+        dec = decode_glyphs(text)
+        text = dec + "\n" + "\n".join(line[::-1] for line in dec.splitlines())
+    text = re.sub(r"[\u0591-\u05c7]", "", text)                      # nikkud and cantillation
+    words, seen = [], set()
+    for w in re.findall(r"[\u05d0-\u05eaA-Za-z][\u05d0-\u05eaA-Za-z'\"״׳\-]*", text):
+        w = w.strip("'\"״׳-")
+        key = w.lower().replace("״", "").replace("\"", "").replace("׳", "").replace("'", "")
+        if len(key) < 2 or key in seen: continue
+        seen.add(key); words.append(w)
+    return " ".join(words[:220])
+
 def render(pdf, out_big, out_small):
     with tempfile.TemporaryDirectory() as td:
         subprocess.run(["pdftoppm", "-f", "1", "-l", "1", "-r", "110", "-jpeg", "-jpegopt", "quality=90",
@@ -202,6 +217,7 @@ def main(paths):
             print(f"dup   {name}: {key} {sec} already present"); continue
         render(pdf, os.path.join(ROOT, big), os.path.join(ROOT, small))
         ed["covers"][sec] = big
+        ed.setdefault("texts", {})[sec] = cover_text(text)
         KNOWN_FRIDAYS.add(key)
         print(f"added {name}: {key} section {sec}" + (f" vol {vol} no {no}" if vol else "") + (f" {p}" if p else ""))
     enrich(data)
