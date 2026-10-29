@@ -450,7 +450,7 @@ write("contact.html", shell("Contact — The Tzeitung", "Contact The Tzeitung.",
 
 # ======================= ARCHIVES =======================
 figs = "".join(f'<figure><a href="covers/{img}" data-zoom="covers/{img}"><img src="covers/{img}" alt="{t}" width="1064" height="1158" loading="lazy"></a><figcaption>{t}<span>{heb}</span></figcaption></figure>' for img, t, heb, _ in SECTIONS)
-archive = band("Archives", "Covers from recent editions. Anyone may request back issues or a copy of a past article from the office.") + f'''
+archive = band("Archives", "Covers from recent editions. You may request back issues or a copy of a past article from the office.") + f'''
 <section class="page-body surface parchment"><div class="wrap">
   <div class="sec-head"><h2>Volume {EDITION_VOL}, number {EDITION_NO}</h2><p><span class="heb">{EDITION_PARSHA}</span>, the week of {EDITION_DATE}</p></div>
   <div class="archive-grid">{figs}</div>
