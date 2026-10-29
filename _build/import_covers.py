@@ -40,20 +40,64 @@ def to_friday(d):
     # editions are dated by their Friday; a Wednesday/Thursday date belongs to that week's Friday
     return d + timedelta(days=(4 - d.weekday()) % 7) if d.weekday() <= 4 else d
 
+HEB_VAL = {"א":1,"ב":2,"ג":3,"ד":4,"ה":5,"ו":6,"ז":7,"ח":8,"ט":9,"י":10,"כ":20,"ך":20,"ל":30,"מ":40,"ם":40,
+           "נ":50,"ן":50,"ס":60,"ע":70,"פ":80,"ף":80,"צ":90,"ץ":90,"ק":100,"ר":200,"ש":300,"ת":400}
+HEB_MONTHS = {"תשרי":7,"חשון":8,"מרחשון":8,"חשוון":8,"כסלו":9,"כסליו":9,"טבת":10,"שבט":11,"אדר":12,"אדר א":12,"אדר ב":13,
+              "ניסן":1,"אייר":2,"סיון":3,"סיוון":3,"תמוז":4,"אב":5,"מנחם אב":5,"אלול":6}
+
+def gematria(word):
+    return sum(HEB_VAL.get(ch, 0) for ch in word)
+
+def hebrew_year_of(text):
+    """5785 for תשפ״ה / תשפ"ה / תשפ''ה."""
+    m = re.search(r"\b(ת[\u05d0-\u05ea]{1,2})[\"״'′]{1,2}([\u05d0-\u05ea])\b", text)
+    if not m: return None
+    y = 5000 + gematria(m.group(1) + m.group(2))
+    return y if 5700 < y < 5900 else None
+
+def hebrew_date_of(text, hyear):
+    """A Hebrew date such as י״ט חשון, converted through the calendar (needs pyluach)."""
+    if not hyear: return None
+    try: from pyluach import dates as hdates
+    except ImportError: return None
+    m = re.search(r"([\u05d0-\u05ea]{1,2})[\"״'′]?([\u05d0-\u05ea])?\s+(מנחם אב|אדר [אב]|מרחשון|חשוון|תשרי|חשון|כסלו|כסליו|טבת|שבט|אדר|ניסן|אייר|סיון|סיוון|תמוז|אב|אלול)", text)
+    if not m: return None
+    day = gematria(m.group(1) + (m.group(2) or ""))
+    if not 1 <= day <= 30: return None
+    try: return hdates.HebrewDate(hyear, HEB_MONTHS[m.group(3)], day).to_pydate()
+    except Exception: return None
+
+def civil_year(hyear, mon, day):
+    """The civil year in which the given month/day falls during Hebrew year hyear."""
+    try: from pyluach import dates as hdates
+    except ImportError: return hyear - 3760
+    for y in (hyear - 3761, hyear - 3760):
+        try:
+            if hdates.HebrewDate.from_pydate(date(y, mon, day)).year == hyear: return y
+        except ValueError: pass
+    return hyear - 3760
+
 def date_of(text):
-    # "MAY 13-15, '26"  /  "October 23, '26"  /  "Oct 30"  — take the first real month name
+    # "MAY 13-15, '26"  /  "October 23, '26"  /  "Oct 30" (+ Hebrew year)  /  "י״ט חשון תשפ״ז"
+    hyear = hebrew_year_of(text)
     best = None
     for m in re.finditer(r"([A-Za-z]{3,9})\.?\s+(\d{1,2})(?:\s*-\s*(\d{1,2}))?(?:,?\s*'(\d{2}))?", text):
-        mon = MONTHS.get(m.group(1)[:3].lower())
-        if not mon or m.group(1).lower() not in ("jan","january","feb","february","mar","march","apr","april","may","jun","june","jul","july","aug","august","sep","sept","september","oct","october","nov","november","dec","december"):
+        word = m.group(1).lower()
+        if word not in ("jan","january","feb","february","mar","march","apr","april","may","jun","june","jul","july",
+                        "aug","august","sep","sept","september","oct","october","nov","november","dec","december"):
             continue
+        mon = MONTHS[word[:3]]
         day = int(m.group(3) or m.group(2))
-        year = 2000 + int(m.group(4)) if m.group(4) else 2026
+        if m.group(4): year = 2000 + int(m.group(4))
+        elif hyear: year = civil_year(hyear, mon, day)
+        else: year = 2026
         try: d = to_friday(date(year, mon, day))
         except ValueError: continue
-        if m.group(4): return d          # a dated match with a year wins outright
+        if m.group(4) or hyear: return d
         best = best or d
-    return best
+    if best: return best
+    hd = hebrew_date_of(text, hyear)
+    return to_friday(hd) if hd else None
 
 def volno_of(text):
     m = re.search(r"VOL\.?\s*(\d+)[^0-9]{1,8}NO\.?\s*(\d+)", text, re.I)
