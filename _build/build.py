@@ -8,20 +8,35 @@ NAV = [("index.html", "Home"), ("archive.html", "Archives"), ("about.html", "Abo
 import glob
 WALL = ",".join("covers/wall/" + os.path.basename(f) for f in sorted(glob.glob(os.path.join(ROOT, "covers", "wall", "*.jpg"))))
 
-# This week's edition. Update these three lines every week.
-EDITION_VOL, EDITION_NO = 40, 6
-EDITION_PARSHA = "פ' וירא"
-EDITION_DATE = "October 28, 2026"
+# Editions come from _build/editions.json (filled by _build/import_covers.py).
+import json
+from datetime import date, timedelta
+EDITIONS = json.load(open(os.path.join(ROOT, "_build", "editions.json"), encoding="utf-8"))
+EDITION_KEYS = sorted(EDITIONS, reverse=True)          # newest first
+LATEST = EDITIONS[EDITION_KEYS[0]]
+
+def nice_date(iso):
+    y, m, d = map(int, iso.split("-")); return date(y, m, d).strftime("%B %-d, %Y")
+def week_of(iso):                                        # the Wednesday the paper reaches the stores
+    y, m, d = map(int, iso.split("-")); return (date(y, m, d) - timedelta(days=2)).strftime("%B %-d, %Y")
+def parsha_html(ed):
+    p = (ed.get("parsha") or "").replace(", ", "-")
+    return f'<span class="heb">{p}</span>' if p else ""
+
+EDITION_VOL, EDITION_NO = LATEST["vol"], LATEST["no"]
+EDITION_PARSHA = (LATEST.get("parsha") or "").replace(", ", "-")
+EDITION_DATE = week_of(LATEST["date"])
+LATEST_COVER = LATEST["covers"].get("a") or next(iter(LATEST["covers"].values()))
 
 PHONE = '<a href="tel:7188516607">718-851-6607</a>'
 ADDRESS = "445 Park Avenue, Suite 202<br>Brooklyn, NY 11205"
 
 SECTIONS = [
-  ("sec-a.jpg", "The main section", "די צייטונג",
+  ("a", "The main section", "די צייטונג",
    "General news and politics, news from America and around the world, business and the economy, and what is happening in the heimishe community."),
-  ("sec-b.jpg", "Yiddishe Tzeit", "אידישע צייט",
+  ("b", "Yiddishe Tzeit", "אידישע צייט",
    "The weekly supplement of history and heritage: the Jewish towns of yesteryear, great personalities, and memoirs passed down through the generations."),
-  ("sec-c.jpg", "Chassidishe Tzeit", "חסידישע צייט",
+  ("c", "Chassidishe Tzeit", "חסידישע צייט",
    "Chassidishe news from around the world, with the popular picture section of Rebbes, chassidishe courts, simchos and events."),
 ]
 
@@ -35,7 +50,7 @@ ORG_JSONLD = """<script type="application/ld+json">
   "alternateName": ["Di Tzeitung", "Dee Tzeitung", "The Tzeitung Newspaper", "News Report", "The Yiddish Newspaper of Record", "די צייטונג", "די זעלבסטשטענדיגע אידישע צייטונג"],
   "url": "https://thetzeitung.com/",
   "logo": "https://thetzeitung.com/covers/favicon.png",
-  "image": "https://thetzeitung.com/covers/sec-a.jpg",
+  "image": "https://thetzeitung.com/""" + LATEST_COVER + """",
   "description": "The Tzeitung (Di Tzeitung, News Report) is the independent Yiddish weekly newspaper, published every week for forty years and read by thousands around the world.",
   "telephone": "+1-718-851-6607",
   "email": "mk@thetzeitung.com",
@@ -72,7 +87,7 @@ def shell(title, desc, body, page="index.html"):
   <meta property="og:title" content="{title}">
   <meta property="og:description" content="{desc}">
   <meta property="og:url" content="{url}">
-  <meta property="og:image" content="{SITE}covers/sec-a.jpg">
+  <meta property="og:image" content="{SITE}{LATEST_COVER}">
   <meta name="twitter:card" content="summary_large_image">
   {ORG_JSONLD}
   <meta name="theme-color" content="#0E7C3F">
@@ -184,16 +199,17 @@ EMAIL_BAND = '''
 HONEYPOT = '<p style="display:none"><label>Leave this empty: <input name="bot-field"></label></p>'
 
 # ======================= HOME =======================
+LATEST_SECTIONS = [(k, t, heb, d) for k, t, heb, d in SECTIONS if k in LATEST["covers"]]
 slides_html = "".join(f'''
-        <a class="slide{" on" if i==0 else ""}" href="covers/{img}" data-zoom="covers/{img}" data-i="{i}" aria-label="{t}">
-          <img src="covers/{img}" alt="{t}" width="1064" height="1158"{"" if i==0 else ' loading="lazy"'}>
-        </a>''' for i, (img, t, heb, _) in enumerate(SECTIONS))
+        <a class="slide{" on" if i==0 else ""}" href="{LATEST["covers"][k]}" data-zoom="{LATEST["covers"][k]}" data-i="{i}" aria-label="{t}">
+          <img src="{LATEST["covers"][k]}" alt="{t}" width="900" height="980"{"" if i==0 else ' loading="lazy"'}>
+        </a>''' for i, (k, t, heb, _) in enumerate(LATEST_SECTIONS))
 
 picker_html = "".join(f'''
         <button class="pick{" on" if i==0 else ""}" data-i="{i}" type="button">
           <b>{t}</b><span class="heb">{heb}</span>
           <i class="bar"></i>
-        </button>''' for i, (img, t, heb, _) in enumerate(SECTIONS))
+        </button>''' for i, (k, t, heb, _) in enumerate(LATEST_SECTIONS))
 
 inside_html = "".join(f'''
       <article>
@@ -220,7 +236,7 @@ home = f'''
   <div class="wrap">
     <div class="sec-head">
       <h2>This week's edition</h2>
-      <p>Volume {EDITION_VOL}, number {EDITION_NO}, <span class="heb">{EDITION_PARSHA}</span>, for the week of {EDITION_DATE}</p>
+      <p>Volume {EDITION_VOL}, number {EDITION_NO}, <span class="heb">{EDITION_PARSHA}</span>, for the week of {EDITION_DATE}. <a href="archive.html">Past editions</a></p>
     </div>
     <div class="showcase" id="showcase">
       <div class="stage">{slides_html}
@@ -313,7 +329,7 @@ subscribe = band("Subscriptions", "Every edition, with both supplements, mailed 
   <div class="promo"><img src="ads/promo-2.jpg" alt="יעדע וואך פונדאסניי, א פרישער געשמאק צום טיר. Subscribe to The Tzeitung." width="1155" height="1173"></div>
   <div class="plans">
     <div class="plan">
-      <img src="covers/sec-a.jpg" alt="" width="1064" height="1158">
+      <img src="{LATEST_COVER}" alt="" width="900" height="980">
       <div>
         <h3>One year</h3>
         <div class="price"><b>$400</b><span>renews every 12 months</span></div>
@@ -321,7 +337,7 @@ subscribe = band("Subscriptions", "Every edition, with both supplements, mailed 
       </div>
     </div>
     <div class="plan">
-      <img src="covers/sec-a.jpg" alt="" width="1064" height="1158">
+      <img src="{LATEST_COVER}" alt="" width="900" height="980">
       <div>
         <h3>Half a year</h3>
         <div class="price"><b>$200</b><span>renews every 6 months</span></div>
@@ -449,18 +465,39 @@ contact = band("Contact", "For the editor, letters, subscriptions and advertisin
 write("contact.html", shell("Contact — The Tzeitung", "Contact The Tzeitung.", contact, page="contact.html"))
 
 # ======================= ARCHIVES =======================
-figs = "".join(f'<figure><a href="covers/{img}" data-zoom="covers/{img}"><img src="covers/{img}" alt="{t}" width="1064" height="1158" loading="lazy"></a><figcaption>{t}<span>{heb}</span></figcaption></figure>' for img, t, heb, _ in SECTIONS)
-archive = band("Archives", "Covers from recent editions. You may request back issues or a copy of a past article from the office.") + f'''
+SECTION_NAME = {k: (t, heb) for k, t, heb, _ in SECTIONS}
+def edition_block(ed):
+    figs = "".join(f'''
+      <figure data-k="{k}">
+        <a href="{ed["covers"][k]}" data-zoom="{ed["covers"][k]}" aria-label="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}"><img src="{ed["covers"][k]}" alt="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}" width="900" height="980" loading="lazy"></a>
+        <figcaption>{SECTION_NAME[k][0]}<span class="heb">{SECTION_NAME[k][1]}</span></figcaption>
+      </figure>''' for k in ("a", "b", "c") if k in ed["covers"])
+    volno = f"Volume {ed['vol']}, number {ed['no']}" if ed.get("vol") else ""
+    meta = ", ".join(x for x in [volno, parsha_html(ed), ed.get("hdate", "")] if x)
+    return f'''
+  <section class="edition" data-has="{"".join(sorted(ed["covers"]))}">
+    <div class="ed-head"><h2>{nice_date(ed["date"])}</h2><p>{meta}</p></div>
+    <div class="ed-covers">{figs}
+    </div>
+  </section>'''
+
+archive_body = "".join(edition_block(EDITIONS[k]) for k in EDITION_KEYS)
+archive = band("Archives", f"{len(EDITIONS)} editions, newest first. You may request back issues or a copy of a past article from the office.") + f'''
 <section class="page-body surface parchment"><div class="wrap">
-  <div class="sec-head"><h2>Volume {EDITION_VOL}, number {EDITION_NO}</h2><p><span class="heb">{EDITION_PARSHA}</span>, the week of {EDITION_DATE}</p></div>
-  <div class="archive-grid">{figs}</div>
+  <div class="filters" role="group" aria-label="Show">
+    <button class="on" data-k="all" type="button">All sections</button>
+    <button data-k="a" type="button">The main section</button>
+    <button data-k="b" type="button">Yiddishe Tzeit</button>
+    <button data-k="c" type="button">Chassidishe Tzeit</button>
+  </div>
+  {archive_body}
   <div class="aside" style="margin:70px auto 0;max-width:720px;text-align:center">
     <h3>Looking for a particular issue?</h3>
     <p>For back issues, special editions or a copy of a specific article, call {PHONE} or write to <a href="mailto:mk@thetzeitung.com"><b>mk@thetzeitung.com</b></a>.</p>
   </div>
 </div></section>
 '''
-write("archive.html", shell("Archives — The Tzeitung", "Covers from recent editions of The Tzeitung.", archive, page="archive.html"))
+write("archive.html", shell("Archives — The Tzeitung", "Covers from every recent edition of The Tzeitung, by date.", archive, page="archive.html"))
 
 # ======================= THANKS =======================
 thanks = band("Thank you", "We received your message and will be in touch shortly.") + '''

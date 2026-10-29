@@ -97,6 +97,23 @@
     show(0); play();
   }
 
+  // archive filters: show one section's covers, or all
+  var filters = document.querySelector('.filters');
+  if (filters) {
+    filters.addEventListener('click', function (e) {
+      var btn = e.target.closest('button'); if (!btn) return;
+      var k = btn.dataset.k;
+      filters.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
+      document.querySelectorAll('.edition').forEach(function (ed) {
+        var any = false;
+        ed.querySelectorAll('figure').forEach(function (f) {
+          var show = k === 'all' || f.dataset.k === k; f.classList.toggle('hide', !show); any = any || show;
+        });
+        ed.classList.toggle('hide', !any);
+      });
+    });
+  }
+
   // cover lightbox: opens a cover full size; arrows, keys and swipes move through the others
   var box = document.querySelector('.lightbox');
   if (box) {
