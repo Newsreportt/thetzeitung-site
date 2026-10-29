@@ -31,7 +31,7 @@ ORG_JSONLD = """<script type="application/ld+json">
   "url": "https://thetzeitung.com/",
   "logo": "https://thetzeitung.com/covers/favicon.png",
   "image": "https://thetzeitung.com/covers/sec-a.jpg",
-  "description": "The Tzeitung (Di Tzeitung, News Report) is the independent Yiddish weekly newspaper, printed in Brooklyn for forty years and read by thousands around the world.",
+  "description": "The Tzeitung (Di Tzeitung, News Report) is the independent Yiddish weekly newspaper, published every week for forty years and read by thousands around the world.",
   "telephone": "+1-718-851-6607",
   "email": "mk@thetzeitung.com",
   "address": {"@type": "PostalAddress", "streetAddress": "445 Park Avenue, Suite 202", "addressLocality": "Brooklyn", "addressRegion": "NY", "postalCode": "11205", "addressCountry": "US"},
@@ -102,7 +102,7 @@ def shell(title, desc, body, page="index.html"):
       <div>
         <a class="wordmark" href="index.html"><img src="covers/logo-yiddish.png" alt="The Tzeitung" width="1140" height="270"></a>
         <img class="nr" src="covers/logo-newsreport.png" alt="News Report — The Yiddish Newspaper of Record" width="600" height="165">
-        <p style="margin-top:18px">The independent Yiddish newspaper. Printed in Brooklyn every week for forty years, read by thousands of families around the world.</p>
+        <p style="margin-top:18px">The independent Yiddish newspaper. Published every week for forty years, read by thousands of families around the world.</p>
       </div>
       <div>
         <h4>Call us</h4>
@@ -201,7 +201,7 @@ home = f'''
     <div class="wordmark"><img src="covers/logo-yiddish.png" alt="The Tzeitung — די צייטונג" width="1140" height="270"></div>
     <img class="nr" src="covers/logo-newsreport.png" alt="News Report — The Yiddish Newspaper of Record" width="600" height="165">
     <h1>The Yiddish newspaper of record.</h1>
-    <p>Independent since the first edition, The Tzeitung has been printed in Brooklyn every week for forty years and is read by thousands of families around the world. A fresh edition reaches the stores every Wednesday morning.</p>
+    <p>Independent since the first edition, The Tzeitung has been published every week for forty years and is read by thousands of families around the world. A fresh edition reaches the stores every Wednesday morning.</p>
     <div class="btn-row"><a class="btn gold" href="subscribe.html">Subscribe</a><a class="btn ghost" href="advertise.html">Advertise with us</a></div>
   </div></div>
 </section>
@@ -273,13 +273,13 @@ home = f'''
 {EMAIL_BAND}
 '''
 write("index.html", shell("The Tzeitung (Di Tzeitung, די צייטונג) — News Report, the Yiddish newspaper of record",
-  "The Tzeitung, also written Di Tzeitung or Dee Tzeitung (די צייטונג), is News Report, the independent Yiddish weekly newspaper printed in Brooklyn for forty years and read by thousands around the world. Subscriptions, advertising and this week's covers.", home))
+  "The Tzeitung, also written Di Tzeitung or Dee Tzeitung (די צייטונג), is News Report, the independent Yiddish weekly newspaper, published every week for forty years and read by thousands around the world. Subscriptions, advertising and this week's covers.", home))
 
 # ======================= ABOUT =======================
 about = band("About The Tzeitung", "Forty years of the independent Yiddish newspaper.") + f'''
 <section class="page-body surface parchment"><div class="wrap two-col">
   <div class="prose">
-    <p class="lead">The Tzeitung, written in Yiddish as די צייטונג and often spelled Di Tzeitung or Dee Tzeitung, is Di Zelbstshtendige Yiddishe Tzeitung, the independent Yiddish newspaper. It was founded in Brooklyn forty years ago by Rabbi Avrohom Friedman, who leads it to this day as founder and editor-in-chief.</p>
+    <p class="lead">The Tzeitung, written in Yiddish as די צייטונג and often spelled Di Tzeitung or Dee Tzeitung, is Di Zelbstshtendige Yiddishe Tzeitung, the independent Yiddish newspaper. It was founded forty years ago by Rabbi Avrohom Friedman, who leads it to this day as founder and editor-in-chief.</p>
     <p>Published every week in Yiddish and known in English as News Report, The Yiddish Newspaper of Record, it has become one of the enduring institutions of the Yiddish printed word in America. A fresh edition reaches the stores every Wednesday morning.</p>
     <h2>Who reads it</h2>
     <p>Thousands of readers around the world: the Yiddish-speaking communities of Brooklyn, in Boro Park, Williamsburg and Flatbush, together with Kiryas Joel, Monsey, Lakewood and other heimishe communities across the United States, and readers in Canada, London, Belgium and Eretz Yisroel.</p>
