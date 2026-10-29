@@ -3,7 +3,7 @@ import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 NAV = [("index.html", "Home"), ("archive.html", "Archives"), ("about.html", "About"),
-       ("advertise.html", "Advertise"), ("contact.html", "Contact")]
+       ("advertise.html", "Advertise"), ("index.html#email", "Email list"), ("contact.html", "Contact")]
 
 import glob
 WALL = ",".join("covers/wall/" + os.path.basename(f) for f in sorted(glob.glob(os.path.join(ROOT, "covers", "wall", "*.jpg"))))
@@ -105,7 +105,7 @@ def shell(title, desc, body, page="index.html"):
         <p style="margin-top:18px">The independent Yiddish newspaper. Printed in Brooklyn every week for forty years, read by thousands of families around the world.</p>
       </div>
       <div>
-        <h4>Visit or call</h4>
+        <h4>Call us</h4>
         <p>{ADDRESS}<br><span class="em">{PHONE}</span></p>
       </div>
       <div>

@@ -61,10 +61,10 @@ p { max-width: 62ch; }
 .top .wrap { display: flex; align-items: center; justify-content: space-between; min-height: 78px; gap: 24px; }
 .top .brand { display: flex; align-items: center; gap: 16px; }
 .top .brand img { height: 38px; width: auto; }
-.top .brand span { font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; opacity: .85; border-left: 1px solid rgba(255,255,255,.4); padding-left: 16px; line-height: 1.3; }
+.top .brand span { font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; opacity: .85; border-left: 1px solid rgba(255,255,255,.4); padding-left: 16px; line-height: 1.3; white-space: nowrap; }
 .top nav ul { list-style: none; display: flex; align-items: center; gap: 2px; }
 .top nav a {
-  display: block; padding: 10px 13px; font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 500;
+  display: block; padding: 10px 11px; font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; white-space: nowrap;
   border-bottom: 1px solid transparent; transition: border-color .2s, color .2s;
 }
 .top nav a:hover, .top nav a.active { border-bottom-color: var(--gold); }
@@ -276,7 +276,7 @@ p { max-width: 62ch; }
 .lightbox img { max-height: 94vh; max-width: 96vw; width: auto; box-shadow: 0 40px 100px rgba(0,0,0,.6); }
 
 /* ---- responsive ---- */
-@media (max-width: 1180px) {
+@media (max-width: 1420px) {
   .top .brand span { display: none; }
 }
 @media (max-width: 1000px) {
