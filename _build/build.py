@@ -521,7 +521,7 @@ archive_body = "".join(f'''
 vol_links = "".join(f'<a href="#volume-{vol}">Volume {vol}</a>' for vol, _ in VOLUMES)
 total_covers = sum(len(e["covers"]) for e in EDITIONS.values())
 
-archive = band("Archives", f"{len(EDITIONS)} editions and {total_covers} covers, newest first. You may request back issues or a copy of a past article from the office.") + f'''
+archive = band("Archives", "You may request back issues or a copy of a past article from the office.") + f'''
 <section class="page-body surface parchment"><div class="wrap">
   <div class="archive-tools">
     <div class="filters" role="group" aria-label="Show">
