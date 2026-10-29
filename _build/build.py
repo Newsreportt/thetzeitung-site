@@ -316,7 +316,7 @@ subscribe = band("Subscriptions", "Every edition, with both supplements, mailed 
       <img src="covers/sec-a.jpg" alt="" width="1064" height="1158">
       <div>
         <h3>One year</h3>
-        <div class="price"><b>$400</b><span>every 12 months</span></div>
+        <div class="price"><b>$400</b><span>renews every 12 months</span></div>
         <a href="#order" class="btn">Choose this plan</a>
       </div>
     </div>
@@ -324,7 +324,7 @@ subscribe = band("Subscriptions", "Every edition, with both supplements, mailed 
       <img src="covers/sec-a.jpg" alt="" width="1064" height="1158">
       <div>
         <h3>Half a year</h3>
-        <div class="price"><b>$200</b><span>every 6 months</span></div>
+        <div class="price"><b>$200</b><span>renews every 6 months</span></div>
         <a href="#order" class="btn ghost-dark">Choose this plan</a>
       </div>
     </div>
