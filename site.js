@@ -111,6 +111,9 @@
         });
         ed.classList.toggle('hide', !any);
       });
+      document.querySelectorAll('.volume').forEach(function (v) {
+        v.classList.toggle('hide', !v.querySelector('.edition:not(.hide)'));
+      });
     });
   }
 

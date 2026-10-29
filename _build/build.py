@@ -479,22 +479,48 @@ def edition_block(ed):
         <figcaption>{SECTION_NAME[k][0]}<span class="heb">{SECTION_NAME[k][1]}</span></figcaption>
       </figure>''' for k in ("a", "b", "c") if k in ed["covers"])
     volno = f"Volume {ed['vol']}, number {ed['no']}" if ed.get("vol") else ""
-    meta = ", ".join(x for x in [volno, parsha_html(ed), ed.get("hdate", "")] if x)
+    meta = ", ".join(x for x in [volno, parsha_html(ed), nice_date(ed["date"])] if x)
+    heading = f'<span class="heb">{ed["hdate"]}</span>' if ed.get("hdate") else nice_date(ed["date"])
     return f'''
   <section class="edition" data-has="{"".join(sorted(ed["covers"]))}">
-    <div class="ed-head"><h2>{nice_date(ed["date"])}</h2><p>{meta}</p></div>
+    <div class="ed-head"><h2>{heading}</h2><p>{meta}</p></div>
     <div class="ed-covers">{figs}
     </div>
   </section>'''
 
-archive_body = "".join(edition_block(EDITIONS[k]) for k in EDITION_KEYS)
-archive = band("Archives", f"{len(EDITIONS)} editions, newest first. You may request back issues or a copy of a past article from the office.") + f'''
+# group by volume, newest first; an edition without a number sits with its neighbours
+vol_of, cur = {}, None
+for k in EDITION_KEYS:
+    if EDITIONS[k].get("vol"): cur = EDITIONS[k]["vol"]
+    vol_of[k] = cur
+VOLUMES = []
+for k in EDITION_KEYS:
+    if not VOLUMES or VOLUMES[-1][0] != vol_of[k]: VOLUMES.append((vol_of[k], []))
+    VOLUMES[-1][1].append(k)
+
+def vol_span(keys):
+    a, b = nice_date(keys[-1]), nice_date(keys[0])
+    return f"{a} to {b}"
+
+archive_body = "".join(f'''
+  <div class="volume" id="volume-{vol}">
+    <div class="vol-head"><h2>Volume {vol}</h2><p>{len(keys)} editions, {vol_span(keys)}</p></div>
+    {"".join(edition_block(EDITIONS[k]) for k in keys)}
+  </div>''' for vol, keys in VOLUMES)
+
+vol_links = "".join(f'<a href="#volume-{vol}">Volume {vol}</a>' for vol, _ in VOLUMES)
+total_covers = sum(len(e["covers"]) for e in EDITIONS.values())
+
+archive = band("Archives", f"{len(EDITIONS)} editions and {total_covers} covers, newest first. You may request back issues or a copy of a past article from the office.") + f'''
 <section class="page-body surface parchment"><div class="wrap">
-  <div class="filters" role="group" aria-label="Show">
-    <button class="on" data-k="all" type="button">All sections</button>
-    <button data-k="a" type="button">The main section</button>
-    <button data-k="b" type="button">Yiddishe Tzeit</button>
-    <button data-k="c" type="button">Chassidishe Tzeit</button>
+  <div class="archive-tools">
+    <div class="filters" role="group" aria-label="Show">
+      <button class="on" data-k="all" type="button">All sections</button>
+      <button data-k="a" type="button">The main section</button>
+      <button data-k="b" type="button">Yiddishe Tzeit</button>
+      <button data-k="c" type="button">Chassidishe Tzeit</button>
+    </div>
+    <nav class="vol-links" aria-label="Jump to a volume">{vol_links}</nav>
   </div>
   {archive_body}
   <div class="aside" style="margin:70px auto 0;max-width:720px;text-align:center">

@@ -1,11 +1,833 @@
 {
+ "2024-10-11": {
+  "date": "2024-10-11",
+  "vol": 38,
+  "no": 1,
+  "parsha": "יום כיפור",
+  "covers": {
+   "a": "covers/archive/2024-10-11-a.jpg",
+   "b": "covers/archive/2024-10-11-b.jpg"
+  },
+  "hdate": "ט׳ תשרי תשפ״ה"
+ },
+ "2024-10-25": {
+  "date": "2024-10-25",
+  "vol": 38,
+  "no": 2,
+  "parsha": "פ' בראשית",
+  "covers": {
+   "a": "covers/archive/2024-10-25-a.jpg",
+   "b": "covers/archive/2024-10-25-b.jpg"
+  },
+  "hdate": "כ״ג תשרי תשפ״ה"
+ },
+ "2024-11-01": {
+  "date": "2024-11-01",
+  "vol": 38,
+  "no": 3,
+  "parsha": "פ' נח",
+  "covers": {
+   "a": "covers/archive/2024-11-01-a.jpg",
+   "b": "covers/archive/2024-11-01-b.jpg"
+  },
+  "hdate": "ל׳ תשרי תשפ״ה"
+ },
+ "2024-11-08": {
+  "date": "2024-11-08",
+  "vol": 38,
+  "no": 4,
+  "parsha": "פ' לך לך",
+  "covers": {
+   "a": "covers/archive/2024-11-08-a.jpg",
+   "b": "covers/archive/2024-11-08-b.jpg"
+  },
+  "hdate": "ז׳ חשון תשפ״ה"
+ },
+ "2024-11-15": {
+  "date": "2024-11-15",
+  "vol": 38,
+  "no": 5,
+  "parsha": "פ' וירא",
+  "covers": {
+   "a": "covers/archive/2024-11-15-a.jpg",
+   "b": "covers/archive/2024-11-15-b.jpg"
+  },
+  "hdate": "י״ד חשון תשפ״ה"
+ },
+ "2024-11-22": {
+  "date": "2024-11-22",
+  "vol": 38,
+  "no": 6,
+  "parsha": "פ' חיי שרה",
+  "covers": {
+   "a": "covers/archive/2024-11-22-a.jpg",
+   "b": "covers/archive/2024-11-22-b.jpg"
+  },
+  "hdate": "כ״א חשון תשפ״ה"
+ },
+ "2024-11-29": {
+  "date": "2024-11-29",
+  "vol": 38,
+  "no": 7,
+  "parsha": "פ' תולדות",
+  "covers": {
+   "a": "covers/archive/2024-11-29-a.jpg",
+   "b": "covers/archive/2024-11-29-b.jpg"
+  },
+  "hdate": "כ״ח חשון תשפ״ה"
+ },
+ "2024-12-06": {
+  "date": "2024-12-06",
+  "vol": 38,
+  "no": 8,
+  "parsha": "פ' ויצא",
+  "covers": {
+   "a": "covers/archive/2024-12-06-a.jpg"
+  },
+  "hdate": "ה׳ כסלו תשפ״ה"
+ },
+ "2024-12-13": {
+  "date": "2024-12-13",
+  "vol": 38,
+  "no": 9,
+  "parsha": "פ' וישלח",
+  "covers": {
+   "a": "covers/archive/2024-12-13-a.jpg",
+   "b": "covers/archive/2024-12-13-b.jpg"
+  },
+  "hdate": "י״ב כסלו תשפ״ה"
+ },
+ "2024-12-20": {
+  "date": "2024-12-20",
+  "vol": 38,
+  "no": 10,
+  "parsha": "פ' וישב",
+  "covers": {
+   "a": "covers/archive/2024-12-20-a.jpg",
+   "b": "covers/archive/2024-12-20-b.jpg"
+  },
+  "hdate": "י״ט כסלו תשפ״ה"
+ },
+ "2024-12-27": {
+  "date": "2024-12-27",
+  "vol": 38,
+  "no": 11,
+  "parsha": "פ' מקץ",
+  "covers": {
+   "a": "covers/archive/2024-12-27-a.jpg",
+   "b": "covers/archive/2024-12-27-b.jpg"
+  },
+  "hdate": "כ״ו כסלו תשפ״ה"
+ },
+ "2025-01-03": {
+  "date": "2025-01-03",
+  "vol": 38,
+  "no": 12,
+  "parsha": "פ' ויגש",
+  "covers": {
+   "a": "covers/archive/2025-01-03-a.jpg",
+   "b": "covers/archive/2025-01-03-b.jpg"
+  },
+  "hdate": "ג׳ טבת תשפ״ה"
+ },
+ "2025-01-10": {
+  "date": "2025-01-10",
+  "vol": 38,
+  "no": 13,
+  "parsha": "פ' ויחי",
+  "covers": {
+   "a": "covers/archive/2025-01-10-a.jpg",
+   "b": "covers/archive/2025-01-10-b.jpg"
+  },
+  "hdate": "י׳ טבת תשפ״ה"
+ },
+ "2025-01-17": {
+  "date": "2025-01-17",
+  "vol": 38,
+  "no": 14,
+  "parsha": "פ' שמות",
+  "covers": {
+   "a": "covers/archive/2025-01-17-a.jpg",
+   "b": "covers/archive/2025-01-17-b.jpg"
+  },
+  "hdate": "י״ז טבת תשפ״ה"
+ },
+ "2025-01-24": {
+  "date": "2025-01-24",
+  "vol": 38,
+  "no": 15,
+  "parsha": "פ' וארא",
+  "covers": {
+   "a": "covers/archive/2025-01-24-a.jpg",
+   "b": "covers/archive/2025-01-24-b.jpg"
+  },
+  "hdate": "כ״ד טבת תשפ״ה"
+ },
+ "2025-01-31": {
+  "date": "2025-01-31",
+  "vol": 38,
+  "no": 16,
+  "parsha": "פ' בא",
+  "covers": {
+   "a": "covers/archive/2025-01-31-a.jpg",
+   "b": "covers/archive/2025-01-31-b.jpg"
+  },
+  "hdate": "ב׳ שבט תשפ״ה"
+ },
+ "2025-02-07": {
+  "date": "2025-02-07",
+  "vol": 38,
+  "no": 17,
+  "parsha": "פ' בשלח",
+  "covers": {
+   "a": "covers/archive/2025-02-07-a.jpg",
+   "b": "covers/archive/2025-02-07-b.jpg"
+  },
+  "hdate": "ט׳ שבט תשפ״ה"
+ },
+ "2025-02-14": {
+  "date": "2025-02-14",
+  "vol": 38,
+  "no": 18,
+  "parsha": "פ' יתרו",
+  "covers": {
+   "a": "covers/archive/2025-02-14-a.jpg",
+   "b": "covers/archive/2025-02-14-b.jpg"
+  },
+  "hdate": "ט״ז שבט תשפ״ה"
+ },
+ "2025-02-21": {
+  "date": "2025-02-21",
+  "vol": 38,
+  "no": 19,
+  "parsha": "פ' משפטים",
+  "covers": {
+   "a": "covers/archive/2025-02-21-a.jpg",
+   "b": "covers/archive/2025-02-21-b.jpg"
+  },
+  "hdate": "כ״ג שבט תשפ״ה"
+ },
+ "2025-02-28": {
+  "date": "2025-02-28",
+  "vol": 38,
+  "no": 20,
+  "parsha": "פ' ס בודזשעט",
+  "covers": {
+   "a": "covers/archive/2025-02-28-a.jpg",
+   "b": "covers/archive/2025-02-28-b.jpg"
+  },
+  "hdate": "ל׳ שבט תשפ״ה"
+ },
+ "2025-03-07": {
+  "date": "2025-03-07",
+  "vol": 38,
+  "no": 21,
+  "parsha": "פ' תצוה",
+  "covers": {
+   "a": "covers/archive/2025-03-07-a.jpg",
+   "b": "covers/archive/2025-03-07-b.jpg"
+  },
+  "hdate": "ז׳ אדר תשפ״ה"
+ },
+ "2025-03-21": {
+  "date": "2025-03-21",
+  "vol": 38,
+  "no": 23,
+  "parsha": "פ' ויקהל",
+  "covers": {
+   "a": "covers/archive/2025-03-21-a.jpg",
+   "b": "covers/archive/2025-03-21-b.jpg"
+  },
+  "hdate": "כ״א אדר תשפ״ה"
+ },
+ "2025-03-28": {
+  "date": "2025-03-28",
+  "vol": 38,
+  "no": 24,
+  "parsha": "פ' פקודי",
+  "covers": {
+   "a": "covers/archive/2025-03-28-a.jpg",
+   "b": "covers/archive/2025-03-28-b.jpg"
+  },
+  "hdate": "כ״ח אדר תשפ״ה"
+ },
+ "2025-04-04": {
+  "date": "2025-04-04",
+  "vol": 38,
+  "no": 25,
+  "parsha": "פ' ויקרא",
+  "covers": {
+   "a": "covers/archive/2025-04-04-a.jpg",
+   "b": "covers/archive/2025-04-04-b.jpg"
+  },
+  "hdate": "ו׳ ניסן תשפ״ה"
+ },
+ "2025-04-11": {
+  "date": "2025-04-11",
+  "vol": 38,
+  "no": 26,
+  "parsha": "פ' צו",
+  "covers": {
+   "a": "covers/archive/2025-04-11-a.jpg"
+  },
+  "hdate": "י״ג ניסן תשפ״ה"
+ },
+ "2025-04-18": {
+  "date": "2025-04-18",
+  "vol": null,
+  "no": null,
+  "parsha": "פסח",
+  "covers": {
+   "b": "covers/archive/2025-04-18-b.jpg"
+  },
+  "hdate": "כ׳ ניסן תשפ״ה"
+ },
+ "2025-04-25": {
+  "date": "2025-04-25",
+  "vol": 38,
+  "no": 27,
+  "parsha": "פ' שמיני",
+  "covers": {
+   "a": "covers/archive/2025-04-25-a.jpg",
+   "b": "covers/archive/2025-04-25-b.jpg"
+  },
+  "hdate": "כ״ז ניסן תשפ״ה"
+ },
+ "2025-05-02": {
+  "date": "2025-05-02",
+  "vol": 38,
+  "no": 28,
+  "parsha": "פ' תזריע, מצורע",
+  "covers": {
+   "a": "covers/archive/2025-05-02-a.jpg",
+   "b": "covers/archive/2025-05-02-b.jpg"
+  },
+  "hdate": "ד׳ אייר תשפ״ה"
+ },
+ "2025-05-09": {
+  "date": "2025-05-09",
+  "vol": 38,
+  "no": 29,
+  "parsha": "פ' אמור",
+  "covers": {
+   "a": "covers/archive/2025-05-09-a.jpg",
+   "b": "covers/archive/2025-05-09-b.jpg"
+  },
+  "hdate": "י״א אייר תשפ״ה"
+ },
+ "2025-05-16": {
+  "date": "2025-05-16",
+  "vol": 38,
+  "no": 30,
+  "parsha": "פ' אמור",
+  "covers": {
+   "a": "covers/archive/2025-05-16-a.jpg",
+   "b": "covers/archive/2025-05-16-b.jpg"
+  },
+  "hdate": "י״ח אייר תשפ״ה"
+ },
+ "2025-05-23": {
+  "date": "2025-05-23",
+  "vol": 38,
+  "no": 31,
+  "parsha": "פ' בהר, בחוקותי",
+  "covers": {
+   "a": "covers/archive/2025-05-23-a.jpg",
+   "b": "covers/archive/2025-05-23-b.jpg"
+  },
+  "hdate": "כ״ה אייר תשפ״ה"
+ },
+ "2025-05-30": {
+  "date": "2025-05-30",
+  "vol": 38,
+  "no": 32,
+  "parsha": "פ' במדבר",
+  "covers": {
+   "a": "covers/archive/2025-05-30-a.jpg",
+   "b": "covers/archive/2025-05-30-b.jpg"
+  },
+  "hdate": "ג׳ סיון תשפ״ה"
+ },
+ "2025-06-06": {
+  "date": "2025-06-06",
+  "vol": 38,
+  "no": 33,
+  "parsha": "פ' נשא",
+  "covers": {
+   "a": "covers/archive/2025-06-06-a.jpg",
+   "b": "covers/archive/2025-06-06-b.jpg"
+  },
+  "hdate": "י׳ סיון תשפ״ה"
+ },
+ "2025-06-13": {
+  "date": "2025-06-13",
+  "vol": 38,
+  "no": 34,
+  "parsha": "פ' בהעלותך",
+  "covers": {
+   "a": "covers/archive/2025-06-13-a.jpg",
+   "b": "covers/archive/2025-06-13-b.jpg"
+  },
+  "hdate": "י״ז סיון תשפ״ה"
+ },
+ "2025-06-20": {
+  "date": "2025-06-20",
+  "vol": 38,
+  "no": 35,
+  "parsha": "פ' שלח",
+  "covers": {
+   "a": "covers/archive/2025-06-20-a.jpg",
+   "b": "covers/archive/2025-06-20-b.jpg"
+  },
+  "hdate": "כ״ד סיון תשפ״ה"
+ },
+ "2025-07-04": {
+  "date": "2025-07-04",
+  "vol": 38,
+  "no": 37,
+  "parsha": "פ' חקת",
+  "covers": {
+   "a": "covers/archive/2025-07-04-a.jpg",
+   "b": "covers/archive/2025-07-04-b.jpg"
+  },
+  "hdate": "ח׳ תמוז תשפ״ה"
+ },
+ "2025-07-11": {
+  "date": "2025-07-11",
+  "vol": 38,
+  "no": 38,
+  "parsha": "פ' בלק",
+  "covers": {
+   "a": "covers/archive/2025-07-11-a.jpg",
+   "b": "covers/archive/2025-07-11-b.jpg"
+  },
+  "hdate": "ט״ו תמוז תשפ״ה"
+ },
+ "2025-07-18": {
+  "date": "2025-07-18",
+  "vol": 38,
+  "no": 39,
+  "parsha": "פ' פינחס",
+  "covers": {
+   "a": "covers/archive/2025-07-18-a.jpg",
+   "b": "covers/archive/2025-07-18-b.jpg"
+  },
+  "hdate": "כ״ב תמוז תשפ״ה"
+ },
+ "2025-07-25": {
+  "date": "2025-07-25",
+  "vol": 38,
+  "no": 40,
+  "parsha": "פ' מטות, מסעי",
+  "covers": {
+   "a": "covers/archive/2025-07-25-a.jpg",
+   "b": "covers/archive/2025-07-25-b.jpg"
+  },
+  "hdate": "כ״ט תמוז תשפ״ה"
+ },
+ "2025-08-01": {
+  "date": "2025-08-01",
+  "vol": 38,
+  "no": 41,
+  "parsha": "פ' דברים",
+  "covers": {
+   "a": "covers/archive/2025-08-01-a.jpg",
+   "b": "covers/archive/2025-08-01-b.jpg"
+  },
+  "hdate": "ז׳ אב תשפ״ה"
+ },
+ "2025-08-08": {
+  "date": "2025-08-08",
+  "vol": 38,
+  "no": 42,
+  "parsha": "פ' ואתחנן",
+  "covers": {
+   "a": "covers/archive/2025-08-08-a.jpg",
+   "b": "covers/archive/2025-08-08-b.jpg"
+  },
+  "hdate": "י״ד אב תשפ״ה"
+ },
+ "2025-08-15": {
+  "date": "2025-08-15",
+  "vol": 38,
+  "no": 43,
+  "parsha": "פ' עקב",
+  "covers": {
+   "a": "covers/archive/2025-08-15-a.jpg",
+   "b": "covers/archive/2025-08-15-b.jpg"
+  },
+  "hdate": "כ״א אב תשפ״ה"
+ },
+ "2025-08-22": {
+  "date": "2025-08-22",
+  "vol": 38,
+  "no": 44,
+  "parsha": "פ' ראה",
+  "covers": {
+   "a": "covers/archive/2025-08-22-a.jpg",
+   "b": "covers/archive/2025-08-22-b.jpg"
+  },
+  "hdate": "כ״ח אב תשפ״ה"
+ },
+ "2025-08-29": {
+  "date": "2025-08-29",
+  "vol": 38,
+  "no": 45,
+  "parsha": "פ' ן וועג",
+  "covers": {
+   "a": "covers/archive/2025-08-29-a.jpg",
+   "b": "covers/archive/2025-08-29-b.jpg"
+  },
+  "hdate": "ה׳ אלול תשפ״ה"
+ },
+ "2025-09-05": {
+  "date": "2025-09-05",
+  "vol": 38,
+  "no": 46,
+  "parsha": "פ' כי תצא",
+  "covers": {
+   "a": "covers/archive/2025-09-05-a.jpg",
+   "b": "covers/archive/2025-09-05-b.jpg"
+  },
+  "hdate": "י״ב אלול תשפ״ה"
+ },
+ "2025-09-12": {
+  "date": "2025-09-12",
+  "vol": 38,
+  "no": 47,
+  "parsha": "פ' כי תבא",
+  "covers": {
+   "a": "covers/archive/2025-09-12-a.jpg",
+   "b": "covers/archive/2025-09-12-b.jpg"
+  },
+  "hdate": "י״ט אלול תשפ״ה"
+ },
+ "2025-09-19": {
+  "date": "2025-09-19",
+  "vol": 38,
+  "no": 48,
+  "parsha": "פ' נצבים",
+  "covers": {
+   "a": "covers/archive/2025-09-19-a.jpg",
+   "b": "covers/archive/2025-09-19-b.jpg"
+  },
+  "hdate": "כ״ו אלול תשפ״ה"
+ },
+ "2025-09-26": {
+  "date": "2025-09-26",
+  "vol": 39,
+  "no": 1,
+  "parsha": "פ' וילך",
+  "covers": {
+   "a": "covers/archive/2025-09-26-a.jpg",
+   "b": "covers/archive/2025-09-26-b.jpg"
+  },
+  "hdate": "ד׳ תשרי תשפ״ו"
+ },
+ "2025-10-17": {
+  "date": "2025-10-17",
+  "vol": 39,
+  "no": 3,
+  "parsha": "פ' בראשית",
+  "covers": {
+   "a": "covers/archive/2025-10-17-a.jpg",
+   "b": "covers/archive/2025-10-17-b.jpg"
+  },
+  "hdate": "כ״ה תשרי תשפ״ו"
+ },
+ "2025-10-24": {
+  "date": "2025-10-24",
+  "vol": 39,
+  "no": 4,
+  "parsha": "פ' נח",
+  "covers": {
+   "a": "covers/archive/2025-10-24-a.jpg",
+   "b": "covers/archive/2025-10-24-b.jpg"
+  },
+  "hdate": "ב׳ חשון תשפ״ו"
+ },
+ "2025-10-31": {
+  "date": "2025-10-31",
+  "vol": 39,
+  "no": 5,
+  "parsha": "פ' לך אויסצושרייען",
+  "covers": {
+   "a": "covers/archive/2025-10-31-a.jpg",
+   "b": "covers/archive/2025-10-31-b.jpg"
+  },
+  "hdate": "ט׳ חשון תשפ״ו"
+ },
+ "2025-11-07": {
+  "date": "2025-11-07",
+  "vol": 39,
+  "no": 6,
+  "parsha": "פ' וירא",
+  "covers": {
+   "a": "covers/archive/2025-11-07-a.jpg",
+   "b": "covers/archive/2025-11-07-b.jpg"
+  },
+  "hdate": "ט״ז חשון תשפ״ו"
+ },
+ "2025-11-14": {
+  "date": "2025-11-14",
+  "vol": 39,
+  "no": 7,
+  "parsha": "פ' חיי שרה",
+  "covers": {
+   "a": "covers/archive/2025-11-14-a.jpg",
+   "b": "covers/archive/2025-11-14-b.jpg"
+  },
+  "hdate": "כ״ג חשון תשפ״ו"
+ },
+ "2025-11-21": {
+  "date": "2025-11-21",
+  "vol": 39,
+  "no": 8,
+  "parsha": "פ' תולדות",
+  "covers": {
+   "a": "covers/archive/2025-11-21-a.jpg",
+   "b": "covers/archive/2025-11-21-b.jpg"
+  },
+  "hdate": "א׳ כסלו תשפ״ו"
+ },
+ "2025-11-28": {
+  "date": "2025-11-28",
+  "vol": 39,
+  "no": 9,
+  "parsha": "פ' ויצא",
+  "covers": {
+   "a": "covers/archive/2025-11-28-a.jpg",
+   "b": "covers/archive/2025-11-28-b.jpg"
+  },
+  "hdate": "ח׳ כסלו תשפ״ו"
+ },
+ "2025-12-05": {
+  "date": "2025-12-05",
+  "vol": 39,
+  "no": 10,
+  "parsha": "פ' וישלח",
+  "covers": {
+   "a": "covers/archive/2025-12-05-a.jpg",
+   "b": "covers/archive/2025-12-05-b.jpg"
+  },
+  "hdate": "ט״ו כסלו תשפ״ו"
+ },
+ "2025-12-12": {
+  "date": "2025-12-12",
+  "vol": 39,
+  "no": 11,
+  "parsha": "פ' ס אוקריינער",
+  "covers": {
+   "a": "covers/archive/2025-12-12-a.jpg",
+   "b": "covers/archive/2025-12-12-b.jpg"
+  },
+  "hdate": "כ״ב כסלו תשפ״ו"
+ },
+ "2025-12-19": {
+  "date": "2025-12-19",
+  "vol": 39,
+  "no": 12,
+  "parsha": "פ' ן",
+  "covers": {
+   "a": "covers/archive/2025-12-19-a.jpg",
+   "b": "covers/archive/2025-12-19-b.jpg"
+  },
+  "hdate": "כ״ט כסלו תשפ״ו"
+ },
+ "2025-12-26": {
+  "date": "2025-12-26",
+  "vol": 39,
+  "no": 13,
+  "parsha": "פ' ויגש",
+  "covers": {
+   "a": "covers/archive/2025-12-26-a.jpg",
+   "b": "covers/archive/2025-12-26-b.jpg"
+  },
+  "hdate": "ו׳ טבת תשפ״ו"
+ },
+ "2026-01-02": {
+  "date": "2026-01-02",
+  "vol": 39,
+  "no": 14,
+  "parsha": "פ' ויחי",
+  "covers": {
+   "a": "covers/archive/2026-01-02-a.jpg",
+   "b": "covers/archive/2026-01-02-b.jpg"
+  },
+  "hdate": "י״ג טבת תשפ״ו"
+ },
+ "2026-01-09": {
+  "date": "2026-01-09",
+  "vol": 39,
+  "no": 15,
+  "parsha": "פ' שמות",
+  "covers": {
+   "a": "covers/archive/2026-01-09-a.jpg",
+   "b": "covers/archive/2026-01-09-b.jpg"
+  },
+  "hdate": "כ׳ טבת תשפ״ו"
+ },
+ "2026-01-16": {
+  "date": "2026-01-16",
+  "vol": 39,
+  "no": 16,
+  "parsha": "פ' וארא",
+  "covers": {
+   "b": "covers/archive/2026-01-16-b.jpg"
+  },
+  "hdate": "כ״ז טבת תשפ״ו"
+ },
+ "2026-01-23": {
+  "date": "2026-01-23",
+  "vol": 39,
+  "no": 17,
+  "parsha": "פ' בא",
+  "covers": {
+   "a": "covers/archive/2026-01-23-a.jpg",
+   "b": "covers/archive/2026-01-23-b.jpg"
+  },
+  "hdate": "ה׳ שבט תשפ״ו"
+ },
+ "2026-01-30": {
+  "date": "2026-01-30",
+  "vol": 39,
+  "no": 18,
+  "parsha": "פ' בשלח",
+  "covers": {
+   "a": "covers/archive/2026-01-30-a.jpg",
+   "b": "covers/archive/2026-01-30-b.jpg"
+  },
+  "hdate": "י״ב שבט תשפ״ו"
+ },
+ "2026-02-06": {
+  "date": "2026-02-06",
+  "vol": 39,
+  "no": 19,
+  "parsha": "פ' יתרו",
+  "covers": {
+   "a": "covers/archive/2026-02-06-a.jpg",
+   "b": "covers/archive/2026-02-06-b.jpg"
+  },
+  "hdate": "י״ט שבט תשפ״ו"
+ },
+ "2026-02-13": {
+  "date": "2026-02-13",
+  "vol": 39,
+  "no": 20,
+  "parsha": "פ' משפטים",
+  "covers": {
+   "a": "covers/archive/2026-02-13-a.jpg",
+   "b": "covers/archive/2026-02-13-b.jpg"
+  },
+  "hdate": "כ״ו שבט תשפ״ו"
+ },
+ "2026-02-20": {
+  "date": "2026-02-20",
+  "vol": 39,
+  "no": 21,
+  "parsha": "פ' תרומה",
+  "covers": {
+   "a": "covers/archive/2026-02-20-a.jpg",
+   "b": "covers/archive/2026-02-20-b.jpg"
+  },
+  "hdate": "ג׳ אדר תשפ״ו"
+ },
+ "2026-02-27": {
+  "date": "2026-02-27",
+  "vol": 39,
+  "no": 22,
+  "parsha": "פ' ס הוי",
+  "covers": {
+   "a": "covers/archive/2026-02-27-a.jpg",
+   "b": "covers/archive/2026-02-27-b.jpg"
+  },
+  "hdate": "י׳ אדר תשפ״ו"
+ },
+ "2026-03-06": {
+  "date": "2026-03-06",
+  "vol": 39,
+  "no": 23,
+  "parsha": "פ' ן וועג",
+  "covers": {
+   "a": "covers/archive/2026-03-06-a.jpg",
+   "b": "covers/archive/2026-03-06-b.jpg"
+  },
+  "hdate": "י״ז אדר תשפ״ו"
+ },
+ "2026-03-13": {
+  "date": "2026-03-13",
+  "vol": 39,
+  "no": 24,
+  "parsha": "פ' ויקהל, פקודי",
+  "covers": {
+   "a": "covers/archive/2026-03-13-a.jpg",
+   "b": "covers/archive/2026-03-13-b.jpg"
+  },
+  "hdate": "כ״ד אדר תשפ״ו"
+ },
+ "2026-03-20": {
+  "date": "2026-03-20",
+  "vol": 39,
+  "no": 25,
+  "parsha": "פ' ן פארלאנג",
+  "covers": {
+   "a": "covers/archive/2026-03-20-a.jpg",
+   "b": "covers/archive/2026-03-20-b.jpg"
+  },
+  "hdate": "ב׳ ניסן תשפ״ו"
+ },
+ "2026-03-27": {
+  "date": "2026-03-27",
+  "vol": 39,
+  "no": 26,
+  "parsha": "פ' צו",
+  "covers": {
+   "a": "covers/archive/2026-03-27-a.jpg",
+   "b": "covers/archive/2026-03-27-b.jpg"
+  },
+  "hdate": "ט׳ ניסן תשפ״ו"
+ },
+ "2026-04-17": {
+  "date": "2026-04-17",
+  "vol": 39,
+  "no": 28,
+  "parsha": "פ' תזריע, מצורע",
+  "covers": {
+   "a": "covers/archive/2026-04-17-a.jpg",
+   "b": "covers/archive/2026-04-17-b.jpg"
+  },
+  "hdate": "ל׳ ניסן תשפ״ו"
+ },
+ "2026-04-24": {
+  "date": "2026-04-24",
+  "vol": 39,
+  "no": 29,
+  "parsha": "פ' אחרי מות, קדושים",
+  "covers": {
+   "a": "covers/archive/2026-04-24-a.jpg",
+   "b": "covers/archive/2026-04-24-b.jpg"
+  },
+  "hdate": "ז׳ אייר תשפ״ו"
+ },
+ "2026-05-01": {
+  "date": "2026-05-01",
+  "vol": 39,
+  "no": 30,
+  "parsha": "פ' אמור",
+  "covers": {
+   "a": "covers/archive/2026-05-01-a.jpg",
+   "b": "covers/archive/2026-05-01-b.jpg"
+  },
+  "hdate": "י״ד אייר תשפ״ו"
+ },
  "2026-05-08": {
   "date": "2026-05-08",
   "vol": 39,
   "no": 31,
-  "parsha": "פ' בהר, בחוקותי",
+  "parsha": "פ' ן וועלט",
   "covers": {
-   "a": "covers/archive/2026-05-08-a.jpg"
+   "a": "covers/archive/2026-05-08-a.jpg",
+   "b": "covers/archive/2026-05-08-b.jpg"
   },
   "hdate": "כ״א אייר תשפ״ו"
  },
@@ -15,8 +837,8 @@
   "no": 32,
   "parsha": "פ' במדבר",
   "covers": {
-   "b": "covers/archive/2026-05-15-b.jpg",
-   "a": "covers/archive/2026-05-15-a.jpg"
+   "a": "covers/archive/2026-05-15-a.jpg",
+   "b": "covers/archive/2026-05-15-b.jpg"
   },
   "hdate": "כ״ח אייר תשפ״ו"
  },
@@ -26,8 +848,8 @@
   "no": 33,
   "parsha": "שבועות",
   "covers": {
-   "b": "covers/archive/2026-05-22-b.jpg",
-   "a": "covers/archive/2026-05-22-a.jpg"
+   "a": "covers/archive/2026-05-22-a.jpg",
+   "b": "covers/archive/2026-05-22-b.jpg"
   },
   "hdate": "ו׳ סיון תשפ״ו"
  },
@@ -37,8 +859,8 @@
   "no": 34,
   "parsha": "פ' נשא",
   "covers": {
-   "b": "covers/archive/2026-05-29-b.jpg",
-   "a": "covers/archive/2026-05-29-a.jpg"
+   "a": "covers/archive/2026-05-29-a.jpg",
+   "b": "covers/archive/2026-05-29-b.jpg"
   },
   "hdate": "י״ג סיון תשפ״ו"
  },
@@ -59,8 +881,8 @@
   "no": 36,
   "parsha": "פ' שלח",
   "covers": {
-   "b": "covers/archive/2026-06-12-b.jpg",
-   "a": "covers/archive/2026-06-12-a.jpg"
+   "a": "covers/archive/2026-06-12-a.jpg",
+   "b": "covers/archive/2026-06-12-b.jpg"
   },
   "hdate": "כ״ז סיון תשפ״ו"
  },
@@ -81,8 +903,8 @@
   "no": 38,
   "parsha": "פ' חקת, בלק",
   "covers": {
-   "b": "covers/archive/2026-06-26-b.jpg",
-   "a": "covers/archive/2026-06-26-a.jpg"
+   "a": "covers/archive/2026-06-26-a.jpg",
+   "b": "covers/archive/2026-06-26-b.jpg"
   },
   "hdate": "י״א תמוז תשפ״ו"
  },
@@ -92,8 +914,8 @@
   "no": 39,
   "parsha": "פ' פינחס",
   "covers": {
-   "b": "covers/archive/2026-07-03-b.jpg",
-   "a": "covers/archive/2026-07-03-a.jpg"
+   "a": "covers/archive/2026-07-03-a.jpg",
+   "b": "covers/archive/2026-07-03-b.jpg"
   },
   "hdate": "י״ח תמוז תשפ״ו"
  },
@@ -124,8 +946,8 @@
   "no": 42,
   "parsha": "פ' ואתחנן",
   "covers": {
-   "b": "covers/archive/2026-07-24-b.jpg",
-   "a": "covers/archive/2026-07-24-a.jpg"
+   "a": "covers/archive/2026-07-24-a.jpg",
+   "b": "covers/archive/2026-07-24-b.jpg"
   },
   "hdate": "י׳ אב תשפ״ו"
  },
@@ -146,8 +968,8 @@
   "no": 44,
   "parsha": "פ' ראה",
   "covers": {
-   "b": "covers/archive/2026-08-07-b.jpg",
-   "a": "covers/archive/2026-08-07-a.jpg"
+   "a": "covers/archive/2026-08-07-a.jpg",
+   "b": "covers/archive/2026-08-07-b.jpg"
   },
   "hdate": "כ״ד אב תשפ״ו"
  },
@@ -157,8 +979,8 @@
   "no": 45,
   "parsha": "פ' שופטים",
   "covers": {
-   "b": "covers/archive/2026-08-14-b.jpg",
-   "a": "covers/archive/2026-08-14-a.jpg"
+   "a": "covers/archive/2026-08-14-a.jpg",
+   "b": "covers/archive/2026-08-14-b.jpg"
   },
   "hdate": "א׳ אלול תשפ״ו"
  },
@@ -168,7 +990,8 @@
   "no": 46,
   "parsha": "פ' כי תצא",
   "covers": {
-   "a": "covers/archive/2026-08-21-a.jpg"
+   "a": "covers/archive/2026-08-21-a.jpg",
+   "b": "covers/archive/2026-08-21-b.jpg"
   },
   "hdate": "ח׳ אלול תשפ״ו"
  },
@@ -178,8 +1001,8 @@
   "no": 47,
   "parsha": "פ' כי תבא",
   "covers": {
-   "b": "covers/archive/2026-08-28-b.jpg",
-   "a": "covers/archive/2026-08-28-a.jpg"
+   "a": "covers/archive/2026-08-28-a.jpg",
+   "b": "covers/archive/2026-08-28-b.jpg"
   },
   "hdate": "ט״ו אלול תשפ״ו"
  },
@@ -211,7 +1034,8 @@
   "no": 1,
   "parsha": "פ' האזינו",
   "covers": {
-   "a": "covers/archive/2026-09-18-a.jpg"
+   "a": "covers/archive/2026-09-18-a.jpg",
+   "b": "covers/archive/2026-09-18-b.jpg"
   },
   "hdate": "ז׳ תשרי תשפ״ז"
  },
@@ -221,6 +1045,7 @@
   "no": 2,
   "parsha": "סוכות",
   "covers": {
+   "a": "covers/archive/2026-09-25-a.jpg",
    "c": "covers/archive/2026-09-25-c.jpg",
    "b": "covers/archive/2026-09-25-b.jpg"
   },
@@ -232,8 +1057,8 @@
   "no": 3,
   "parsha": "פ' בראשית",
   "covers": {
-   "c": "covers/archive/2026-10-09-c.jpg",
-   "a": "covers/archive/2026-10-09-a.jpg"
+   "a": "covers/archive/2026-10-09-a.jpg",
+   "c": "covers/archive/2026-10-09-c.jpg"
   },
   "hdate": "כ״ח תשרי תשפ״ז"
  },
@@ -244,7 +1069,8 @@
   "parsha": "פ' נח",
   "covers": {
    "a": "covers/archive/2026-10-16-a.jpg",
-   "c": "covers/archive/2026-10-16-c.jpg"
+   "c": "covers/archive/2026-10-16-c.jpg",
+   "b": "covers/archive/2026-10-16-b.jpg"
   },
   "hdate": "ה׳ חשון תשפ״ז"
  },
