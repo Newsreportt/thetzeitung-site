@@ -278,6 +278,7 @@ p { max-width: 62ch; }
 .ed-head p { font-family: var(--display); font-style: italic; font-size: 20px; color: var(--ink-2); }
 .ed-head p .heb { font-style: normal; color: var(--gold-deep); }
 .ed-covers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
+.ed-covers[data-n="4"] { grid-template-columns: repeat(4, 1fr); gap: 28px; }
 .ed-covers figure { text-align: center; }
 .ed-covers figure.hide { display: none; }
 .ed-covers a { display: block; }

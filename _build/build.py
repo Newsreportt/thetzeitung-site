@@ -38,7 +38,10 @@ SECTIONS = [
    "The weekly supplement of history and heritage: the Jewish towns of yesteryear, great personalities, and memoirs passed down through the generations."),
   ("c", "Chassidishe Tzeit", "חסידישע צייט",
    "Chassidishe news from around the world, with the popular picture section of Rebbes, chassidishe courts, simchos and events."),
+  ("d", "Yom Tov Tzeit", "יום טוב צייט",
+   "The yom tov supplement: longer reading for the days of yom tov."),
 ]
+REGULAR = [sec for sec in SECTIONS if sec[0] in ("a", "b", "c")]   # what every edition carries
 
 SITE = "https://thetzeitung.com/"
 
@@ -222,7 +225,7 @@ inside_html = "".join(f'''
         <h3>{t}</h3>
         <span class="heb">{heb}</span>
         <p>{d}</p>
-      </article>''' for _, t, heb, d in SECTIONS)
+      </article>''' for _, t, heb, d in REGULAR)
 
 home = f'''
 <section class="hero">
@@ -477,7 +480,7 @@ def edition_block(ed):
       <figure data-k="{k}">
         <a href="{ed["covers"][k]}" data-zoom="{ed["covers"][k]}" aria-label="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}"><img src="{ed["covers"][k]}" alt="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}" width="900" height="980" loading="lazy"></a>
         <figcaption>{SECTION_NAME[k][0]}<span class="heb">{SECTION_NAME[k][1]}</span></figcaption>
-      </figure>''' for k in ("a", "b", "c") if k in ed["covers"])
+      </figure>''' for k in ("a", "b", "c", "d") if k in ed["covers"])
     volno = f"Volume {ed['vol']}, number {ed['no']}" if ed.get("vol") else ""
     parsha = ed.get("parsha") or ""
     hdate = ed.get("hdate") or ""
@@ -491,7 +494,7 @@ def edition_block(ed):
     return f'''
   <section class="edition" data-has="{"".join(sorted(ed["covers"]))}">
     <div class="ed-head"><h2>{heading}</h2><p>{meta}</p></div>
-    <div class="ed-covers">{figs}
+    <div class="ed-covers" data-n="{len(ed["covers"])}">{figs}
     </div>
   </section>'''
 
@@ -526,6 +529,7 @@ archive = band("Archives", f"{len(EDITIONS)} editions and {total_covers} covers,
       <button data-k="a" type="button">The main section</button>
       <button data-k="b" type="button">Yiddishe Tzeit</button>
       <button data-k="c" type="button">Chassidishe Tzeit</button>
+      <button data-k="d" type="button">Yom Tov Tzeit</button>
     </div>
     <nav class="vol-links" aria-label="Jump to a volume">{vol_links}</nav>
   </div>

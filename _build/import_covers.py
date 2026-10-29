@@ -31,9 +31,11 @@ def section_of(text, name):
     n = name.lower()
     if re.search(r"section[ _]a|saction[ _]a|_aa|a\.pdf$", n): return "a"
     if re.search(r"section[ _]c|_cc|_c\.pdf$|c\.pdf$", n): return "c"
+    if re.search(r"section[ _]d|_dd|_d\.pdf$|d\.pdf$", n): return "d"
     if re.search(r"section[ _]b|_bb|_b\.pdf$|b\.pdf$", n): return "b"
     if re.search(r"VOL\s*\d+", text): return "a"
     if "חסידישע" in text: return "c"
+    if "יום טוב" in text: return "d"
     return "b"
 
 def to_friday(d):
