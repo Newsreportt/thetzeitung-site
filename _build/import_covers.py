@@ -239,16 +239,46 @@ def enrich(data):
             ed["parsha"] = f"פ' {p}" if p else (hs.holiday(hebrew=True) or None)
         ed["hdate"] = hdates.HebrewDate.from_pydate(friday).hebrew_date_string()
         ed["hyear"] = hdates.HebrewDate.from_pydate(shabbos).hebrew_date_string().split()[-1]   # the year of that Shabbos (Rosh Hashana editions belong to the new year)
+        if not ed.get("vol"):
+            # the volume turns over with the Hebrew year on the Wednesday the paper comes out
+            # (volume 38 began with the first edition after Rosh Hashana 5785)
+            ed["vol"] = hdates.HebrewDate.from_pydate(friday - timedelta(days=2)).year - 5747
+    # an edition whose number was not read off its cover sits between two numbered neighbours
     keys = sorted(data)
     for i, key in enumerate(keys):
         ed = data[key]
-        if ed.get("vol"): continue
+        if ed.get("no"): continue
         prv = data[keys[i-1]] if i > 0 else None
         nxt = data[keys[i+1]] if i + 1 < len(keys) else None
-        if prv and nxt and prv.get("vol") == nxt.get("vol") and prv.get("no") and nxt.get("no") == prv["no"] + 2:
-            ed["vol"], ed["no"] = prv["vol"], prv["no"] + 1
-        elif prv and prv.get("vol") and prv.get("no") and (not nxt or not nxt.get("vol")):
-            ed["vol"], ed["no"] = prv["vol"], prv["no"] + 1
+        if prv and nxt and prv.get("vol") == nxt.get("vol") == ed.get("vol") and prv.get("no") and nxt.get("no") == prv["no"] + 2:
+            ed["no"] = prv["no"] + 1
+        elif prv and prv.get("vol") == ed.get("vol") and prv.get("no") and (not nxt or not nxt.get("no")) and i == len(keys) - 1:
+            ed["no"] = prv["no"] + 1
+    # a run of unnumbered editions between two numbered ones of the same volume: when the two
+    # numbers are exactly as far apart as the editions between them, the run is complete and
+    # can be numbered through
+    anchors = [i for i, key in enumerate(keys) if data[key].get("no")]
+    for a, b in zip(anchors, anchors[1:]):
+        ea, eb = data[keys[a]], data[keys[b]]
+        if ea.get("vol") == eb.get("vol") and eb["no"] - ea["no"] == b - a and b - a > 1:
+            for j in range(a + 1, b):
+                if data[keys[j]].get("vol") == ea["vol"]: data[keys[j]]["no"] = ea["no"] + (j - a)
+    # the start of a volume: when the first numbered edition carries exactly its position in the
+    # volume, the editions before it are complete and count up from 1
+    # the end of a volume: editions a week apart after the last numbered one count on from it
+    byvol = {}
+    for key in keys: byvol.setdefault(data[key].get("vol"), []).append(key)
+    for vol, vk in byvol.items():
+        nums = [i for i, key in enumerate(vk) if data[key].get("no")]
+        if not nums: continue
+        f = nums[0]
+        if data[vk[f]]["no"] == f + 1:
+            for i in range(f): data[vk[i]]["no"] = i + 1
+        l = nums[-1]
+        for i in range(l + 1, len(vk)):
+            d0, d1 = date(*map(int, vk[i-1].split("-"))), date(*map(int, vk[i].split("-")))
+            if (d1 - d0).days != 7 or not data[vk[i-1]].get("no"): break
+            data[vk[i]]["no"] = data[vk[i-1]]["no"] + 1
 
 if __name__ == "__main__":
     main(sys.argv[1:])

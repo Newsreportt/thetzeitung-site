@@ -115,8 +115,15 @@
         f.el.classList.toggle('hide', !ok); if (ok) shown++;
       });
       document.querySelectorAll('.edition').forEach(function (ed) { ed.classList.toggle('hide', !ed.querySelector('figure:not(.hide)')); });
-      document.querySelectorAll('.volume').forEach(function (v) { v.classList.toggle('hide', !v.querySelector('.edition:not(.hide)')); });
+      document.querySelectorAll('.month').forEach(function (m) { m.classList.toggle('hide', !m.querySelector('.edition:not(.hide)')); });
+      document.querySelectorAll('.year').forEach(function (v) { v.classList.toggle('hide', !v.querySelector('.edition:not(.hide)')); });
+      var years = document.querySelector('.years');
+      if (years) years.querySelectorAll('a').forEach(function (a) {
+        var y = document.getElementById(a.getAttribute('href').slice(1));
+        a.classList.toggle('dim', !!(y && y.classList.contains('hide')));
+      });
       if (hits) hits.textContent = terms.length ? (shown ? shown + (shown === 1 ? ' cover' : ' covers') : 'No covers match') : '';
+      var page = document.querySelector('.archive'); if (page) page.classList.toggle('empty', shown === 0);
     }
     if (filters) filters.addEventListener('click', function (e) {
       var btn = e.target.closest('button'); if (!btn) return;
@@ -125,7 +132,8 @@
       apply();
     });
     if (search) {
-      search.addEventListener('input', apply);
+      var wait = null;
+      search.addEventListener('input', function () { clearTimeout(wait); wait = setTimeout(apply, 120); });
       search.addEventListener('keydown', function (e) { if (e.key === 'Escape') { search.value = ''; apply(); } });
     }
   }

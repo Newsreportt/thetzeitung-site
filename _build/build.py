@@ -40,6 +40,10 @@ SECTIONS = [
    "Chassidishe news from around the world, with the popular picture section of Rebbes, chassidishe courts, simchos and events."),
   ("d", "Yom Tov Tzeit", "יום טוב צייט",
    "The yom tov supplement: longer reading for the days of yom tov."),
+  ("t", "Torah Tzeit", "תורה צייט",
+   "The yom tov supplement of Torah and history: the gedolim and the seforim, the minhagim and the memories of yom tov."),
+  ("k", "Kehila Tzeit", "קהלה צייט",
+   "The yom tov supplement about the kehilos: mosdos, askonim and the people who build the community."),
 ]
 REGULAR = [sec for sec in SECTIONS if sec[0] in ("a", "b", "c")]   # what every edition carries
 
@@ -474,93 +478,138 @@ contact = band("Contact", "For the editor, letters, subscriptions and advertisin
 write("contact.html", shell("Contact — The Tzeitung", "Contact The Tzeitung.", contact, page="contact.html"))
 
 # ======================= ARCHIVES =======================
+# Grouped by Hebrew year, then by month; an edition is headed by its Hebrew date
+# (a yom tov edition by the yom tov), with the parsha, the civil date and its number.
+from pyluach import dates as hdates
 SECTION_NAME = {k: (t, heb) for k, t, heb, _ in SECTIONS}
+
+def heb_year_of(key):
+    # the year of the Tuesday after: an edition that comes out for Rosh Hashana belongs to the new year
+    y, m, d = map(int, key.split("-"))
+    return hdates.HebrewDate.from_pydate(date(y, m, d) + timedelta(days=4)).year
+def heb_month_of(key):
+    y, m, d = map(int, key.split("-"))
+    hd = hdates.HebrewDate.from_pydate(date(y, m, d))
+    return hd.month_name(hebrew=True)
+YOMIM_TOVIM = [(7, 1, "ראש השנה"), (7, 10, "יום כיפור"), (7, 15, "סוכות"), (1, 15, "פסח"), (3, 6, "שבועות")]
+def yomtov_of(key):
+    """The yom tov this edition comes out for: one falling between the Wednesday the paper
+    appears and the Tuesday after, e.g. ערב סוכות; the calendar's own holiday for that Shabbos
+    (chol hamoed, a yom tov on Shabbos) is in the parsha field already."""
+    y, m, d = map(int, key.split("-"))
+    f = date(y, m, d)
+    found = None
+    for off in range(-1, 5):            # the Thursday before through the Tuesday after; the later yom tov wins
+        hd = hdates.HebrewDate.from_pydate(f + timedelta(days=off))
+        for mo, da, name in YOMIM_TOVIM:
+            if hd.month == mo and hd.day == da: found = (name, hd.hebrew_date_string().split()[-1])
+    return found
+
+def heb_year_label(key):
+    return hdates.HebrewDate.from_pydate(date(*map(int, key.split("-"))) + timedelta(days=4)).hebrew_date_string().split()[-1]
+
 def edition_block(ed):
-    figs = "".join(f'''
+    figs = "".join(f"""
       <figure data-k="{k}" data-s="{search_blob(ed, k).replace('"', "&quot;")}">
         <a href="{ed["covers"][k]}" data-zoom="{ed["covers"][k]}" aria-label="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}"><img src="{ed["covers"][k]}" alt="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}" width="900" height="980" loading="lazy"></a>
         <figcaption>{SECTION_NAME[k][0]}<span class="heb">{SECTION_NAME[k][1]}</span></figcaption>
-      </figure>''' for k in ("a", "b", "c", "d") if k in ed["covers"])
-    volno = f"Volume {ed['vol']}, number {ed['no']}" if ed.get("vol") else ""
+      </figure>""" for k, _, _, _ in SECTIONS if k in ed["covers"])
+    number = f'<span class="no">No. {ed["no"]}</span>' if ed.get("no") else ""
     parsha = ed.get("parsha") or ""
     hdate = ed.get("hdate") or ""
-    if parsha and not parsha.startswith("פ'") and hdate:
-        # a yom tov edition is headed by the yom tov, e.g. סוכות תשפ״ז
-        heading = f'<span class="heb">{parsha} {ed.get("hyear") or hdate.split()[-1]}</span>'
-        meta = ", ".join(x for x in [volno, f'<span class="heb">{hdate}</span>', nice_date(ed["date"])] if x)
+    yt = yomtov_of(ed["date"])
+    yomtov = yt[0] if yt else (parsha if parsha and not parsha.startswith("פ'") else None)
+    if yomtov and hdate:
+        # a yom tov edition is headed by the yom tov and its year, e.g. סוכות תשפ״ז
+        heading = f'<span class="heb">{yomtov} {yt[1] if yt else (ed.get("hyear") or hdate.split()[-1])}</span>'
+        meta = [f'<span class="heb">{hdate}</span>', parsha_html(ed) if parsha.startswith("פ'") else "", nice_date(ed["date"])]
     else:
         heading = f'<span class="heb">{hdate}</span>' if hdate else nice_date(ed["date"])
-        meta = ", ".join(x for x in [volno, parsha_html(ed), nice_date(ed["date"])] if x)
-    return f'''
-  <section class="edition" data-has="{"".join(sorted(ed["covers"]))}">
-    <div class="ed-head"><h2>{heading}</h2><p>{meta}</p></div>
+        meta = [parsha_html(ed), nice_date(ed["date"])]
+    return f"""
+  <section class="edition" id="e-{ed["date"]}" data-has="{"".join(sorted(ed["covers"]))}">
+    <div class="ed-head"><h3>{heading}</h3><p>{", ".join(x for x in meta if x)}{number}</p></div>
     <div class="ed-covers" data-n="{len(ed["covers"])}">{figs}
     </div>
-  </section>'''
-
-# group by volume, newest first; an edition without a number sits with its neighbours
-vol_of, cur = {}, None
-for k in EDITION_KEYS:
-    if EDITIONS[k].get("vol"): cur = EDITIONS[k]["vol"]
-    vol_of[k] = cur
-VOLUMES = []
-for k in EDITION_KEYS:
-    if not VOLUMES or VOLUMES[-1][0] != vol_of[k]: VOLUMES.append((vol_of[k], []))
-    VOLUMES[-1][1].append(k)
-
-def vol_span(keys):
-    a, b = nice_date(keys[-1]), nice_date(keys[0])
-    return f"{a} to {b}"
+  </section>"""
 
 # words that appear on most covers of a section are masthead boilerplate, not worth searching
 from collections import Counter
 def _norm(w): return re.sub(r"[\"״׳']", "", w.lower())
-_freq = {sec: Counter() for sec in "abcd"}; _count = {sec: 0 for sec in "abcd"}
+_freq = {k: Counter() for k, _, _, _ in SECTIONS}; _count = {k: 0 for k, _, _, _ in SECTIONS}
 for ed in EDITIONS.values():
     for sec, txt in ed.get("texts", {}).items():
-        _count[sec] += 1; _freq[sec].update(set(_norm(w) for w in txt.split()))
-BOILER = {sec: {w for w, n in _freq[sec].items() if _count[sec] >= 5 and n > 0.4 * _count[sec]} for sec in "abcd"}
+        if sec in _freq:
+            _count[sec] += 1; _freq[sec].update(set(_norm(w) for w in txt.split()))
+BOILER = {sec: {w for w, n in _freq[sec].items() if _count[sec] >= 5 and n > 0.4 * _count[sec]} for sec in _freq}
 
 def search_blob(ed, sec):
-    words = [w for w in ed.get("texts", {}).get(sec, "").split() if _norm(w) not in BOILER[sec]]
-    bits = [SECTION_NAME[sec][0], SECTION_NAME[sec][1], nice_date(ed["date"]), ed["date"], ed.get("hdate", ""),
-            (ed.get("parsha") or "").replace(", ", "-"), (ed.get("parsha") or "").replace("פ' ", ""),
-            f"volume {ed['vol']} number {ed['no']} {ed['vol']}/{ed['no']} #{ed['no']}" if ed.get("vol") else ""]
+    words = [w for w in ed.get("texts", {}).get(sec, "").split() if _norm(w) not in BOILER[sec]][:160]
+    y, m, d = map(int, ed["date"].split("-"))
+    bits = [SECTION_NAME[sec][0], SECTION_NAME[sec][1], nice_date(ed["date"]), ed["date"], date(y, m, d).strftime("%b %Y"),
+            ed.get("hdate", ""), ed.get("hyear", ""), heb_month_of(ed["date"]),
+            (ed.get("parsha") or "").replace(", ", "-"), (ed.get("parsha") or "").replace("פ' ", ""), " ".join(yomtov_of(ed["date"]) or ()),
+            f"number {ed['no']} no {ed['no']} #{ed['no']}" if ed.get("no") else ""]
     return " ".join(bits + words)
 
-archive_body = "".join(f'''
-  <div class="volume" id="volume-{vol}">
-    <div class="vol-head"><h2>Volume {vol}</h2><p>{len(keys)} editions, {vol_span(keys)}</p></div>
-    {"".join(edition_block(EDITIONS[k]) for k in keys)}
-  </div>''' for vol, keys in VOLUMES)
+# years, newest first; months within a year in reading order (newest first too)
+YEARS = []
+for k in EDITION_KEYS:
+    hy = heb_year_of(k)
+    if not YEARS or YEARS[-1][0] != hy: YEARS.append((hy, heb_year_label(k), []))
+    YEARS[-1][2].append(k)
 
-vol_links = "".join(f'<a href="#volume-{vol}">Volume {vol}</a>' for vol, _ in VOLUMES)
+def span_of(keys):
+    a, b = date(*map(int, keys[-1].split("-"))), date(*map(int, keys[0].split("-")))
+    if a.year == b.year:
+        return f"{a.strftime('%B')} to {b.strftime('%B %Y')}" if a.month != b.month else b.strftime("%B %Y")
+    return f"{a.strftime('%B %Y')} to {b.strftime('%B %Y')}"
+
+def year_block(hy, label, keys):
+    months = []
+    for k in keys:
+        mn = heb_month_of(k)
+        if not months or months[-1][0] != mn: months.append((mn, []))
+        months[-1][1].append(k)
+    body = "".join(f"""
+    <div class="month">
+      <div class="month-rule"><span class="heb">{mn}</span></div>{"".join(edition_block(EDITIONS[k]) for k in mk)}
+    </div>""" for mn, mk in months)
+    n = len(keys)
+    return f"""
+  <div class="year" id="y-{hy}">
+    <div class="year-head"><h2 class="heb">{label}</h2><p>{n} edition{"s" if n != 1 else ""}, {span_of(keys)}</p></div>{body}
+  </div>"""
+
+archive_body = "".join(year_block(hy, label, keys) for hy, label, keys in YEARS)
+year_links = "".join(f'<a href="#y-{hy}" class="heb">{label}</a>' for hy, label, _ in YEARS)
 total_covers = sum(len(e["covers"]) for e in EDITIONS.values())
+FIRST_KEY, LAST_KEY = EDITION_KEYS[-1], EDITION_KEYS[0]
 
-archive = band("Archives", "You may request back issues or a copy of a past article from the office.") + f'''
-<section class="page-body surface parchment"><div class="wrap">
-  <div class="archive-search">
-    <input id="cover-search" type="search" placeholder="Search the covers: a date, a parsha, a headline, a name" autocomplete="off" aria-label="Search the covers">
-    <span class="hits" id="search-hits"></span>
-  </div>
-  <div class="archive-tools">
-    <div class="filters" role="group" aria-label="Show">
-      <button class="on" data-k="all" type="button">All sections</button>
-      <button data-k="a" type="button">The main section</button>
-      <button data-k="b" type="button">Yiddishe Tzeit</button>
-      <button data-k="c" type="button">Chassidishe Tzeit</button>
-      <button data-k="d" type="button">Yom Tov Tzeit</button>
+archive = band("Archives", f'The covers of every edition since <span class="heb">{heb_year_label(FIRST_KEY)}</span>, by year and date. You may request back issues or a copy of a past article from the office.') + f"""
+<section class="page-body surface parchment archive"><div class="wrap">
+  <div class="finder">
+    <div class="archive-search">
+      <input id="cover-search" type="search" placeholder="Find a cover: a date, a parsha, a yom tov, a headline, a name" autocomplete="off" aria-label="Search the covers">
+      <span class="hits" id="search-hits"></span>
     </div>
-    <nav class="vol-links" aria-label="Jump to a volume">{vol_links}</nav>
+    <div class="archive-tools">
+      <div class="filters" role="group" aria-label="Show">
+        <button class="on" data-k="all" type="button">All sections</button>
+        {"".join(f'<button data-k="{k}" type="button">{t}</button>' for k, t, _, _ in SECTIONS)}
+      </div>
+    </div>
   </div>
+  <nav class="years" aria-label="Jump to a year"><span class="lbl">Year</span>{year_links}</nav>
+  <p class="none">No cover matches that. Try a parsha, a yom tov, a month or a year, or a word from a headline.</p>
   {archive_body}
   <div class="aside" style="margin:70px auto 0;max-width:720px;text-align:center">
     <h3>Looking for a particular issue?</h3>
     <p>For back issues, special editions or a copy of a specific article, call {PHONE} or write to <a href="mailto:mk@thetzeitung.com"><b>mk@thetzeitung.com</b></a>.</p>
   </div>
 </div></section>
-'''
-write("archive.html", shell("Archives — The Tzeitung", "Covers from every recent edition of The Tzeitung, by date.", archive, page="archive.html"))
+"""
+write("archive.html", shell("Archives — The Tzeitung", f"The covers of every edition of The Tzeitung since {heb_year_label(FIRST_KEY)}, by Hebrew year and date, with a search of every cover.", archive, page="archive.html"))
 
 # ======================= THANKS =======================
 thanks = band("Thank you", "We received your message and will be in touch shortly.") + '''
