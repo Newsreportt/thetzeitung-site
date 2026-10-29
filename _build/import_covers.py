@@ -220,6 +220,7 @@ def enrich(data):
             p = parshios.getparsha_string(hs, israel=False, hebrew=True)
             ed["parsha"] = f"פ' {p}" if p else (hs.holiday(hebrew=True) or None)
         ed["hdate"] = hdates.HebrewDate.from_pydate(friday).hebrew_date_string()
+        ed["hyear"] = hdates.HebrewDate.from_pydate(shabbos).hebrew_date_string().split()[-1]   # the year of that Shabbos (Rosh Hashana editions belong to the new year)
     keys = sorted(data)
     for i, key in enumerate(keys):
         ed = data[key]

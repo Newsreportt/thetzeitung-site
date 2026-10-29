@@ -479,8 +479,15 @@ def edition_block(ed):
         <figcaption>{SECTION_NAME[k][0]}<span class="heb">{SECTION_NAME[k][1]}</span></figcaption>
       </figure>''' for k in ("a", "b", "c") if k in ed["covers"])
     volno = f"Volume {ed['vol']}, number {ed['no']}" if ed.get("vol") else ""
-    meta = ", ".join(x for x in [volno, parsha_html(ed), nice_date(ed["date"])] if x)
-    heading = f'<span class="heb">{ed["hdate"]}</span>' if ed.get("hdate") else nice_date(ed["date"])
+    parsha = ed.get("parsha") or ""
+    hdate = ed.get("hdate") or ""
+    if parsha and not parsha.startswith("פ'") and hdate:
+        # a yom tov edition is headed by the yom tov, e.g. סוכות תשפ״ז
+        heading = f'<span class="heb">{parsha} {ed.get("hyear") or hdate.split()[-1]}</span>'
+        meta = ", ".join(x for x in [volno, f'<span class="heb">{hdate}</span>', nice_date(ed["date"])] if x)
+    else:
+        heading = f'<span class="heb">{hdate}</span>' if hdate else nice_date(ed["date"])
+        meta = ", ".join(x for x in [volno, parsha_html(ed), nice_date(ed["date"])] if x)
     return f'''
   <section class="edition" data-has="{"".join(sorted(ed["covers"]))}">
     <div class="ed-head"><h2>{heading}</h2><p>{meta}</p></div>
