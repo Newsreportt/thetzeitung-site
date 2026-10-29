@@ -117,7 +117,7 @@ def shell(title, desc, body, page="index.html"):
     </div>
     <div class="bottom">
       <span>© <span id="year"></span> The Tzeitung · TheTzeitung.com</span>
-      <span><a href="advertise.html">Advertise</a> &nbsp;&nbsp; <a href="subscribe.html">Subscribe</a> &nbsp;&nbsp; <a href="contact.html">Contact</a></span>
+      <span><a href="advertise.html">Advertise</a> &nbsp;&nbsp; <a href="subscribe.html">Subscribe</a> &nbsp;&nbsp; <a href="index.html#email">Email list</a> &nbsp;&nbsp; <a href="contact.html">Contact</a></span>
     </div>
   </div>
 </footer>
@@ -149,6 +149,27 @@ CONTACT_ASIDE = f'''<aside class="aside">
   <div class="line"></div>
   <p>Office hours are Sunday to Thursday, 9 AM to 6 PM. Material for the coming edition is due Tuesday at 12 PM.</p>
 </aside>'''
+
+
+EMAIL_BAND = '''
+<section class="emaillist" id="email">
+  <div class="wrap grid">
+    <div>
+      <h2>Join our email list</h2>
+      <p>This week's covers, news from The Tzeitung and the occasional announcement, straight to your inbox. Free, and you can leave any time.</p>
+    </div>
+    <form class="mc" action="https://thetzeitung.us19.list-manage.com/subscribe/post?u=32d4918dafef1c115c1d3f6bc&amp;id=cd1d1ef5a7" method="post" target="_blank" rel="noopener" novalidate>
+      <div class="row">
+        <div><label for="mc-fname">First name</label><input id="mc-fname" type="text" name="FNAME" autocomplete="given-name"></div>
+        <div><label for="mc-email">Email address</label><input id="mc-email" type="email" name="EMAIL" autocomplete="email" required></div>
+      </div>
+      <div style="position:absolute;left:-5000px" aria-hidden="true"><input type="text" name="b_32d4918dafef1c115c1d3f6bc_cd1d1ef5a7" tabindex="-1" value=""></div>
+      <button class="btn gold" type="submit" name="subscribe">Join the list</button>
+      <span class="note">You'll get one email asking you to confirm.</span>
+    </form>
+  </div>
+</section>
+'''
 
 HONEYPOT = '<p style="display:none"><label>Leave this empty: <input name="bot-field"></label></p>'
 
@@ -249,6 +270,7 @@ home = f'''
     </div>
   </div>
 </section>
+{EMAIL_BAND}
 '''
 write("index.html", shell("The Tzeitung (Di Tzeitung, די צייטונג) — News Report, the Yiddish newspaper of record",
   "The Tzeitung, also written Di Tzeitung or Dee Tzeitung (די צייטונג), is News Report, the independent Yiddish weekly newspaper printed in Brooklyn for forty years and read by thousands around the world. Subscriptions, advertising and this week's covers.", home))
@@ -331,6 +353,7 @@ subscribe = band("Subscriptions", "Every edition, with both supplements, mailed 
     </aside>
   </div>
 </div></section>
+{EMAIL_BAND}
 '''
 write("subscribe.html", shell("Subscriptions — The Tzeitung", "Subscribe to The Tzeitung and have every edition delivered to your home.", subscribe, page="subscribe.html"))
 

@@ -197,6 +197,20 @@ p { max-width: 62ch; }
 .form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
 .form .btn { justify-self: start; margin-top: 6px; }
 
+/* ---- email list ---- */
+.emaillist { background: var(--forest-2); color: var(--ivory); padding: 80px 0; }
+.emaillist .grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 64px; align-items: center; }
+.emaillist h2 { color: var(--ivory); font-size: clamp(34px, 3.6vw, 46px); margin-bottom: 14px; }
+.emaillist p { color: var(--sage); font-size: 17.5px; max-width: 42ch; }
+.mc { position: relative; display: grid; gap: 22px; }
+.mc .row { display: grid; grid-template-columns: 1fr 1.4fr; gap: 22px; }
+.mc label { display: block; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--sage); margin-bottom: 4px; }
+.mc input { width: 100%; padding: 12px 0; font-family: var(--sans); font-size: 17px; color: var(--ivory); background: transparent; border: 0; border-bottom: 1px solid rgba(201,168,92,.55); border-radius: 0; }
+.mc input:focus { outline: 0; border-bottom-color: var(--gold); }
+.mc input::placeholder { color: rgba(183,207,190,.6); }
+.mc .btn { justify-self: start; }
+.mc .note { font-size: 13.5px; color: var(--sage); opacity: .85; margin-top: -8px; }
+
 /* ---- generic page body ---- */
 .page-body { padding: 80px 0 100px; }
 .two-col { display: grid; grid-template-columns: 1.15fr .85fr; gap: 64px; align-items: start; }
@@ -271,7 +285,7 @@ p { max-width: 62ch; }
   .inside { grid-template-columns: 1fr; gap: 36px; }
   .inside article { padding: 0 0 0 22px; }
   .inside article:first-child { padding-left: 22px; border-left: 1px solid var(--gold); }
-  .subscribe .grid, .two-col, .plans { grid-template-columns: 1fr; gap: 44px; }
+  .subscribe .grid, .two-col, .plans, .emaillist .grid { grid-template-columns: 1fr; gap: 44px; }
   .site-footer .grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 700px) {
@@ -304,7 +318,8 @@ p { max-width: 62ch; }
   .plan { grid-template-columns: 1fr; text-align: center; }
   .plan img { margin: 0 auto; max-width: 150px; }
   .panel { padding: 28px 22px; }
-  .form .row { grid-template-columns: 1fr; }
+  .form .row, .mc .row { grid-template-columns: 1fr; }
+  .emaillist { padding: 60px 0; }
   .archive-grid { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
   .site-footer .grid { grid-template-columns: 1fr; gap: 30px; }
   .rates th, .rates td { padding: 10px 6px; font-size: 14.5px; }
