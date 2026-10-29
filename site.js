@@ -91,24 +91,54 @@
 
     // keep cycling; only rest while the tab is in the background
     document.addEventListener('visibilitychange', function () { document.hidden ? stop() : play(); });
+    document.addEventListener('lightbox:open', stop);
+    document.addEventListener('lightbox:close', play);
 
     show(0); play();
   }
 
-  // cover lightbox
+  // cover lightbox: opens a cover full size; arrows, keys and swipes move through the others
   var box = document.querySelector('.lightbox');
   if (box) {
-    var big = box.querySelector('img');
-    document.querySelectorAll('[data-zoom]').forEach(function (a) {
-      a.addEventListener('click', function (e) {
-        e.preventDefault();
-        big.src = a.getAttribute('data-zoom');
-        var inner = a.querySelector('img');
-        big.alt = inner ? inner.alt : '';
-        box.classList.add('on');
-      });
+    var big = box.querySelector('img'), cap = box.querySelector('figcaption');
+    var items = Array.prototype.slice.call(document.querySelectorAll('[data-zoom]')).map(function (a) {
+      var im = a.querySelector('img');
+      return { src: a.getAttribute('data-zoom'), title: a.getAttribute('aria-label') || (im ? im.alt : '') };
     });
-    box.addEventListener('click', function () { box.classList.remove('on'); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') box.classList.remove('on'); });
+    var cur = 0;
+
+    function render() {
+      var it = items[cur];
+      big.src = it.src; big.alt = it.title;
+      cap.innerHTML = it.title + '<small>' + (cur + 1) + ' of ' + items.length + '</small>';
+      // warm the next one so the flip is instant
+      var nx = new Image(); nx.src = items[(cur + 1) % items.length].src;
+    }
+    function open(i) { cur = i; render(); box.classList.add('on'); document.body.style.overflow = 'hidden'; document.dispatchEvent(new Event('lightbox:open')); }
+    function close() { box.classList.remove('on'); document.body.style.overflow = ''; document.dispatchEvent(new Event('lightbox:close')); }
+    function step(d) { cur = (cur + d + items.length) % items.length; render(); }
+
+    document.querySelectorAll('[data-zoom]').forEach(function (a, i) {
+      a.addEventListener('click', function (e) { e.preventDefault(); open(i); });
+    });
+    box.querySelector('.lb-prev').addEventListener('click', function (e) { e.stopPropagation(); step(-1); });
+    box.querySelector('.lb-next').addEventListener('click', function (e) { e.stopPropagation(); step(1); });
+    box.querySelector('.lb-close').addEventListener('click', function (e) { e.stopPropagation(); close(); });
+    big.addEventListener('click', function (e) { e.stopPropagation(); close(); });
+    box.addEventListener('click', function (e) { if (e.target === box) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (!box.classList.contains('on')) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowRight') step(1);
+      else if (e.key === 'ArrowLeft') step(-1);
+    });
+    // swipe
+    var x0 = null;
+    box.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    box.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
+    }, { passive: true });
   }
 })();

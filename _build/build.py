@@ -8,6 +8,11 @@ NAV = [("index.html", "Home"), ("archive.html", "Archives"), ("about.html", "Abo
 import glob
 WALL = ",".join("covers/wall/" + os.path.basename(f) for f in sorted(glob.glob(os.path.join(ROOT, "covers", "wall", "*.jpg"))))
 
+# This week's edition. Update these three lines every week.
+EDITION_VOL, EDITION_NO = 40, 6
+EDITION_PARSHA = "פ' וירא"
+EDITION_DATE = "October 28, 2026"
+
 PHONE = '<a href="tel:7188516607">718-851-6607</a>'
 ADDRESS = "445 Park Avenue, Suite 202<br>Brooklyn, NY 11205"
 
@@ -122,7 +127,12 @@ def shell(title, desc, body, page="index.html"):
   </div>
 </footer>
 
-<div class="lightbox" role="dialog" aria-label="Cover preview"><img src="" alt=""></div>
+<div class="lightbox" role="dialog" aria-modal="true" aria-label="Cover preview">
+  <button class="lb-close" type="button" aria-label="Close">&times;</button>
+  <button class="lb-prev" type="button" aria-label="Previous cover">&#8249;</button>
+  <figure><img src="" alt=""><figcaption></figcaption></figure>
+  <button class="lb-next" type="button" aria-label="Next cover">&#8250;</button>
+</div>
 <script src="site.js"></script>
 </body>
 </html>
@@ -210,7 +220,7 @@ home = f'''
   <div class="wrap">
     <div class="sec-head">
       <h2>This week's edition</h2>
-      <p>Volume 40, number 6, for the week of October 28, 2026</p>
+      <p>Volume {EDITION_VOL}, number {EDITION_NO}, <span class="heb">{EDITION_PARSHA}</span>, for the week of {EDITION_DATE}</p>
     </div>
     <div class="showcase" id="showcase">
       <div class="stage">{slides_html}
@@ -409,9 +419,6 @@ advertise = band("Advertise", "Reach thousands of heimishe households around the
       <div class="line"></div>
       <h3>Why The Tzeitung</h3>
       <p>A newspaper that stays on the table all week, at home, in shul and in the store, read by thousands of families around the world.</p>
-      <div class="line"></div>
-      <h3>Need an ad designed?</h3>
-      <p>Our design team can create one for you. Mention it in your request.</p>
     </aside>
   </div>
 </div></section>
@@ -445,7 +452,7 @@ write("contact.html", shell("Contact — The Tzeitung", "Contact The Tzeitung.",
 figs = "".join(f'<figure><a href="covers/{img}" data-zoom="covers/{img}"><img src="covers/{img}" alt="{t}" width="1064" height="1158" loading="lazy"></a><figcaption>{t}<span>{heb}</span></figcaption></figure>' for img, t, heb, _ in SECTIONS)
 archive = band("Archives", "Covers from recent editions. Anyone may request back issues or a copy of a past article from the office.") + f'''
 <section class="page-body surface parchment"><div class="wrap">
-  <div class="sec-head"><h2>Volume 40, number 6</h2><p>The week of October 28, 2026</p></div>
+  <div class="sec-head"><h2>Volume {EDITION_VOL}, number {EDITION_NO}</h2><p><span class="heb">{EDITION_PARSHA}</span>, the week of {EDITION_DATE}</p></div>
   <div class="archive-grid">{figs}</div>
   <div class="aside" style="margin:70px auto 0;max-width:720px;text-align:center">
     <h3>Looking for a particular issue?</h3>
