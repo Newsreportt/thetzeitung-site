@@ -443,7 +443,7 @@ write("contact.html", shell("Contact — The Tzeitung", "Contact The Tzeitung.",
 
 # ======================= ARCHIVES =======================
 figs = "".join(f'<figure><a href="covers/{img}" data-zoom="covers/{img}"><img src="covers/{img}" alt="{t}" width="1064" height="1158" loading="lazy"></a><figcaption>{t}<span>{heb}</span></figcaption></figure>' for img, t, heb, _ in SECTIONS)
-archive = band("Archives", "Covers from recent editions. Subscribers may request back issues from the office.") + f'''
+archive = band("Archives", "Covers from recent editions. Anyone may request back issues or a copy of a past article from the office.") + f'''
 <section class="page-body surface parchment"><div class="wrap">
   <div class="sec-head"><h2>Volume 40, number 6</h2><p>The week of October 28, 2026</p></div>
   <div class="archive-grid">{figs}</div>
