@@ -162,7 +162,7 @@
     function render() {
       var it = items[cur];
       big.src = it.src; big.alt = it.title;
-      cap.innerHTML = it.title + '<small>' + (cur + 1) + ' of ' + items.length + '</small>';
+      cap.textContent = it.title;
       // warm the next one so the flip is instant
       var nx = new Image(); nx.src = items[(cur + 1) % items.length].src;
     }
