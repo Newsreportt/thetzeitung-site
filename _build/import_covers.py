@@ -58,7 +58,7 @@ def hebrew_year_of(text):
     m = re.search(r"\b(ת[\u05d0-\u05ea]{1,2})[\"״'′]{1,2}([\u05d0-\u05ea])\b", text)
     if not m: return None
     y = 5000 + gematria(m.group(1) + m.group(2))
-    return y if 5780 <= y <= 5795 else None
+    return y if 5765 <= y <= 5799 else None
 
 def hebrew_date_of(text, hyear):
     """A Hebrew date such as י״ט חשון, converted through the calendar (needs pyluach)."""
@@ -78,7 +78,7 @@ def guess_year(mon, day):
     """A cover date without a year: the paper is dated Wednesday to Friday, so only some
     years fit; prefer a year in which that Friday is already a known edition."""
     fits = []
-    for y in range(2022, date.today().year + 1):
+    for y in range(2005, date.today().year + 1):
         try: d = date(y, mon, day)
         except ValueError: continue
         if d.weekday() <= 4 and d <= date.today() + timedelta(days=7): fits.append(d)
