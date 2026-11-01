@@ -36,7 +36,7 @@ def main(folder, no_wall=False, report=None, only=None):
         txt = os.path.join(folder, tag + ".txt"); jpg = os.path.join(folder, tag + ".jpg")
         if not os.path.exists(jpg): continue
         text = open(txt, encoding="utf-8", errors="replace").read() if os.path.exists(txt) else ""
-        items.append((tag, name, it, text, jpg))
+        items.append((tag, name, it, ic.normalize_text(text), jpg))
     # main-section covers carry full dates: they go first and anchor the others
     items.sort(key=lambda x: (0 if ic.section_of(x[3], x[1]) == "a" else 1, x[1]))
     rows, added = [], 0

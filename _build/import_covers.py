@@ -33,7 +33,7 @@ def section_of(text, name):
     if re.search(r"section[ _]c|_cc|_c\.pdf$|c\.pdf$", n): return "c"
     if re.search(r"section[ _]d|_dd|_d\.pdf$|d\.pdf$", n): return "d"
     if re.search(r"section[ _]b|_bb|_b\.pdf$|b\.pdf$", n): return "b"
-    if re.search(r"VOL\s*\d+", text): return "a"
+    if re.search(r"VOL\.?\s*\d+", text): return "a"
     if "חסידישע" in text: return "c"
     if "יום טוב" in text: return "d"
     return "b"
@@ -58,7 +58,7 @@ def hebrew_year_of(text):
     m = re.search(r"\b(ת[\u05d0-\u05ea]{1,2})[\"״'′]{1,2}([\u05d0-\u05ea])\b", text)
     if not m: return None
     y = 5000 + gematria(m.group(1) + m.group(2))
-    return y if 5765 <= y <= 5799 else None
+    return y if 5750 <= y <= 5799 else None
 
 def hebrew_date_of(text, hyear):
     """A Hebrew date such as י״ט חשון, converted through the calendar (needs pyluach)."""
@@ -110,6 +110,27 @@ def decode_glyphs(text):
         else: out.append(ch)
     return "".join(out)
 
+_KB_KEYS = "qwertyuiop[]asdfghjkl;'zxcvbnm,./"
+_KB_HEB  = "/'קראטוןםפ][שדגכעיחלךף,זסבהנמצתץ."
+_KB = dict(zip(_KB_KEYS, _KB_HEB)); _KB.update({k.upper(): v for k, v in zip(_KB_KEYS, _KB_HEB) if k.isalpha()})
+_LATIN_LINE = re.compile(r"\b(VOL|NO|FRIDAY|JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[A-Z]*\b")
+
+def decode_keyboard(text):
+    """The oldest covers (2005 and thereabouts) were set in fonts that store Hebrew as the Latin
+    keys of the Hebrew keyboard layout, one line reversed: 'iup' is פון. Lines that carry the
+    English date and volume are left alone."""
+    out = []
+    for line in text.splitlines():
+        if _LATIN_LINE.search(line): out.append(line); continue
+        out.append("".join(_KB.get(ch, ch) for ch in line)[::-1])
+    return "\n".join(out)
+
+def normalize_text(text):
+    """Whichever reading of the text layer yields the most Hebrew: as is, glyph-shifted, or keyboard-mapped."""
+    def heb(t): return len(re.findall(r"[\u05d0-\u05ea]", t))
+    cands = [text, decode_glyphs(text), decode_keyboard(text)]
+    return max(cands, key=heb)
+
 def looks_garbled(text):
     return len(re.findall(r"[\xAA-\xC9]", text)) > 20 and len(re.findall(r"[\u05d0-\u05ea]", text)) < 20
 
@@ -119,7 +140,9 @@ def date_of(text):
     dec = decode_glyphs(text)
     d = _date_of(dec)
     if d: return d
-    return _date_of("\n".join(line[::-1] for line in dec.splitlines()))
+    d = _date_of("\n".join(line[::-1] for line in dec.splitlines()))
+    if d: return d
+    return _date_of(decode_keyboard(text))
 
 def _date_of(text):
     # "MAY 13-15, '26"  /  "October 23, '26"  /  "Oct 30" (+ Hebrew year)  /  "י״ט חשון תשפ״ז"
