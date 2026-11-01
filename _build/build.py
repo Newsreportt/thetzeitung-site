@@ -636,7 +636,7 @@ archive = band("Archives", "You may request back issues or a copy of a past arti
     </div>
     <div class="archive-tools">
       <div class="filters" role="group" aria-label="Show">
-        <button class="on heb" data-k="all" type="button">אַלע סעקציעס</button>
+        <button class="on heb" data-k="all" type="button">אַלע</button>
         {"".join(f'<button class="heb" data-k="{k}" type="button" aria-label="{t}">{heb}</button>' for k, t, heb, _ in SECTIONS)}
       </div>
     </div>
