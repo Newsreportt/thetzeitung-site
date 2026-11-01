@@ -631,6 +631,7 @@ archive = band("Archives", "You may request back issues or a copy of a past arti
   <div class="finder">
     <div class="archive-search">
       <input id="cover-search" type="search" placeholder="Find a cover: a date, a parsha, a yom tov, a headline, a name" autocomplete="off" aria-label="Search the covers">
+      <select id="year-jump" class="heb" aria-label="Go to a year"><option value="">שנה</option>{"".join(f'<option value="y-{hy}">{label}</option>' for hy, label, _ in YEARS)}</select>
       <span class="hits" id="search-hits"></span>
     </div>
     <div class="archive-tools">
@@ -643,6 +644,7 @@ archive = band("Archives", "You may request back issues or a copy of a past arti
   <nav class="years" aria-label="Jump to a year"><span class="lbl">Year</span>{year_links}</nav>
   <p class="none">No cover matches that. Try a parsha, a yom tov, a month or a year, or a word from a headline.</p>
   {archive_body}
+  <button class="to-top" type="button" aria-label="Back to the top">&uarr;</button>
   <div class="aside" style="margin:70px auto 0;max-width:720px;text-align:center">
     <h3>Looking for a particular issue?</h3>
     <p>For back issues, special editions or a copy of a specific article, call {PHONE} or write to <a href="mailto:mk@thetzeitung.com"><b>mk@thetzeitung.com</b></a>.</p>

@@ -142,6 +142,21 @@
       filters.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
       apply();
     });
+    // jump to a year from the sticky bar, and a button back to the top once the page is scrolled
+    var jump = document.getElementById('year-jump');
+    if (jump) jump.addEventListener('change', function () {
+      var y = jump.value && document.getElementById(jump.value);
+      if (y) y.scrollIntoView({ behavior: 'instant', block: 'start' });
+    });
+    var toTop = document.querySelector('.to-top');
+    if (toTop) {
+      var tick = false;
+      window.addEventListener('scroll', function () {
+        if (tick) return; tick = true;
+        requestAnimationFrame(function () { toTop.classList.toggle('on', window.scrollY > 700); tick = false; });
+      }, { passive: true });
+      toTop.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'instant' }); if (jump) jump.value = ''; });
+    }
     if (search) {
       var wait = null;
       search.addEventListener('input', function () { clearTimeout(wait); wait = setTimeout(apply, 120); });

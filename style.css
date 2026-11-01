@@ -268,6 +268,19 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
 .archive-search input::placeholder { color: #9a937f; }
 .archive-search input:focus { outline: 0; border-color: var(--forest); box-shadow: 0 0 0 3px rgba(201,168,92,.25); }
 .archive-search .hits { font-family: var(--display); font-style: italic; font-size: 18px; color: var(--ink-2); white-space: nowrap; }
+.archive-search select {
+  flex: 0 0 auto; padding: 13px 40px 13px 16px; font-family: var(--hebrew); font-size: 18px; font-weight: 700; color: var(--forest);
+  background: var(--ivory) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%239A7B36' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 14px center;
+  border: 1px solid var(--gold); border-radius: 0; -webkit-appearance: none; appearance: none; cursor: pointer; direction: rtl;
+}
+.archive-search select:focus { outline: 0; border-color: var(--forest); box-shadow: 0 0 0 3px rgba(201,168,92,.25); }
+.to-top {
+  position: fixed; right: 26px; bottom: 26px; z-index: 9; width: 52px; height: 52px; border-radius: 50%;
+  border: 1px solid var(--gold); background: var(--forest); color: var(--ivory); font-size: 24px; line-height: 1; cursor: pointer;
+  box-shadow: 0 14px 30px -12px rgba(10,46,30,.6); opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity .3s, transform .3s, background .2s;
+}
+.to-top.on { opacity: 1; transform: none; pointer-events: auto; }
+.to-top:hover { background: var(--gold); color: var(--forest); }
 .archive-tools { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
 .filters { display: flex; flex-wrap: wrap; gap: 8px; }
 .filters button {
@@ -394,6 +407,8 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
   .archive-search { margin-bottom: 10px; }
   .archive-search input { padding: 12px 14px; font-size: 16px; }
   .archive-search .hits { display: none; }
+  .archive-search select { padding: 11px 34px 11px 12px; font-size: 16px; }
+  .to-top { right: 14px; bottom: 14px; width: 46px; height: 46px; }
   .ed-covers { --gap: 16px; gap: 26px var(--gap); }
   .ed-covers figure { flex-basis: calc((100% - var(--gap)) / 2); }
   .ed-covers figcaption { font-size: 16px; }
