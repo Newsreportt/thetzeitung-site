@@ -300,12 +300,10 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
 .ed-head p { font-family: var(--display); font-style: italic; font-size: 20px; color: var(--ink-2); max-width: none; }
 .ed-head p .heb { font-style: normal; color: var(--gold-deep); font-size: 19px; }
 .ed-head p .no { font-family: var(--sans); font-style: normal; font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-deep); margin-left: 14px; padding-left: 14px; border-left: 1px solid var(--gold); }
-.ed-covers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
-.ed-covers[data-n="1"] { grid-template-columns: repeat(3, 1fr); }
-.ed-covers[data-n="2"] { grid-template-columns: repeat(3, 1fr); }
-.ed-covers[data-n="4"] { grid-template-columns: repeat(4, 1fr); gap: 28px; }
-.ed-covers[data-n="5"], .ed-covers[data-n="6"] { grid-template-columns: repeat(5, 1fr); gap: 22px; }
-.ed-covers figure { text-align: center; }
+/* every cover the same width, a third of the row, however many an edition has or a filter shows;
+   a fourth or fifth cover wraps to the next line; the pictures sit on one line, captions level */
+.ed-covers { --gap: 36px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 44px var(--gap); }
+.ed-covers figure { flex: 0 0 calc((100% - 2 * var(--gap)) / 3); text-align: center; }
 .ed-covers a { display: block; }
 .ed-covers img {
   border: 1px solid rgba(27,26,23,.08);
@@ -397,7 +395,8 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
   .archive-search { margin-bottom: 10px; }
   .archive-search input { padding: 12px 14px; font-size: 16px; }
   .archive-search .hits { display: none; }
-  .ed-covers, .ed-covers[data-n="4"], .ed-covers[data-n="5"], .ed-covers[data-n="6"] { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .ed-covers { --gap: 16px; gap: 26px var(--gap); }
+  .ed-covers figure { flex-basis: calc((100% - var(--gap)) / 2); }
   .ed-covers figcaption { font-size: 16px; }
   .ed-head h3 { font-size: 28px; }
   .year-head h2 { font-size: 44px; }
