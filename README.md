@@ -18,6 +18,8 @@ The covers back to Elul 5778 came from the JPEGs in the Mailchimp content studio
 and section are read from the Mailchimp file names, the volume and number off the main cover with
 OCR, and the search text of each cover with OCR as well. Sections: a = the main section,
 b = Yiddishe Tzeit, c = Chassidishe Tzeit, d = Yom Tov Tzeit, t = Torah Tzeit, k = Kehila Tzeit.
+Those JPEGs carried an unmanaged print green (bright, yellowish); `_build/regreen.py` remaps it to the
+masthead green of the PDF renders and runs as part of the image import.
 
 Primary domain is thetzeitung.com; ditzeitung.com redirects to it (see `_redirects`).
 Forms (subscribe, advertise, contact) are Netlify Forms; notifications go to mk@thetzeitung.com.

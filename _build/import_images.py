@@ -73,7 +73,8 @@ def read_volno(im):
     return None, None
 
 def render(im, out_big, out_small):
-    im = im.convert("RGB")
+    from regreen import regreen
+    im = regreen(im.convert("RGB"))          # print green, not the bright green of an unmanaged JPEG
     bg = Image.new("RGB", im.size, im.getpixel((3, 3)))
     box = ImageChops.difference(im, bg).convert("L").point(lambda v: 255 if v > 14 else 0).getbbox()
     if box and (box[2] - box[0]) > im.width * 0.8 and (box[3] - box[1]) > im.height * 0.8:
