@@ -83,8 +83,8 @@ p { max-width: 62ch; }
 .wall .row { flex: 0 0 auto; height: 44%; }
 .wall .track { display: flex; height: 100%; width: max-content; animation: drift var(--dur, 90s) linear infinite; will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
 .wall .row:nth-child(2) .track { margin-left: -160px; }
-.wall img { height: 100%; width: auto; margin-right: 22px; border: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 40px -22px rgba(0,0,0,.7); flex: 0 0 auto; opacity: 0; transition: opacity .7s ease; }
-.wall img.in { opacity: 1; }
+.wall .cv { display: block; flex: 0 0 auto; height: 100%; margin-right: 22px; background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 40px -22px rgba(0,0,0,.7); }
+.wall .cv img { display: block; height: 100%; width: 100%; }
 @keyframes drift { to { transform: translateX(-50%); } }
 .veil { position: absolute; inset: 0; pointer-events: none; }
 .hero .veil {
@@ -373,7 +373,7 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
   .hero { min-height: 0; display: block; }
   .wall { gap: 12px; }
   .wall .row { height: 150px; }
-  .wall img { margin-right: 12px; }
+  .wall .cv { margin-right: 12px; }
   .wall .row:nth-child(2) .track { margin-left: -70px; }
   .hero .veil { background: linear-gradient(180deg, rgba(10,46,30,.7) 0%, rgba(10,46,30,.9) 40%, rgba(10,46,30,.97) 100%); }
   .hero .wrap { padding-top: 64px; padding-bottom: 64px; }

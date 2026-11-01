@@ -5,12 +5,48 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 NAV = [("index.html", "Home"), ("archive.html", "Archives"), ("about.html", "About"),
        ("advertise.html", "Advertise"), ("index.html#email", "Email list"), ("contact.html", "Contact")]
 
-import glob
+# The cover wall (the covers drifting behind the hero and the page bands) is laid out here, not in the
+# browser: every cover comes with its size and a tiny blurred preview baked into the page, so the rows
+# are complete and moving the moment the page appears, and the real pictures sharpen in as they arrive.
+import glob, random, base64, io
 from PIL import Image as _Image
-def _wall_entry(f):
-    w, h = _Image.open(f).size          # the size travels with the name so the row is laid out before the pictures arrive
-    return f"covers/wall/{os.path.basename(f)}|{w}x{h}"
-WALL = ",".join(_wall_entry(f) for f in sorted(glob.glob(os.path.join(ROOT, "covers", "wall", "*.jpg"))))
+_WALL_FILES = sorted(glob.glob(os.path.join(ROOT, "covers", "wall", "*.jpg")))
+_WALL_META = {}
+for _f in _WALL_FILES:
+    _im = _Image.open(_f); _w, _h = _im.size
+    _tiny = _im.convert("RGB").resize((12, max(1, round(12 * _h / _w))), _Image.LANCZOS)
+    _buf = io.BytesIO(); _tiny.save(_buf, "JPEG", quality=50, optimize=True)
+    _WALL_META["covers/wall/" + os.path.basename(_f)] = (_w, _h, base64.b64encode(_buf.getvalue()).decode("ascii"))
+
+def _deal(rng, count):
+    """A row of covers: sections take turns so two of the same kind never sit side by side."""
+    groups = {}
+    for src in _WALL_META: groups.setdefault(os.path.basename(src)[0], []).append(src)
+    kinds = sorted(groups); queues = {k: rng.sample(groups[k], len(groups[k])) for k in kinds}
+    seq, last = [], None
+    for _ in range(count):
+        cands = [k for k in kinds if k != last] if len(kinds) > 1 else kinds
+        weights = [len(queues[k]) or len(groups[k]) for k in cands]
+        pick = rng.choices(cands, weights=weights)[0]
+        if not queues[pick]: queues[pick] = rng.sample(groups[pick], len(groups[pick]))
+        seq.append(queues[pick].pop(0)); last = pick
+    while len(seq) > 2 and os.path.basename(seq[0])[0] == os.path.basename(seq[-1])[0]: seq.pop()   # the loop seam
+    return seq
+
+def wall_html(rows, seed):
+    rng = random.Random(seed)
+    out = ['<div class="wall" aria-hidden="true">']
+    for r in range(rows):
+        seq = _deal(rng, 24)
+        dur = round(230 + r * 60 + rng.random() * 20)
+        out.append(f'<div class="row"><div class="track" style="--dur:{dur}s">')
+        for i, src in enumerate(seq + seq):                      # twice over, so the loop never jumps
+            w, h, pre = _WALL_META[src]
+            out.append(f'<span class="cv" style="aspect-ratio:{w}/{h};background-image:url(data:image/jpeg;base64,{pre})">'
+                       f'<img src="{src}" width="{w}" height="{h}" alt="" decoding="async" fetchpriority="{"high" if i < 8 else "low"}"></span>')
+        out.append('</div></div>')
+    out.append('</div>')
+    return "".join(out)
 
 # Editions come from _build/editions.json (filled by _build/import_covers.py).
 import json, re
@@ -175,7 +211,7 @@ def write(fname, html):
 
 def band(h1, p):
     return f'''<section class="band">
-  <div class="wall" data-wall="{WALL}" data-rows="1" aria-hidden="true"></div>
+  {wall_html(1, h1)}
   <div class="veil"></div>
   <div class="wrap"><h1>{h1}</h1><p>{p}</p></div>
 </section>'''
@@ -237,7 +273,7 @@ inside_html = "".join(f'''
 
 home = f'''
 <section class="hero">
-  <div class="wall" data-wall="{WALL}" data-rows="2" aria-hidden="true"></div>
+  {wall_html(2, "hero " + EDITION_KEYS[0])}
   <div class="veil"></div>
   
   <div class="wrap"><div class="inner">
