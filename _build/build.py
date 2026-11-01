@@ -6,7 +6,11 @@ NAV = [("index.html", "Home"), ("archive.html", "Archives"), ("about.html", "Abo
        ("advertise.html", "Advertise"), ("index.html#email", "Email list"), ("contact.html", "Contact")]
 
 import glob
-WALL = ",".join("covers/wall/" + os.path.basename(f) for f in sorted(glob.glob(os.path.join(ROOT, "covers", "wall", "*.jpg"))))
+from PIL import Image as _Image
+def _wall_entry(f):
+    w, h = _Image.open(f).size          # the size travels with the name so the row is laid out before the pictures arrive
+    return f"covers/wall/{os.path.basename(f)}|{w}x{h}"
+WALL = ",".join(_wall_entry(f) for f in sorted(glob.glob(os.path.join(ROOT, "covers", "wall", "*.jpg"))))
 
 # Editions come from _build/editions.json (filled by _build/import_covers.py).
 import json, re

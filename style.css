@@ -79,11 +79,13 @@ p { max-width: 62ch; }
   min-height: 680px; display: flex; align-items: center;
 }
 /* The cover wall: rows of covers drifting right-to-left behind the text */
-.wall { position: absolute; inset: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+.wall { position: absolute; inset: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 20px; opacity: 0; transition: opacity 1.4s ease; }
+.wall.ready { opacity: 1; }
 .wall .row { flex: 0 0 auto; height: 44%; }
-.wall .track { display: flex; height: 100%; width: max-content; animation: drift var(--dur, 90s) linear infinite; will-change: transform; }
+.wall .track { display: flex; height: 100%; width: max-content; animation: drift var(--dur, 90s) linear infinite; animation-play-state: paused; will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
+.wall.ready .track { animation-play-state: running; }
 .wall .row:nth-child(2) .track { margin-left: -160px; }
-.wall img { height: 100%; width: auto; margin-right: 22px; border: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 40px -22px rgba(0,0,0,.7); }
+.wall img { height: 100%; width: auto; margin-right: 22px; border: 1px solid rgba(255,255,255,.1); box-shadow: 0 24px 40px -22px rgba(0,0,0,.7); flex: 0 0 auto; }
 @keyframes drift { to { transform: translateX(-50%); } }
 .veil { position: absolute; inset: 0; pointer-events: none; }
 .hero .veil {

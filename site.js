@@ -19,7 +19,11 @@
   // Covers are grouped by section (file name starts with a-, b- or c-) and
   // dealt out so that two covers of the same section never sit side by side.
   document.querySelectorAll('.wall[data-wall]').forEach(function (wall) {
-    var list = wall.getAttribute('data-wall').split(',').filter(Boolean);
+    var dims = {};
+    var list = wall.getAttribute('data-wall').split(',').filter(Boolean).map(function (e) {
+      var p = e.split('|'); if (p[1]) { var wh = p[1].split('x'); dims[p[0]] = (+wh[0]) / (+wh[1]); }
+      return p[0];
+    });
     if (!list.length) return;
     var rows = +wall.getAttribute('data-rows') || 1;
 
@@ -53,16 +57,25 @@
       return seq;
     }
 
+    // every picture gets its shape up front, so the rows are laid out before anything loads,
+    // and the drift only starts (with a fade) once the pictures have been decoded: no stutter
+    var pics = [];
     for (var r = 0; r < rows; r++) {
       var seq = deal(24);
       var row = document.createElement('div'); row.className = 'row';
       var track = document.createElement('div'); track.className = 'track';
       track.style.setProperty('--dur', Math.round(230 + r * 60 + Math.random() * 20) + 's');
       seq.concat(seq).forEach(function (src) {          // twice over, so the loop never jumps
-        var im = new Image(); im.src = src; im.alt = ''; im.decoding = 'async'; track.appendChild(im);
+        var im = new Image(); im.alt = ''; im.decoding = 'async';
+        if (dims[src]) im.style.aspectRatio = dims[src];
+        im.src = src; track.appendChild(im); pics.push(im);
       });
       row.appendChild(track); wall.appendChild(row);
     }
+    var started = false;
+    function start() { if (started) return; started = true; wall.classList.add('ready'); }
+    Promise.all(pics.map(function (im) { return im.decode ? im.decode().catch(function () {}) : Promise.resolve(); })).then(start);
+    setTimeout(start, 3500);                            // slow connection: go anyway
   });
 
   // cover showcase: fades from one cover to the next on its own
