@@ -586,7 +586,7 @@ year_links = "".join(f'<a href="#y-{hy}" class="heb">{label}</a>' for hy, label,
 total_covers = sum(len(e["covers"]) for e in EDITIONS.values())
 FIRST_KEY, LAST_KEY = EDITION_KEYS[-1], EDITION_KEYS[0]
 
-archive = band("Archives", f'The covers of every edition since <span class="heb">{heb_year_label(FIRST_KEY)}</span>, by year and date. You may request back issues or a copy of a past article from the office.') + f"""
+archive = band("Archives", "You may request back issues or a copy of a past article from the office.") + f"""
 <section class="page-body surface parchment archive"><div class="wrap">
   <div class="finder">
     <div class="archive-search">
