@@ -2,7 +2,7 @@
 """Import covers that arrive as first-page renders: <tag>.jpg + <tag>.txt pairs (the page as a
 JPEG and its text layer), plus listing.json with the original file names.
 
-    python3 _build/import_pages.py path/to/out [--no-wall] [--report report.tsv]
+    python3 _build/import_pages.py path/to/out [--no-wall] [--main-only] [--report report.tsv]
 
 Same reading as the PDF importer (section, date, volume/number, parsha from the text; the file
 name helps with the section), but the picture is already rendered. --no-wall keeps the covers out
@@ -26,7 +26,7 @@ def render(im, out_big, out_small):
     if out_small:
         im.resize((320, round(320 * im.height / im.width)), Image.LANCZOS).save(out_small, quality=76, optimize=True)
 
-def main(folder, no_wall=False, report=None, only=None):
+def main(folder, no_wall=False, report=None, only=None, main_only=False):
     data = json.load(open(ic.DATA, encoding="utf-8")) if os.path.exists(ic.DATA) else {}
     ic.KNOWN_FRIDAYS.update(data.keys())
     listing = json.load(open(os.path.join(folder, "listing.json"), encoding="utf-8"))
@@ -43,6 +43,8 @@ def main(folder, no_wall=False, report=None, only=None):
     for tag, name, it, text, jpg in items:
         if only and tag not in only: continue
         sec = ic.section_of(text, name)
+        if main_only and sec != "a":
+            rows.append((tag, name, "notmain", "", sec)); continue
         d = ic.date_of(text)
         if not d:
             rows.append((tag, name, "nodate", "", sec)); print(f"skip  {name}: no date found"); continue
@@ -76,7 +78,9 @@ if __name__ == "__main__":
     args = sys.argv[1:]
     no_wall = "--no-wall" in args
     if no_wall: args.remove("--no-wall")
+    main_only = "--main-only" in args          # only pages that carry the masthead's VOL/NO line
+    if main_only: args.remove("--main-only")
     report = None
     if "--report" in args:
         i = args.index("--report"); report = args[i + 1]; del args[i:i + 2]
-    main(args[0], no_wall=no_wall, report=report)
+    main(args[0], no_wall=no_wall, report=report, main_only=main_only)
