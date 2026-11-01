@@ -57,25 +57,23 @@
       return seq;
     }
 
-    // every picture gets its shape up front, so the rows are laid out before anything loads,
-    // and the drift only starts (with a fade) once the pictures have been decoded: no stutter
-    var pics = [];
+    // every picture gets its shape up front, so the rows are laid out and start drifting at once;
+    // each cover fades in as it arrives, so nothing jumps while the pictures load
     for (var r = 0; r < rows; r++) {
       var seq = deal(24);
       var row = document.createElement('div'); row.className = 'row';
       var track = document.createElement('div'); track.className = 'track';
       track.style.setProperty('--dur', Math.round(230 + r * 60 + Math.random() * 20) + 's');
-      seq.concat(seq).forEach(function (src) {          // twice over, so the loop never jumps
+      seq.concat(seq).forEach(function (src, i) {       // twice over, so the loop never jumps
         var im = new Image(); im.alt = ''; im.decoding = 'async';
+        im.setAttribute('fetchpriority', r === 0 && i < 10 ? 'high' : 'low');   // what is on screen first comes first
         if (dims[src]) im.style.aspectRatio = dims[src];
-        im.src = src; track.appendChild(im); pics.push(im);
+        im.onload = function () { im.classList.add('in'); };
+        im.src = src; if (im.complete && im.naturalWidth) im.classList.add('in');
+        track.appendChild(im);
       });
       row.appendChild(track); wall.appendChild(row);
     }
-    var started = false;
-    function start() { if (started) return; started = true; wall.classList.add('ready'); }
-    Promise.all(pics.map(function (im) { return im.decode ? im.decode().catch(function () {}) : Promise.resolve(); })).then(start);
-    setTimeout(start, 3500);                            // slow connection: go anyway
   });
 
   // cover showcase: fades from one cover to the next on its own

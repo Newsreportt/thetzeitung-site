@@ -1,0 +1,7 @@
+# Netlify cache rules: the covers rarely change, the stylesheet and script carry a version in their URL
+/covers/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+/style.css
+  Cache-Control: public, max-age=31536000, immutable
+/site.js
+  Cache-Control: public, max-age=31536000, immutable
