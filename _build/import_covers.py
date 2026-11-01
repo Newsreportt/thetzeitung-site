@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Import cover PDFs into the archive.
 
-    python3 _build/import_covers.py path/to/*.pdf
+    python3 _build/import_covers.py path/to/*.pdf            # add --no-wall to keep them out of the drifting background
 
 For each PDF this reads the first page's text to find the section
 (main / Yiddishe Tzeit / Chassidishe Tzeit), the edition date, the volume
@@ -180,6 +180,8 @@ def cover_text(text):
         seen.add(key); words.append(w)
     return " ".join(words[:220])
 
+NO_WALL = False      # --no-wall: archive only, no small copy for the drifting background
+
 def render(pdf, out_big, out_small):
     with tempfile.TemporaryDirectory() as td:
         subprocess.run(["pdftoppm", "-f", "1", "-l", "1", "-r", "110", "-jpeg", "-jpegopt", "quality=90",
@@ -192,7 +194,8 @@ def render(pdf, out_big, out_small):
         im = im.crop((max(box[0]-pad, 0), max(box[1]-pad, 0), min(box[2]+pad, im.width), min(box[3]+pad, im.height)))
     if im.width > 900: im = im.resize((900, round(900 * im.height / im.width)), Image.LANCZOS)
     im.save(out_big, quality=84, optimize=True, progressive=True)
-    im.resize((320, round(320 * im.height / im.width)), Image.LANCZOS).save(out_small, quality=76, optimize=True)
+    if not NO_WALL:
+        im.resize((320, round(320 * im.height / im.width)), Image.LANCZOS).save(out_small, quality=76, optimize=True)
 
 def main(paths):
     data = json.load(open(DATA, encoding="utf-8")) if os.path.exists(DATA) else {}
@@ -281,4 +284,7 @@ def enrich(data):
             data[vk[i]]["no"] = data[vk[i-1]]["no"] + 1
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    args = sys.argv[1:]
+    if "--no-wall" in args:
+        NO_WALL = True; args.remove("--no-wall")
+    main(args)
