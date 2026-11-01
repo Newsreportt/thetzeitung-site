@@ -1,0 +1,33 @@
+name: Fetch a year of covers
+on:
+  push:
+    branches: [year-fetch]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils > /dev/null
+      - run: pip install -q gdown
+      - run: |
+          ID=$(python -c "import json;print(json.load(open('_year/job.json'))['id'])")
+          gdown "$ID" -O year.zip && ls -la year.zip && df -h . | tail -1
+      - run: python _year/extract.py year.zip _year/out
+      - name: Publish to the year-raw branch
+        run: |
+          cd _year
+          git init -q -b year-raw
+          git config user.name "cover-fetch"
+          git config user.email "cover-fetch@users.noreply.github.com"
+          git add out job.json
+          git commit -qm "First pages of the year's PDFs"
+          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" year-raw:year-raw
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
