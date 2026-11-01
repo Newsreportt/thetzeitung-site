@@ -631,13 +631,13 @@ archive = band("Archives", "You may request back issues or a copy of a past arti
   <div class="finder">
     <div class="archive-search">
       <input id="cover-search" type="search" placeholder="Find a cover: a date, a parsha, a yom tov, a headline, a name" autocomplete="off" aria-label="Search the covers">
-      <select id="year-jump" class="heb" aria-label="Go to a year"><option value="">שנה</option>{"".join(f'<option value="y-{hy}">{label}</option>' for hy, label, _ in YEARS)}</select>
+      <select id="year-jump" class="heb" aria-label="Go to a year"><option value="">יאָר</option>{"".join(f'<option value="y-{hy}">{label}</option>' for hy, label, _ in YEARS)}</select>
       <span class="hits" id="search-hits"></span>
     </div>
     <div class="archive-tools">
       <div class="filters" role="group" aria-label="Show">
-        <button class="on" data-k="all" type="button">All sections</button>
-        {"".join(f'<button data-k="{k}" type="button">{t}</button>' for k, t, _, _ in SECTIONS)}
+        <button class="on heb" data-k="all" type="button">אַלע סעקציעס</button>
+        {"".join(f'<button class="heb" data-k="{k}" type="button" aria-label="{t}">{heb}</button>' for k, t, heb, _ in SECTIONS)}
       </div>
     </div>
   </div>
