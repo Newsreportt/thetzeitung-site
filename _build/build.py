@@ -37,7 +37,7 @@ def wall_html(rows, seed):
     rng = random.Random(seed)
     out = ['<div class="wall" aria-hidden="true">']
     for r in range(rows):
-        seq = _deal(rng, 24)
+        seq = _deal(rng, 18)
         dur = round(230 + r * 60 + rng.random() * 20)
         out.append(f'<div class="row"><div class="track" style="--dur:{dur}s">')
         for i, src in enumerate(seq + seq):                      # twice over, so the loop never jumps
@@ -564,7 +564,7 @@ def heb_year_label(key):
 
 def edition_block(ed):
     figs = "".join(f"""
-      <figure data-k="{k}" data-s="{search_blob(ed, k).replace('"', "&quot;")}">
+      <figure data-k="{k}">
         <a href="#" data-zoom="{ed["covers"][k]}" aria-label="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}"><img src="{ed["covers"][k]}" alt="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}" width="900" height="980" loading="lazy" draggable="false"></a>
         <figcaption>{SECTION_NAME[k][0]}<span class="heb">{SECTION_NAME[k][1]}</span></figcaption>
       </figure>""" for k, _, _, _ in SECTIONS if k in ed["covers"])
@@ -598,7 +598,7 @@ for ed in EDITIONS.values():
 BOILER = {sec: {w for w, n in _freq[sec].items() if _count[sec] >= 5 and n > 0.4 * _count[sec]} for sec in _freq}
 
 def search_blob(ed, sec):
-    words = [w for w in ed.get("texts", {}).get(sec, "").split() if _norm(w) not in BOILER[sec]][:160]
+    words = [w for w in ed.get("texts", {}).get(sec, "").split() if _norm(w) not in BOILER[sec]][:110]
     y, m, d = map(int, ed["date"].split("-"))
     bits = [SECTION_NAME[sec][0], SECTION_NAME[sec][1], nice_date(ed["date"]), ed["date"], date(y, m, d).strftime("%b %Y"),
             ed.get("hdate", ""), ed.get("hyear", ""), heb_month_of(ed["date"]),
@@ -636,6 +636,12 @@ def year_block(hy, label, keys):
   </div>"""
 
 archive_body = "".join(year_block(hy, label, keys) for hy, label, keys in YEARS)
+# the search index, in the order the figures appear on the page
+SEARCH_INDEX = [search_blob(EDITIONS[k], sec) for hy, label, keys in YEARS for k in keys for sec, _, _, _ in SECTIONS if sec in EDITIONS[k]["covers"]]
+import hashlib
+_index_json = json.dumps(SEARCH_INDEX, ensure_ascii=False, separators=(",", ":"))
+open(os.path.join(ROOT, "archive-index.json"), "w", encoding="utf-8").write(_index_json)
+INDEX_V = hashlib.md5(_index_json.encode("utf-8")).hexdigest()[:8]
 year_links = "".join(f'<a href="#y-{hy}" class="heb">{label}</a>' for hy, label, _ in YEARS)
 total_covers = sum(len(e["covers"]) for e in EDITIONS.values())
 FIRST_KEY, LAST_KEY = EDITION_KEYS[-1], EDITION_KEYS[0]
@@ -644,7 +650,7 @@ archive = band("Archives", "You may request back issues or a copy of a past arti
 <section class="page-body surface parchment archive"><div class="wrap">
   <div class="finder">
     <div class="archive-search">
-      <input id="cover-search" type="search" placeholder="Find a cover: a date, a parsha, a yom tov, a headline, a name" autocomplete="off" aria-label="Search the covers">
+      <input id="cover-search" type="search" placeholder="Find a cover: a date, a parsha, a yom tov, a headline, a name" autocomplete="off" aria-label="Search the covers" data-index="archive-index.json?v={INDEX_V}">
       <select id="year-jump" class="heb" aria-label="Go to a year"><option value="">יאָר</option>{"".join(f'<option value="y-{hy}">{label}</option>' for hy, label, _ in YEARS)}</select>
       <span class="hits" id="search-hits"></span>
     </div>

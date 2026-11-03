@@ -114,12 +114,22 @@
     var hits = document.getElementById('search-hits');
     var norm = function (s) { return s.toLowerCase().replace(/[\u0591-\u05c7]/g, '').replace(/["\u05f4\u05f3'\u2019\u201c\u201d]/g, ''); };
     var figs = Array.prototype.slice.call(document.querySelectorAll('.edition figure')).map(function (f) {
-      return { el: f, k: f.dataset.k, s: norm(f.dataset.s || '') };
+      return { el: f, k: f.dataset.k, s: '' };
     });
+    // the words on every cover live in a separate index, fetched the first time someone searches
+    var index = null, loading = null;
+    function loadIndex() {
+      if (index || loading || !search) return loading;
+      loading = fetch(search.dataset.index).then(function (r) { return r.json(); }).then(function (list) {
+        index = list; figs.forEach(function (f, i) { f.s = norm(list[i] || ''); }); apply();
+      }).catch(function () { loading = null; });
+      return loading;
+    }
     var kind = 'all';
     function apply() {
       var q = search ? norm(search.value.trim()) : '';
       var terms = q ? q.split(/\s+/) : [];
+      if (terms.length && !index) { loadIndex(); return; }
       var shown = 0;
       figs.forEach(function (f) {
         var ok = (kind === 'all' || f.k === kind) && terms.every(function (t) { return f.s.indexOf(t) !== -1; });
@@ -159,6 +169,7 @@
     }
     if (search) {
       var wait = null;
+      search.addEventListener('focus', loadIndex);
       search.addEventListener('input', function () { clearTimeout(wait); wait = setTimeout(apply, 120); });
       search.addEventListener('keydown', function (e) { if (e.key === 'Escape') { search.value = ''; apply(); } });
     }
