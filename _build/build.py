@@ -237,7 +237,7 @@ EMAIL_BAND = '''
   <div class="wrap grid">
     <div>
       <h2>Join our email list</h2>
-      <p>This week's covers, news from The Tzeitung and the occasional announcement, straight to your inbox. Free, and you can leave any time.</p>
+      <p>This week's covers, straight to your inbox. Free, and you can leave any time.</p>
     </div>
     <form class="mc" action="https://thetzeitung.us19.list-manage.com/subscribe/post?u=32d4918dafef1c115c1d3f6bc&amp;id=cd1d1ef5a7" method="post" target="_blank" rel="noopener" novalidate>
       <div class="row">
