@@ -661,7 +661,6 @@ archive = band("Archives", "You may request back issues or a copy of a past arti
       </div>
     </div>
   </div>
-  <nav class="years" aria-label="Jump to a year"><span class="lbl">Year</span>{year_links}</nav>
   <p class="none">No cover matches that. Try a parsha, a yom tov, a month or a year, or a word from a headline.</p>
   {archive_body}
   <button class="to-top" type="button" aria-label="Back to the top">&uarr;</button>
