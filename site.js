@@ -164,6 +164,12 @@
     }
   }
 
+  // no copying or cutting of the page text (the forms stay usable)
+  function inField(el) { return el && el.closest && el.closest('input, textarea, select'); }
+  ['copy', 'cut', 'selectstart'].forEach(function (ev) {
+    document.addEventListener(ev, function (e) { if (!inField(e.target)) e.preventDefault(); });
+  });
+
   // the covers are for looking at, not for saving: no context menu or dragging on them
   var GUARD = '.ed-covers, .stage, .wall, .lightbox, .showcase';
   document.addEventListener('contextmenu', function (e) { if (e.target.closest && e.target.closest(GUARD)) e.preventDefault(); });

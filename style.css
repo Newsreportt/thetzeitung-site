@@ -23,6 +23,9 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+/* the site is for reading: no highlighting or copying of text, except inside the forms */
+body { -webkit-user-select: none; user-select: none; }
+input, textarea, select { -webkit-user-select: text; user-select: text; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
   background: var(--forest);
