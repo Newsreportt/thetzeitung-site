@@ -356,7 +356,12 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
 .lightbox { position: fixed; inset: 0; background: rgba(10,46,30,.95); display: none; align-items: center; justify-content: center; z-index: 100; padding: 24px 76px; }
 .lightbox.on { display: flex; }
 .lightbox figure { margin: 0; text-align: center; max-width: 100%; }
+.lightbox .lb-pic { position: relative; display: inline-block; max-width: 100%; }
 .lightbox img { max-height: 86vh; max-width: 100%; width: auto; margin: 0 auto; box-shadow: 0 40px 100px rgba(0,0,0,.6); cursor: zoom-out; }
+.lightbox .shield { position: absolute; inset: 0; cursor: zoom-out; }
+/* the covers are for looking at: no dragging, saving or long-press menus */
+.ed-covers img, .stage img, .wall img, .lightbox img { -webkit-user-drag: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.ed-covers a, .stage .slide { -webkit-touch-callout: none; }
 .lightbox figcaption { margin-top: 14px; font-family: var(--display); font-style: italic; font-size: 22px; color: var(--ivory); }
 .lightbox figcaption small { display: block; font-family: var(--sans); font-style: normal; font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--sage); margin-top: 4px; }
 .lightbox button {

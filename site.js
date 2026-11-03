@@ -164,6 +164,11 @@
     }
   }
 
+  // the covers are for looking at, not for saving: no context menu or dragging on them
+  var GUARD = '.ed-covers, .stage, .wall, .lightbox, .showcase';
+  document.addEventListener('contextmenu', function (e) { if (e.target.closest && e.target.closest(GUARD)) e.preventDefault(); });
+  document.addEventListener('dragstart', function (e) { if (e.target.closest && e.target.closest(GUARD)) e.preventDefault(); });
+
   // cover lightbox: opens a cover full size; arrows, keys and swipes move through the others
   var box = document.querySelector('.lightbox');
   if (box) {
@@ -192,6 +197,8 @@
     box.querySelector('.lb-next').addEventListener('click', function (e) { e.stopPropagation(); step(1); });
     box.querySelector('.lb-close').addEventListener('click', function (e) { e.stopPropagation(); close(); });
     big.addEventListener('click', function (e) { e.stopPropagation(); close(); });
+    var shield = box.querySelector('.shield');
+    if (shield) shield.addEventListener('click', function (e) { e.stopPropagation(); close(); });
     box.addEventListener('click', function (e) { if (e.target === box) close(); });
     document.addEventListener('keydown', function (e) {
       if (!box.classList.contains('on')) return;
