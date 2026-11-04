@@ -186,25 +186,53 @@
   document.addEventListener('contextmenu', function (e) { if (e.target.closest && e.target.closest(GUARD)) e.preventDefault(); });
   document.addEventListener('dragstart', function (e) { if (e.target.closest && e.target.closest(GUARD)) e.preventDefault(); });
 
-  // cover lightbox: opens a cover full size; arrows, keys and swipes move through the others
+  // cover lightbox: opens a cover full size; arrows, keys and swipes move through the others;
+  // a click (or tap) zooms in on that spot, drag or scroll moves around, pinch zooms on a phone
   var box = document.querySelector('.lightbox');
   if (box) {
-    var big = box.querySelector('img'), cap = box.querySelector('figcaption');
+    var big = box.querySelector('img'), cap = box.querySelector('figcaption'), pic = box.querySelector('.lb-pic'), shield = box.querySelector('.shield');
     var items = Array.prototype.slice.call(document.querySelectorAll('[data-zoom]')).map(function (a) {
       var im = a.querySelector('img');
-      return { src: a.getAttribute('data-zoom'), title: a.getAttribute('aria-label') || (im ? im.alt : '') };
+      return { src: a.getAttribute('data-zoom'), hi: a.getAttribute('data-big'), title: a.getAttribute('aria-label') || (im ? im.alt : '') };
     });
     var cur = 0;
+    var scale = 1, tx = 0, ty = 0, MAX = 4;
+
+    function place() {
+      pic.style.transform = scale === 1 ? '' : 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+      pic.classList.toggle('zoomed', scale !== 1);
+    }
+    function reset() { scale = 1; tx = 0; ty = 0; place(); }
+    function clampPan() {
+      var r = pic.getBoundingClientRect(), vw = window.innerWidth, vh = window.innerHeight;
+      // keep the picture covering the screen while it is bigger than it, centred otherwise
+      var w = r.width, h = r.height;
+      var minX = Math.min(0, vw - w) / 2, maxX = -minX, minY = Math.min(0, vh - h) / 2, maxY = -minY;
+      tx = Math.max(minX, Math.min(maxX, tx)); ty = Math.max(minY, Math.min(maxY, ty));
+    }
+    function zoomAt(factor, cx, cy) {
+      var next = Math.max(1, Math.min(MAX, scale * factor));
+      if (next === scale) return;
+      var r = pic.getBoundingClientRect();
+      // the point under the cursor stays under the cursor
+      var ox = cx - (r.left + r.width / 2), oy = cy - (r.top + r.height / 2);
+      var k = next / scale;
+      tx = tx - ox * (k - 1); ty = ty - oy * (k - 1);
+      scale = next;
+      if (scale === 1) { tx = 0; ty = 0; }
+      if (scale > 1 && items[cur].hi && big.getAttribute('src') !== items[cur].hi) big.src = items[cur].hi;   // the sharper copy
+      place(); clampPan(); place();
+    }
 
     function render() {
       var it = items[cur];
+      reset();
       big.src = it.src; big.alt = it.title;
       cap.textContent = it.title;
-      // warm the next one so the flip is instant
-      var nx = new Image(); nx.src = items[(cur + 1) % items.length].src;
+      var nx = new Image(); nx.src = items[(cur + 1) % items.length].src;   // warm the next one
     }
     function open(i) { cur = i; render(); box.classList.add('on'); document.body.style.overflow = 'hidden'; document.dispatchEvent(new Event('lightbox:open')); }
-    function close() { box.classList.remove('on'); document.body.style.overflow = ''; document.dispatchEvent(new Event('lightbox:close')); }
+    function close() { box.classList.remove('on'); document.body.style.overflow = ''; reset(); document.dispatchEvent(new Event('lightbox:close')); }
     function step(d) { cur = (cur + d + items.length) % items.length; render(); }
 
     document.querySelectorAll('[data-zoom]').forEach(function (a, i) {
@@ -213,23 +241,79 @@
     box.querySelector('.lb-prev').addEventListener('click', function (e) { e.stopPropagation(); step(-1); });
     box.querySelector('.lb-next').addEventListener('click', function (e) { e.stopPropagation(); step(1); });
     box.querySelector('.lb-close').addEventListener('click', function (e) { e.stopPropagation(); close(); });
-    big.addEventListener('click', function (e) { e.stopPropagation(); close(); });
-    var shield = box.querySelector('.shield');
-    if (shield) shield.addEventListener('click', function (e) { e.stopPropagation(); close(); });
+    var zin = box.querySelector('.lb-in'), zout = box.querySelector('.lb-out');
+    if (zin) zin.addEventListener('click', function (e) { e.stopPropagation(); zoomAt(1.6, window.innerWidth / 2, window.innerHeight / 2); });
+    if (zout) zout.addEventListener('click', function (e) { e.stopPropagation(); zoomAt(1 / 1.6, window.innerWidth / 2, window.innerHeight / 2); });
     box.addEventListener('click', function (e) { if (e.target === box) close(); });
+
+    // mouse: click zooms in on the spot (or back out when already close), drag pans, wheel zooms
+    var drag = null, moved = false;
+    shield.addEventListener('mousedown', function (e) { if (e.button !== 0) return; drag = { x: e.clientX, y: e.clientY, tx: tx, ty: ty }; moved = false; e.preventDefault(); });
+    window.addEventListener('mousemove', function (e) {
+      if (!drag) return;
+      var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+      if (scale > 1) { tx = drag.tx + dx; ty = drag.ty + dy; clampPan(); place(); }
+    });
+    window.addEventListener('mouseup', function (e) {
+      if (!drag) return; drag = null;
+      if (moved) return;
+      e.stopPropagation();
+      if (scale >= MAX - 0.01) reset(); else zoomAt(scale === 1 ? 2.5 : 1.6, e.clientX, e.clientY);
+    });
+    shield.addEventListener('click', function (e) { e.stopPropagation(); });
+    box.addEventListener('wheel', function (e) {
+      if (!box.classList.contains('on')) return;
+      e.preventDefault();
+      zoomAt(e.deltaY < 0 ? 1.15 : 1 / 1.15, e.clientX, e.clientY);
+    }, { passive: false });
+
+    // touch: one finger pans (or swipes to the next cover when not zoomed), two fingers pinch, double tap zooms
+    var t0 = null, pinch = null, lastTap = 0;
+    box.addEventListener('touchstart', function (e) {
+      if (e.touches.length === 2) {
+        var a = e.touches[0], b = e.touches[1];
+        pinch = { d: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), s: scale, cx: (a.clientX + b.clientX) / 2, cy: (a.clientY + b.clientY) / 2 };
+        t0 = null;
+      } else if (e.touches.length === 1) {
+        t0 = { x: e.touches[0].clientX, y: e.touches[0].clientY, tx: tx, ty: ty, moved: false, t: Date.now() };
+      }
+    }, { passive: true });
+    box.addEventListener('touchmove', function (e) {
+      if (pinch && e.touches.length === 2) {
+        e.preventDefault();
+        var a = e.touches[0], b = e.touches[1];
+        var d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+        var want = Math.max(1, Math.min(MAX, pinch.s * d / pinch.d));
+        zoomAt(want / scale, pinch.cx, pinch.cy);
+      } else if (t0 && e.touches.length === 1) {
+        var dx = e.touches[0].clientX - t0.x, dy = e.touches[0].clientY - t0.y;
+        if (Math.abs(dx) + Math.abs(dy) > 6) t0.moved = true;
+        if (scale > 1) { e.preventDefault(); tx = t0.tx + dx; ty = t0.ty + dy; clampPan(); place(); }
+      }
+    }, { passive: false });
+    box.addEventListener('touchend', function (e) {
+      if (pinch) { if (e.touches.length < 2) pinch = null; return; }
+      if (!t0) return;
+      var dx = e.changedTouches[0].clientX - t0.x, dy = e.changedTouches[0].clientY - t0.y;
+      var tap = !t0.moved && Date.now() - t0.t < 350;
+      var s = t0; t0 = null;
+      if (tap) {
+        var now = Date.now();
+        if (now - lastTap < 320) { if (scale > 1) reset(); else zoomAt(2.5, e.changedTouches[0].clientX, e.changedTouches[0].clientY); lastTap = 0; }
+        else lastTap = now;
+        return;
+      }
+      if (scale === 1 && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);
+    }, { passive: true });
+
     document.addEventListener('keydown', function (e) {
       if (!box.classList.contains('on')) return;
-      if (e.key === 'Escape') close();
+      if (e.key === 'Escape') { if (scale > 1) reset(); else close(); }
       else if (e.key === 'ArrowRight') step(1);
       else if (e.key === 'ArrowLeft') step(-1);
+      else if (e.key === '+' || e.key === '=') zoomAt(1.6, window.innerWidth / 2, window.innerHeight / 2);
+      else if (e.key === '-') zoomAt(1 / 1.6, window.innerWidth / 2, window.innerHeight / 2);
     });
-    // swipe
-    var x0 = null;
-    box.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
-    box.addEventListener('touchend', function (e) {
-      if (x0 === null) return;
-      var dx = e.changedTouches[0].clientX - x0; x0 = null;
-      if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
-    }, { passive: true });
   }
 })();

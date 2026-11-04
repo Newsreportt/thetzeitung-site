@@ -87,6 +87,11 @@ SECTIONS = [
 ]
 REGULAR = [sec for sec in SECTIONS if sec[0] in ("a", "b", "c")]   # what every edition carries
 
+def big_attr(ed, k):
+    """A sharper copy of the cover for zooming in, when one was rendered."""
+    p = f"covers/zoom/{ed['date']}-{k}.jpg"
+    return f' data-big="{p}"' if os.path.exists(os.path.join(ROOT, p)) else ""
+
 PLACES = ["Monsey", "Monroe", "Williamsburg", "Boro Park", "Lakewood", "Jackson", "Linden", "Staten Island",
           "Flatbush", "Crown Heights", "London", "Antwerp", "Eretz Yisroel", "Tosh", "Montreal"]
 
@@ -200,6 +205,7 @@ def shell(title, desc, body, page="index.html"):
 
 <div class="lightbox" role="dialog" aria-modal="true" aria-label="Cover preview">
   <button class="lb-close" type="button" aria-label="Close">&times;</button>
+  <div class="lb-zoom"><button class="lb-in" type="button" aria-label="Zoom in">+</button><button class="lb-out" type="button" aria-label="Zoom out">&minus;</button></div>
   <button class="lb-prev" type="button" aria-label="Previous cover">&#8249;</button>
   <figure><div class="lb-pic"><img src="" alt="" draggable="false"><span class="shield"></span></div><figcaption></figcaption></figure>
   <button class="lb-next" type="button" aria-label="Next cover">&#8250;</button>
@@ -257,7 +263,7 @@ HONEYPOT = '<p style="display:none"><label>Leave this empty: <input name="bot-fi
 # ======================= HOME =======================
 LATEST_SECTIONS = [(k, t, heb, d) for k, t, heb, d in SECTIONS if k in LATEST["covers"]]
 slides_html = "".join(f'''
-        <a class="slide{" on" if i==0 else ""}" href="#" data-zoom="{LATEST["covers"][k]}" data-i="{i}" aria-label="{t}">
+        <a class="slide{" on" if i==0 else ""}" href="#" data-zoom="{LATEST["covers"][k]}"{big_attr(LATEST, k)} data-i="{i}" aria-label="{t}">
           <img src="{LATEST["covers"][k]}" alt="{t}" width="900" height="980"{"" if i==0 else ' loading="lazy"'}>
         </a>''' for i, (k, t, heb, _) in enumerate(LATEST_SECTIONS))
 
@@ -565,7 +571,7 @@ def heb_year_label(key):
 def edition_block(ed):
     figs = "".join(f"""
       <figure data-k="{k}">
-        <a href="#" data-zoom="{ed["covers"][k]}" aria-label="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}"><img src="{ed["covers"][k]}" alt="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}" width="900" height="980" loading="lazy" draggable="false"></a>
+        <a href="#" data-zoom="{ed["covers"][k]}"{big_attr(ed, k)} aria-label="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}"><img src="{ed["covers"][k]}" alt="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}" width="900" height="980" loading="lazy" draggable="false"></a>
         <figcaption>{SECTION_NAME[k][0]}<span class="heb">{SECTION_NAME[k][1]}</span></figcaption>
       </figure>""" for k, _, _, _ in SECTIONS if k in ed["covers"])
     number = f'<span class="no">No. {ed["no"]}</span>' if ed.get("no") else ""

@@ -205,20 +205,35 @@ def cover_text(text):
 
 NO_WALL = False      # --no-wall: archive only, no small copy for the drifting background
 
-def render(pdf, out_big, out_small):
+ZOOM_W = 1500      # the sharper copy used when zooming in on a cover
+
+def page_image(pdf, dpi):
     with tempfile.TemporaryDirectory() as td:
-        subprocess.run(["pdftoppm", "-f", "1", "-l", "1", "-r", "110", "-jpeg", "-jpegopt", "quality=90",
+        subprocess.run(["pdftoppm", "-f", "1", "-l", "1", "-r", str(dpi), "-jpeg", "-jpegopt", "quality=92",
                         pdf, os.path.join(td, "p")], check=True)
         im = Image.open(glob.glob(os.path.join(td, "p*.jpg"))[0]).convert("RGB")
     bg = Image.new("RGB", im.size, im.getpixel((3, 3)))
     box = ImageChops.difference(im, bg).convert("L").point(lambda v: 255 if v > 14 else 0).getbbox()
     if box:
-        pad = 6
+        pad = round(6 * dpi / 110)
         im = im.crop((max(box[0]-pad, 0), max(box[1]-pad, 0), min(box[2]+pad, im.width), min(box[3]+pad, im.height)))
+    return im
+
+def render_zoom(pdf, out_zoom):
+    im = page_image(pdf, 200)
+    if im.width > ZOOM_W: im = im.resize((ZOOM_W, round(ZOOM_W * im.height / im.width)), Image.LANCZOS)
+    im.save(out_zoom, quality=80, optimize=True, progressive=True)
+
+def render(pdf, out_big, out_small):
+    im = page_image(pdf, 110)
     if im.width > 900: im = im.resize((900, round(900 * im.height / im.width)), Image.LANCZOS)
     im.save(out_big, quality=84, optimize=True, progressive=True)
     if not NO_WALL:
         im.resize((320, round(320 * im.height / im.width)), Image.LANCZOS).save(out_small, quality=76, optimize=True)
+    zoom = out_big.replace(os.sep + "archive" + os.sep, os.sep + "zoom" + os.sep)
+    if zoom != out_big:
+        os.makedirs(os.path.dirname(zoom), exist_ok=True)
+        render_zoom(pdf, zoom)
 
 def main(paths):
     data = json.load(open(DATA, encoding="utf-8")) if os.path.exists(DATA) else {}
