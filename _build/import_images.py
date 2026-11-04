@@ -146,8 +146,27 @@ def main(manifest, imgdir, decisions_path=None, report=None):
     print(Counter(r[2] for r in out))
     print(f"{added} covers added; {len(data)} editions in {os.path.relpath(DATA, ROOT)}")
 
+def week(key, files):
+    """A week's covers sent as pictures: python3 _build/import_images.py --week 2026-11-06 a=main.jpg b=yt.jpg c=ct.jpg"""
+    import shutil, tempfile
+    code = {"a": ("TZE", "001"), "b": ("TZ1", "001"), "c": ("TZ1", "027"), "d": ("TZ2", "001"), "t": ("TZ2", "001"), "k": ("TZ2", "001")}
+    with tempfile.TemporaryDirectory() as td:
+        rows, decisions = [], []
+        for spec in files:
+            sec, path = spec.split("=", 1)
+            uid = f"week-{key}-{sec}"
+            Image.open(path).convert("RGB").save(os.path.join(td, uid + ".jpg"), quality=95)
+            c, pg = code[sec]
+            rows.append(f"{uid}\tjpg\t{key},DI,{c},{pg},R0.jpg\t")
+            decisions.append(f"{uid}\t{sec}\t{key}")
+        open(os.path.join(td, "manifest.tsv"), "w", encoding="utf-8").write("\n".join(rows) + "\n")
+        open(os.path.join(td, "decisions.tsv"), "w", encoding="utf-8").write("\n".join(decisions) + "\n")
+        main(os.path.join(td, "manifest.tsv"), td, decisions_path=os.path.join(td, "decisions.tsv"))
+
 if __name__ == "__main__":
     args = sys.argv[1:]
+    if args and args[0] == "--week":
+        week(args[1], args[2:]); sys.exit()
     opts = {}
     for flag in ("--decisions", "--report"):
         if flag in args:

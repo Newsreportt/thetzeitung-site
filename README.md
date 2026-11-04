@@ -12,6 +12,10 @@ Source for the website. Netlify deploys `main` automatically.
    edition" on the home page; the Archives page lists every edition, newest first.
 3. Commit and push.
 
+When the week's covers come as pictures instead of PDFs:
+`python3 _build/import_images.py --week 2026-11-06 a=main.jpg b=yiddishe.jpg c=chassidishe.jpg`
+(a = the main section, b = Yiddishe Tzeit, c = Chassidishe Tzeit, d/t/k = the yom tov supplements), then build as usual.
+
 ## Older covers
 The covers back to Elul 5778 came from the JPEGs in the Mailchimp content studio
 (`python3 _build/import_images.py manifest.tsv images/ --decisions decisions.tsv`): the edition date
