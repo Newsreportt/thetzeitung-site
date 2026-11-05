@@ -341,7 +341,7 @@ home = f'''
         <img src="ads/in-stores.jpg" alt="אין די געשעפטן: די צייטונג — דריי אינהאלטסרייכע אפטיילונגען יעדע וואך" width="1100" height="1424" loading="lazy" draggable="false">
       </figure>
       <div class="stands-list">
-        <p class="tag">Available in heimishe communities around the world</p>
+        <p class="tag">Available in all heimishe communities around the world</p>
         <ul class="places">{"".join(f"<li>{x}</li>" for x in PLACES)}</ul>
         <p class="more">and more to come</p>
       </div>
