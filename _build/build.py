@@ -336,8 +336,16 @@ home = f'''
       <h2>On the stands every Wednesday morning</h2>
       <p>The Tzeitung is sold in heimishe stores wherever Yiddish is read</p>
     </div>
-    <ul class="places">{"".join(f"<li>{x}</li>" for x in PLACES)}</ul>
-    <p class="more">and more to come</p>
+    <div class="stands-grid">
+      <figure class="poster">
+        <img src="ads/in-stores.jpg" alt="אין די געשעפטן: די צייטונג — דריי אינהאלטסרייכע אפטיילונגען יעדע וואך" width="1100" height="1424" loading="lazy" draggable="false">
+      </figure>
+      <div class="stands-list">
+        <p class="heb tag">דריי אינהאלטסרייכע אפטיילונגען, יעדע וואך</p>
+        <ul class="places">{"".join(f"<li>{x}</li>" for x in PLACES)}</ul>
+        <p class="more">and more to come</p>
+      </div>
+    </div>
   </div>
 </section>
 
