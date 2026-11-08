@@ -238,5 +238,5 @@ done = sum(1 for l in listing if l.get("rendered"))
 nthumb = sum(1 for l in listing if l.get("thumb"))
 print(f"done: {done} rendered of {len(selected)}; {nthumb} only as thumbnails; {len(listing) - done - nthumb} failed; {len(left)} left for another round", flush=True)
 if left:
-    fetched = sum(1 for l in listing if l.get("rendered") and "seconds" in l)      # PDFs fetched this round
+    fetched = sum(1 for l in listing if l.get("rendered") and not previous.get(l["tag"], {}).get("rendered"))   # PDFs fetched this round
     open(AGAIN, "w").write(f"{len(left)} {fetched}\n")
