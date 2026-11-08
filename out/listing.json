@@ -6254,9 +6254,11 @@
   "id": "1lmPDg5bcFABUw1_zc4YuurLpVoImRT3V",
   "issue": "Vol 29/22",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 68,
+  "bytes": 28332387
  },
  {
   "tag": "00525",
@@ -6276,9 +6278,11 @@
   "id": "1N78uEy0eBrkDWonxJDKoxc8YjWG1Dmcd",
   "issue": "Vol 29/23",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 7,
+  "pages": 64,
+  "bytes": 27835770
  },
  {
   "tag": "00527",
@@ -6286,9 +6290,11 @@
   "id": "1xYtwEFWcZ5NM8SrZRM33gWlazdTTWAk6",
   "issue": "Vol 29/24",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 56,
+  "bytes": 6606218
  },
  {
   "tag": "00528",
@@ -6296,9 +6302,11 @@
   "id": "1vwi1t83wto2mEfxAGeYR-Wfwhjr4SZL7",
   "issue": "Vol 29/24",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 6,
+  "pages": 68,
+  "bytes": 12639462
  },
  {
   "tag": "00529",
@@ -6306,9 +6314,11 @@
   "id": "1pMazBlNe8vO4Ulb1qOz66Jxp9om77uyQ",
   "issue": "Vol 29/25",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 56,
+  "bytes": 10078195
  },
  {
   "tag": "00530",
@@ -6316,9 +6326,11 @@
   "id": "1VvRzv1TXZeE9SF1TcGed6Ojv9a3VTLJj",
   "issue": "Vol 29/25",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 64,
+  "bytes": 9662715
  },
  {
   "tag": "00531",
@@ -6326,9 +6338,11 @@
   "id": "1kPcTPkXi5o42fZ54cp4nhbvxecltsV98",
   "issue": "Vol 29/26",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 11,
+  "pages": 64,
+  "bytes": 12808331
  },
  {
   "tag": "00532",
@@ -6336,9 +6350,11 @@
   "id": "1LFvKLipcdJ6gCYnauRSc7yFTkUoI9_jt",
   "issue": "Vol 29/26",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 64,
+  "bytes": 10193318
  },
  {
   "tag": "00533",
@@ -6346,9 +6362,11 @@
   "id": "1DSywqbQPyjPe8POVsxqsoF7NuxfuT-F8",
   "issue": "Vol 29/27",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 5,
+  "pages": 60,
+  "bytes": 21573770
  },
  {
   "tag": "00534",
@@ -6356,9 +6374,11 @@
   "id": "1qe0hU-ziVJUhZ61vrcB_7ECnUsrnDDRf",
   "issue": "Vol 29/27",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 7,
+  "pages": 68,
+  "bytes": 31649497
  },
  {
   "tag": "00536",
@@ -6366,9 +6386,11 @@
   "id": "1wm0XyREBwn5YfuM-aXoHRF_JQNN7Y8D-",
   "issue": "Vol 29/28",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 64,
+  "bytes": 10010926
  },
  {
   "tag": "00537",
@@ -6376,9 +6398,11 @@
   "id": "1VFcoppfb9qhS-vHi_6jCSnkhqtfy5ywY",
   "issue": "Vol 29/29",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 64,
+  "bytes": 9492772
  },
  {
   "tag": "00538",
@@ -6386,9 +6410,11 @@
   "id": "1E6gO6tiBRfgC1rHwateMu75bbXUdLf58",
   "issue": "Vol 29/29",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 60,
+  "bytes": 9213507
  },
  {
   "tag": "00539",
@@ -6396,9 +6422,11 @@
   "id": "11FAPJxoN4cx0dQigRjVwg-CTFwGrccV_",
   "issue": "Vol 29/30",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 68,
+  "bytes": 8270958
  },
  {
   "tag": "00540",
@@ -6406,9 +6434,11 @@
   "id": "1ng6p-zwBDsIdPfv96oPMp42nSEuNEb09",
   "issue": "Vol 29/30",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 72,
+  "bytes": 11415986
  },
  {
   "tag": "00541",
@@ -6416,9 +6446,11 @@
   "id": "1EJr81LsLoYZiugM5DWIgr_Ik_lDzqxl-",
   "issue": "Vol 29/31",
   "kind": "s",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 2,
+  "pages": 1,
+  "bytes": 2297997
  },
  {
   "tag": "00542",
@@ -6426,9 +6458,11 @@
   "id": "1Ohyb5yxxc77rvugy_iC9fIDNx_qv4L5T",
   "issue": "Vol 29/32",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 64,
+  "bytes": 11491280
  },
  {
   "tag": "00543",
@@ -6436,9 +6470,11 @@
   "id": "1UHQcMyr3Lxuz-2K76dLSAuH6Zi93lc4H",
   "issue": "Vol 29/32",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 80,
+  "bytes": 9823922
  },
  {
   "tag": "00544",
@@ -6446,9 +6482,11 @@
   "id": "1hlQtCmtU1camAxdqQ9whIIN9inQavgdP",
   "issue": "Vol 29/33",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 60,
+  "bytes": 10099023
  },
  {
   "tag": "00545",
@@ -6456,9 +6494,11 @@
   "id": "1JceeGIdyK02fS92Xb8ogfuSXTEvmqnGM",
   "issue": "Vol 29/33",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 64,
+  "bytes": 8199654
  },
  {
   "tag": "00546",
@@ -6466,9 +6506,11 @@
   "id": "16rQZ48BVGrCQkXL1gUutfSVCvOJfpgYO",
   "issue": "Vol 29/34",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 60,
+  "bytes": 7655873
  },
  {
   "tag": "00547",
@@ -6476,9 +6518,11 @@
   "id": "1fQkUbjLNg1f9ZnfuPVCwMXyi7cmXtpaK",
   "issue": "Vol 29/34",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 5,
+  "pages": 80,
+  "bytes": 9880611
  },
  {
   "tag": "00548",
@@ -6486,9 +6530,11 @@
   "id": "1tSExI7K2_foYux7_v8HMf0AtfaIR_gu-",
   "issue": "Vol 29/35",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 68,
+  "bytes": 9365823
  },
  {
   "tag": "00549",
@@ -6496,9 +6542,11 @@
   "id": "1FLg6QMl_zlngdiC1T3lr8LDYzr9dtM8z",
   "issue": "Vol 29/35",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 68,
+  "bytes": 7151291
  },
  {
   "tag": "00550",
@@ -6506,9 +6554,11 @@
   "id": "1hpogbjcDTe_BMw0kGzbOIf0SqfZlAI-f",
   "issue": "Vol 29/36",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 56,
+  "bytes": 6356175
  },
  {
   "tag": "00551",
@@ -6516,9 +6566,11 @@
   "id": "1fMgK3EPdSqywcxgei6Hvy5ubuxK5ljcr",
   "issue": "Vol 29/36",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 80,
+  "bytes": 9936942
  },
  {
   "tag": "00552",
@@ -6526,9 +6578,11 @@
   "id": "11ZlQ0Q4bP0ar2Bt64gmyHUJ71CKfOaBw",
   "issue": "Vol 29/37",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 60,
+  "bytes": 6984363
  },
  {
   "tag": "00553",
@@ -6536,9 +6590,11 @@
   "id": "1lSS52_VUpdqXwc0HUE8pAzYeo_H6KEqB",
   "issue": "Vol 29/37",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 100,
+  "bytes": 10686460
  },
  {
   "tag": "00554",
@@ -6546,9 +6602,11 @@
   "id": "1HJrymjYmkvlmyfAgrqmLUuIP-2YloOiW",
   "issue": "Vol 29/38",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 6,
+  "pages": 64,
+  "bytes": 12793161
  },
  {
   "tag": "00555",
@@ -6556,9 +6614,11 @@
   "id": "1UmhvS7Sso8wPhna0DsTTx7VPwVszXN3H",
   "issue": "Vol 29/38",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 72,
+  "bytes": 41314178
  },
  {
   "tag": "00556",
@@ -6566,9 +6626,11 @@
   "id": "1HplDAxeTuB9n3GdyeBLKYiu1G30Fx5Zl",
   "issue": "Vol 29/39",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 60,
+  "bytes": 6123095
  },
  {
   "tag": "00557",
@@ -6576,9 +6638,11 @@
   "id": "1qlZbm_pobw6lj8cNaULkaj1VwR8KMbXS",
   "issue": "Vol 29/39",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 60,
+  "bytes": 5564023
  },
  {
   "tag": "00558",
@@ -6586,9 +6650,11 @@
   "id": "1U-hJPZxwqLNhPihVrbhLwG2rv8fSudEY",
   "issue": "Vol 29/40",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 60,
+  "bytes": 8745094
  },
  {
   "tag": "00559",
@@ -6596,9 +6662,11 @@
   "id": "1R3bwkreXcRvgc_qM7X1_ukMI2S-tv6Mn",
   "issue": "Vol 29/40",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 76,
+  "bytes": 10806876
  },
  {
   "tag": "00560",
@@ -6606,9 +6674,11 @@
   "id": "1cOJmtF3nghq06IpCDnEWK6E0DM0jGgQX",
   "issue": "Vol 29/41",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 56,
+  "bytes": 6016271
  },
  {
   "tag": "00561",
@@ -6616,9 +6686,11 @@
   "id": "1j8sM763WcMC_8jV-5_dUi5B1W7tONrQm",
   "issue": "Vol 29/41",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 60,
+  "bytes": 8396009
  },
  {
   "tag": "00562",
@@ -6626,9 +6698,11 @@
   "id": "1Zq-9kUBM3zIbXo_WVZZyy582suIBQLVG",
   "issue": "Vol 29/42",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 60,
+  "bytes": 5471564
  },
  {
   "tag": "00563",
@@ -6636,9 +6710,11 @@
   "id": "18oCWPklPcWM6nl7Wws1KGosRzC2eTt7I",
   "issue": "Vol 29/42",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 60,
+  "bytes": 8827422
  },
  {
   "tag": "00564",
@@ -6646,9 +6722,11 @@
   "id": "18qN4AdbkyuBqitByDvv8agXzmJd9mMvF",
   "issue": "Vol 29/43",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 5,
+  "pages": 56,
+  "bytes": 5861552
  },
  {
   "tag": "00565",
@@ -6656,9 +6734,11 @@
   "id": "13t-ApFLRUwXPjk62uh6jjAcaWo3psCjE",
   "issue": "Vol 29/43",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 68,
+  "bytes": 9583521
  },
  {
   "tag": "00566",
@@ -6666,9 +6746,11 @@
   "id": "15CSo02nFjffDMH0_CM0C3EbCtuHb_F8j",
   "issue": "Vol 29/44",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 5,
+  "pages": 48,
+  "bytes": 4897232
  },
  {
   "tag": "00567",
@@ -6676,9 +6758,11 @@
   "id": "1JVFMO6b7b-Iz4s3KEdin_CDjXC9bRSxy",
   "issue": "Vol 29/44",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 64,
+  "bytes": 8012009
  },
  {
   "tag": "00568",
@@ -6686,9 +6770,11 @@
   "id": "1NISXllyu-LHVFCRjPqW5662ueXSnL8er",
   "issue": "Vol 29/45",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 56,
+  "bytes": 5201916
  },
  {
   "tag": "00569",
@@ -6696,9 +6782,11 @@
   "id": "1g6yYKkWCzieN_fnOIfpcHVRe5Ex_T5hT",
   "issue": "Vol 29/45",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 60,
+  "bytes": 7432585
  },
  {
   "tag": "00570",
@@ -6706,9 +6794,11 @@
   "id": "1LQA3GigpatCZ1v8Cv4WCpN1hXGqQh17I",
   "issue": "Vol 29/46",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 5,
+  "pages": 60,
+  "bytes": 8184691
  },
  {
   "tag": "00571",
@@ -6716,9 +6806,11 @@
   "id": "1TwWj9Ma4h80DoqB9ha7KuiGCciRFvNhD",
   "issue": "Vol 29/46",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 72,
+  "bytes": 8358069
  },
  {
   "tag": "00572",
@@ -6726,9 +6818,11 @@
   "id": "1tzDqEmAHngHGPRMd3TTw0ULVHfwZszjW",
   "issue": "Vol 29/47",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 52,
+  "bytes": 5468629
  },
  {
   "tag": "00573",
@@ -6736,9 +6830,11 @@
   "id": "1dicmaD9IfQpb5ir-XN81RLou6JDxBNbT",
   "issue": "Vol 29/47",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 76,
+  "bytes": 7515024
  },
  {
   "tag": "00574",
@@ -6746,9 +6842,11 @@
   "id": "1U7cE1Y0MzuNK-rIMgButHki3ecSaKvc0",
   "issue": "Vol 29/48",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 2,
+  "pages": 1,
+  "bytes": 1446822
  },
  {
   "tag": "00575",
@@ -6756,9 +6854,11 @@
   "id": "1DY0yWRogAQH_SA61yqnGQm5CUyG19FK2",
   "issue": "Vol 29/48",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 88,
+  "bytes": 9653924
  },
  {
   "tag": "00576",
@@ -6766,9 +6866,11 @@
   "id": "16w_oKifws0Yb1yJIHRtitJhiMS-ewokl",
   "issue": "Vol 29/49",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 60,
+  "bytes": 6808889
  },
  {
   "tag": "00577",
@@ -6776,9 +6878,11 @@
   "id": "1dCnkTPLuEYJA4Ih0oZ4YlQtdtD8Hpvlp",
   "issue": "Vol 29/49",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 76,
+  "bytes": 8885804
  },
  {
   "tag": "00578",
@@ -6786,9 +6890,11 @@
   "id": "1NDtRv2w6HEmZGcOYsqUZU1GGWlxqu2Yf",
   "issue": "Vol 29/50",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 64,
+  "bytes": 6328496
  },
  {
   "tag": "00579",
@@ -6796,9 +6902,11 @@
   "id": "1Kxgbh56L5s3F1qR4OaE8E7aO7e3sgtj_",
   "issue": "Vol 29/50",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 64,
+  "bytes": 36547309
  },
  {
   "tag": "00580",
@@ -6806,9 +6914,11 @@
   "id": "1fpkp7nrAYpD32rxWS1Lzeo87Yxxwmsuo",
   "issue": "Vol 29/51",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 5,
+  "pages": 64,
+  "bytes": 8884815
  },
  {
   "tag": "00581",
@@ -6816,9 +6926,11 @@
   "id": "1gCHNd4q4gSLzt4ug63IXtQGzvwsbSmD8",
   "issue": "Vol 29/51",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 64,
+  "bytes": 6940235
  },
  {
   "tag": "00582",
@@ -6826,9 +6938,11 @@
   "id": "1MzzjAGUFrIa512iDc1PYfOM74NJOtX2o",
   "issue": "Vol 29/52",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 6,
+  "pages": 64,
+  "bytes": 18679057
  },
  {
   "tag": "00583",
@@ -6836,9 +6950,11 @@
   "id": "1EzjiotoA_SFBnlcqh1_6TlFxzzfVzFm3",
   "issue": "Vol 29/52",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 6,
+  "pages": 60,
+  "bytes": 23455905
  },
  {
   "tag": "00584",
@@ -6846,9 +6962,11 @@
   "id": "1P49devxMw4FVDYfn71Zuqhwr2rvrIbra",
   "issue": "Vol 29/53",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 72,
+  "bytes": 8722445
  },
  {
   "tag": "00585",
@@ -6856,9 +6974,11 @@
   "id": "1HS_NLNPwCJVqynXD1G1S1tfbAt_tGeJP",
   "issue": "Vol 29/53",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 5,
+  "pages": 80,
+  "bytes": 29924540
  },
  {
   "tag": "00586",
@@ -6866,9 +6986,11 @@
   "id": "1mQ8RrzQ4RO-ni4d6jU3gZGwlOKbEMyTn",
   "issue": "Vol 30/01",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 5,
+  "pages": 56,
+  "bytes": 7271441
  },
  {
   "tag": "00587",
@@ -6876,9 +6998,11 @@
   "id": "18lhwgltC73Tbq9mphzNXO8kIYZ7HFJ_r",
   "issue": "Vol 30/01",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 68,
+  "bytes": 8644529
  },
  {
   "tag": "00588",
@@ -6886,9 +7010,11 @@
   "id": "1GE4xyh_QffVWU9p5ThO7iXoWxsGdLAZ_",
   "issue": "Vol 30/02",
   "kind": "g",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 2,
+  "pages": 1,
+  "bytes": 401602
  },
  {
   "tag": "00589",
@@ -6896,9 +7022,11 @@
   "id": "1QH2iTzegURwl4TzF5cGxQAmkOwjicjGY",
   "issue": "Vol 30/03",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 6,
+  "pages": 40,
+  "bytes": 8132326
  },
  {
   "tag": "00590",
@@ -6906,9 +7034,11 @@
   "id": "1zbNrOP6isBL4Ji1rTS06BCUmp9pqpJOE",
   "issue": "Vol 30/03",
   "kind": "b",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 64,
+  "bytes": 45977309
  },
  {
   "tag": "00591",
@@ -6916,9 +7046,23 @@
   "id": "1I3YBkbXMz9ijqLELIBziEyKV_qMjQUph",
   "issue": "Vol 30/04",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 56,
+  "bytes": 19441704
+ },
+ {
+  "tag": "00592",
+  "path": "Vol 30/04/Pages/Section B.pdf",
+  "id": "1WJTFzMmq2hfGJqJ8XqMqkbrIC-pyaYyf",
+  "issue": "Vol 30/04",
+  "kind": "b",
+  "ok": true,
+  "rendered": true,
+  "seconds": 6,
+  "pages": 56,
+  "bytes": 68096037
  },
  {
   "tag": "00593",
@@ -6926,9 +7070,11 @@
   "id": "1E9F1wImUheutDL8vTvjy7x5DyjMA-AKV",
   "issue": "Vol 30/05",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 3,
+  "pages": 56,
+  "bytes": 5297572
  },
  {
   "tag": "00594",
@@ -6946,9 +7092,11 @@
   "id": "1V9brJXN8oFVQFWg3s7z8Gz53UNkqil4t",
   "issue": "Vol 30/06",
   "kind": "a",
-  "ok": false,
-  "rendered": false,
-  "thumb": true
+  "ok": true,
+  "rendered": true,
+  "seconds": 4,
+  "pages": 60,
+  "bytes": 8136058
  },
  {
   "tag": "00596",
