@@ -47,15 +47,28 @@ def main(folder, no_wall=False, report=None, only=None, main_only=False):
         if not os.path.exists(jpg): continue
         text = open(txt, encoding="utf-8", errors="replace").read() if os.path.exists(txt) else ""
         items.append((tag, name, it, ic.normalize_text(text), jpg))
+    def section(it, text, name):
+        sec = ic.section_of(text, name)
+        if it.get("kind") in ("g", "s") and sec == "a": sec = "d"     # a GEN/SP1 special is never the main paper
+        return sec
     # main-section covers carry full dates: they go first and anchor the others
-    items.sort(key=lambda x: (0 if ic.section_of(x[3], x[1]) == "a" else 1, x[1]))
+    items.sort(key=lambda x: (0 if section(x[2], x[3], x[1]) == "a" else 1, x[1]))
     rows, added = [], 0
+    issue_date = {}        # issue folder -> the date on its main cover
     for tag, name, it, text, jpg in items:
         if only and tag not in only: continue
-        sec = ic.section_of(text, name)
+        sec = section(it, text, name)
         if main_only and sec != "a":
             rows.append((tag, name, "notmain", "", sec)); continue
         d = ic.date_of(text)
+        issue = it.get("issue")
+        if sec == "a" and d and issue and issue not in issue_date:
+            within = it["path"][len(issue):].lstrip("/")
+            if not re.match(r"\d{1,2}/", within): issue_date[issue] = d     # not a copy of another issue filed here
+        elif sec != "a" and issue in issue_date and d != issue_date[issue]:
+            # a supplement is dated by the issue it was filed with; its own masthead date can carry a typo
+            if d: print(f"note  {it['path']}: says {d}, filed with the {issue_date[issue]} edition")
+            d = issue_date[issue]
         if not d:
             rows.append((tag, name, "nodate", "", sec)); print(f"skip  {name}: no date found"); continue
         key = d.isoformat()

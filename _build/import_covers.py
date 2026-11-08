@@ -185,7 +185,7 @@ def volno_of(text):
     return (int(m.group(1)), int(m.group(2))) if m else (None, None)
 
 def parsha_of(text):
-    m = re.search(r"(פ'|פרשת)\s*([א-ת]+(?:\s[א-ת]+)?)", text)
+    m = re.search(r"(פ'|פרשת)\s*([א-ת]+(?:[ \t]+[א-ת]+)?)", text)      # a second word on the same line only
     return f"פ' {m.group(2).strip()}" if m else None
 
 def cover_text(text):
