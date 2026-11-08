@@ -157,12 +157,12 @@ def main(folder, no_wall=False, report=None, only=None, main_only=False):
         if not m: return None
         try: return ic.to_friday(date(int(m.group(1)), int(m.group(2)), int(m.group(3))))
         except ValueError: return None
-    manual = {"dates": {}, "rotate": {}, "skip": []}
+    manual = {"dates": {}, "rotate": {}, "skip": [], "section": {}}
     if os.path.exists(os.path.join(folder, "manual.json")):      # dates read by eye, pages to turn
         manual.update(json.load(open(os.path.join(folder, "manual.json"), encoding="utf-8")))
     pre = {}
     for tag, name, it, text, jpg in items:
-        sec = section(it, text, name)
+        sec = manual["section"].get(it["path"]) or section(it, text, name)     # a section settled by eye wins
         vol, no = volno(it.get("issue"))
         if it.get("thumb"): d = name_date(name) or (ocr_date(text, vol, no) if vol else None)
         else: d = ic.date_of(text) or name_date(name)
