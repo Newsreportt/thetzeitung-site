@@ -36,8 +36,8 @@ runs in rounds (one an hour while throttled); meanwhile it keeps Drive's own fir
 home page background). The importer reads each page's date and section from its text layer (OCR of
 the masthead for thumbnails), places every issue on its volume's weekly grid so a misread digit or
 a misfiled copy cannot land on the wrong week, lets a real page replace a thumbnail imported
-earlier, and honours `raw/out/manual.json` (`dates` read by eye, `rotate` for yom tov spreads,
-`skip` for stray files). A yom tov edition's second Yiddishe Tzeit section is labelled through
+earlier, and honours `raw/out/manual.json` (kept as `_build/drive-manual.json`: `dates` and
+`section` settled by eye, `rotate` for yom tov spreads, `skip` for stray files). A yom tov edition's second Yiddishe Tzeit section is labelled through
 `labels` in `editions.json`.
 
 Primary domain is thetzeitung.com; ditzeitung.com redirects to it (see `_redirects`).

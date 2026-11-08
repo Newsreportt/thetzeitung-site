@@ -1,0 +1,24 @@
+{
+ "dates": {
+  "Vol 27/01": "2013-09-13",
+  "Vol 27/02": "2013-09-27",
+  "Vol 28/02": "2014-10-17"
+ },
+ "rotate": {
+  "Vol 27/02/Pages/27-02a.pdf": -90,
+  "Vol 28/02/pages/Section A (1-14, 59-72).pdf": -90,
+  "Vol 26/02/PDF Full Pages/section A.pdf": -90,
+  "Vol 26/26/Pages/Section A.pdf": -90,
+  "Vol 29/02/Pages/Section A-B.pdf": -90,
+  "Vol 31/02/Pages/31-02a.pdf": -90,
+  "Vol 32/02/Pages/32-02a.pdf": -90
+ },
+ "skip": [
+  "Vol 26/17/1497941.pdf",
+  "Vol 28/26/1.pdf"
+ ],
+ "section": {
+  "Vol 26/26/Pages/Section A.pdf": "a",
+  "Vol 28/15/Pages/Section B.pdf": "b"
+ }
+}
