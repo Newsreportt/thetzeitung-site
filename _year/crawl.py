@@ -80,6 +80,7 @@ def walk(folder_id, path, issue, depth=0):
     for fid, name, is_folder in children(folder_id):
         if is_folder:
             if "vol38" in name.lower() or "תשפ" in name: continue        # already in the archive
+            if depth >= 1 and re.fullmatch(r"\d{1,2}", name.strip()): continue   # a copy of another issue filed inside this one
             walk(fid, f"{path}/{name}", issue or (f"{path}/{name}" if depth == 0 else None), depth + 1)
             time.sleep(0.05)
         else:
