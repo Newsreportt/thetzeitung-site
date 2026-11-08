@@ -18,8 +18,14 @@ def fetch(url, tries=5):
     raise err
 
 ENTRY = re.compile(r'<div class="flip-entry" id="entry-([^"]+)"(.*?)</div>\s*</div>\s*</div>', re.S)
+denied = []
 def children(folder_id):
-    page = fetch(f"https://drive.google.com/embeddedfolderview?id={folder_id}#list")
+    for attempt in range(6):
+        page = fetch(f"https://drive.google.com/embeddedfolderview?id={folder_id}#list")
+        if "id=\"entry-" in page or ("Access Denied" not in page and "You need access" not in page): break
+        time.sleep(30 * (attempt + 1))          # sharing may still be spreading through the tree
+    else:
+        denied.append(folder_id); print("access denied:", folder_id, flush=True); return []
     items = []
     for m in re.finditer(r'id="entry-([\w-]+)"', page):
         fid = m.group(1)
@@ -52,7 +58,8 @@ def walk(folder_id, path, depth=0):
 
 for f in job["folders"]:
     walk(f["id"], f["name"])
-print(f"crawled {nfolders} folders; {len(selected)} candidate covers", flush=True)
+print(f"crawled {nfolders} folders; {len(selected)} candidate covers; {len(denied)} folders denied", flush=True)
+json.dump(denied, open(f"{out}/denied.json", "w"))
 json.dump(selected, open(f"{out}/selected.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
 listing = []
