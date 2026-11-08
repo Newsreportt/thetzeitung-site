@@ -210,7 +210,10 @@ def main(folder, no_wall=False, report=None, only=None, main_only=False):
         p = ic.parsha_of(text)
         if p and not ed.get("parsha"): ed["parsha"] = p
         if sec in ed["covers"]:
-            rows.append((tag, name, "dup", key, sec)); continue
+            held = ed.get("source", {}).get(sec, "")
+            if it.get("thumb") or not held.startswith("thumb:"):
+                rows.append((tag, name, "dup", key, sec)); continue
+            print(f"page  {it['path']}: the real page replaces the thumbnail of {key} {sec}")
         big = f"covers/archive/{key}-{sec}.jpg"; small = f"covers/wall/{sec}-{key}.jpg"
         render(Image.open(jpg), os.path.join(ic.ROOT, big), None if no_wall else os.path.join(ic.ROOT, small),
                zoom_src=jpg if it.get("thumb") else os.path.join(folder, tag + "-zoom.jpg"),
