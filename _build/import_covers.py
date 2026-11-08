@@ -151,7 +151,7 @@ def _date_of(text):
     MONTH_WORDS = ("jan","january","feb","february","mar","march","apr","april","may","jun","june","jul","july",
                    "aug","august","sep","sept","september","oct","october","nov","november","dec","december")
     # "OCT. 30 - NOV. 1, '24": a range may cross into the next month; the edition is dated by its end
-    for m in re.finditer(r"([A-Za-z]{3,9})\.?\s+(\d{1,2})(?:\s*-\s*(?:([A-Za-z]{3,9})\.?\s+)?(\d{1,2}))?(?:,?\s*'(\d{2}))?", text):
+    for m in re.finditer(r"([A-Za-z]{3,9})\.?\s+(\d{1,2})(?:\s*[-\u2013\u2014]\s*(?:([A-Za-z]{3,9})\.?\s+)?(\d{1,2}))?(?:,?\s*'(\d{2}))?", text):
         word = m.group(1).lower()
         if word not in MONTH_WORDS: continue
         mon = MONTHS[word[:3]]
