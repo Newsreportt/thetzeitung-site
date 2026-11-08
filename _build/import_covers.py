@@ -155,14 +155,17 @@ def _date_of(text):
         word = m.group(1).lower()
         if word not in MONTH_WORDS: continue
         mon = MONTHS[word[:3]]
+        day = int(m.group(2))
         if m.group(4):
-            day = int(m.group(4))
+            # "OCT. 30 - NOV. 1": the paper is dated by the Friday that ends the span; but a yom tov
+            # double issue ("APRIL 11-18") is dated by the Friday it came out, the first day
+            mon2, day2 = mon, int(m.group(4))
             if m.group(3):
                 w2 = m.group(3).lower()
                 if w2 not in MONTH_WORDS: continue
-                mon = MONTHS[w2[:3]]
-        else:
-            day = int(m.group(2))
+                mon2 = MONTHS[w2[:3]]
+            span = (day2 - day) if mon2 == mon else (day2 + 31 - day)
+            if 0 < span < 5: mon, day = mon2, day2
         if m.group(5): year = 2000 + int(m.group(5))
         elif hyear: year = civil_year(hyear, mon, day)
         else:

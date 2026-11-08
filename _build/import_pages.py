@@ -91,8 +91,10 @@ def page_kind(text):
     if _near("יום טוב", "צייט", both) or _near("יו\"ט", "צייט", both): return "d"
     if _near("תורה", "צייט", both, 3): return "t"
     if _near("קהלה", "צייט", both, 3): return "k"
-    if re.search(r"FRIDAY|פרייטאג|גאטיירפ", both) and re.search(r"[-•·]\s*\d{1,3}(?!\d)|(?<!\d)\d{1,3}\s*[-•·]", flat[:500]):
-        return "inside"                                  # a running head with a page number
+    # a running head with a page number ("• 17 •", "- 17 -"), once dates and VOL/NO are out of the way
+    bare = re.sub(r"VOL\.?\s*\d+(\s*[·•.\-]\s*NO\.?\s*\d+)?|\d{1,2}\s*[-–—]\s*\d{1,2}|'\d\d", " ", flat[:500], flags=re.I)
+    if re.search(r"FRIDAY|פרייטאג|גאטיירפ", both) and re.search(r"(?:^|\s)[-•·]\s*\d{1,3}\s*[-•·](?:\s|$)|(?:^|\s)\d{1,2}\s*[•·](?:\s|$)", bare):
+        return "inside"
     return None
 
 def trim(im, pad=6):
@@ -138,6 +140,8 @@ def main(folder, no_wall=False, report=None, only=None, main_only=False):
         text = open(txt, encoding="utf-8", errors="replace").read() if os.path.exists(txt) else ""
         items.append((tag, name, it, ic.normalize_text(text), jpg))
     def section(it, text, name):
+        m = re.search(r"\(\s*(\d{1,3})\s*-\s*\d{1,3}|pages?\s+(\d{1,3})\s*-", name, re.I)
+        if m and int(m.group(1) or m.group(2)) > 1: return "inside"   # a file that starts inside the paper
         k = page_kind(text)                      # what the page says about itself comes first
         if k == "inside": return k
         if k and it.get("kind") in ("g", "s") and k == "a": k = "d"   # a GEN/SP1 special is never the main paper
