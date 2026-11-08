@@ -1294,8 +1294,7 @@
   "id": "1zyGMHsQ6lsmMuThh7xdc3wN2v7ferQSC",
   "path": "Vol 26/17/PDF Full Pages/Section A.pdf",
   "issue": "Vol 26/17",
-  "kind": "a",
-  "skip": true
+  "kind": "a"
  },
  {
   "id": "1bj5JRVLT_adHSrb79rhwft45PhWw-F4A",
@@ -4149,7 +4148,8 @@
   "id": "1Y0MdjD7BBgKPXwk_yN5dpMJb7F2-Axct",
   "path": "Vol 26/17/1497941.pdf",
   "issue": "Vol 26/17",
-  "kind": "a"
+  "kind": "a",
+  "skip": true
  },
  {
   "id": "11jDP6tJ8g5ezXgLbOnOANjq20rVyCOh0",
@@ -5457,7 +5457,8 @@
   "id": "1hpbnKeDNGe0Hk-xfVoqWeGviH8TtcM8O",
   "path": "Vol 32/51/1117-1.pdf",
   "issue": "Vol 32/51",
-  "kind": "a"
+  "kind": "a",
+  "skip": true
  },
  {
   "id": "13ppDTlCMKo-WT9gDuSCp1UVHR8YFD-Rz",
@@ -5488,5 +5489,11 @@
   "path": "Vol 32/53/Pages/32-53b.pdf",
   "issue": "Vol 32/53",
   "kind": "b"
+ },
+ {
+  "id": "1R1Chfc7eULfm-pPGA_No1SVTX24Dyd_a",
+  "path": "Vol 32/51/Pages/32-51a.pdf",
+  "issue": "Vol 32/51",
+  "kind": "a"
  }
 ]
