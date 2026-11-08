@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Import covers that arrive as first-page renders: <tag>.jpg + <tag>.txt pairs (the page as a
-JPEG and its text layer), plus listing.json with the original file names.
+JPEG and its text layer), an optional sharper <tag>-zoom.jpg for zooming in, plus listing.json
+with the original file names.
 
     python3 _build/import_pages.py path/to/out [--no-wall] [--main-only] [--report report.tsv]
 
@@ -14,17 +15,26 @@ from PIL import Image, ImageChops
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import import_covers as ic
 
-def render(im, out_big, out_small):
+def trim(im, pad=6):
+    """Cut the white page margin away, as the PDF importer does."""
     im = im.convert("RGB")
     bg = Image.new("RGB", im.size, im.getpixel((3, 3)))
     box = ImageChops.difference(im, bg).convert("L").point(lambda v: 255 if v > 14 else 0).getbbox()
     if box:
-        pad = 6
         im = im.crop((max(box[0]-pad, 0), max(box[1]-pad, 0), min(box[2]+pad, im.width), min(box[3]+pad, im.height)))
+    return im
+
+def render(im, out_big, out_small, zoom_src=None, out_zoom=None):
+    im = trim(im)
     if im.width > 900: im = im.resize((900, round(900 * im.height / im.width)), Image.LANCZOS)
     im.save(out_big, quality=84, optimize=True, progressive=True)
     if out_small:
         im.resize((320, round(320 * im.height / im.width)), Image.LANCZOS).save(out_small, quality=76, optimize=True)
+    if zoom_src and out_zoom and os.path.exists(zoom_src):      # the sharper copy for zooming in
+        z = trim(Image.open(zoom_src), pad=round(6 * Image.open(zoom_src).width / max(im.width, 1)))
+        if z.width > ic.ZOOM_W: z = z.resize((ic.ZOOM_W, round(ic.ZOOM_W * z.height / z.width)), Image.LANCZOS)
+        os.makedirs(os.path.dirname(out_zoom), exist_ok=True)
+        z.save(out_zoom, quality=80, optimize=True, progressive=True)
 
 def main(folder, no_wall=False, report=None, only=None, main_only=False):
     data = json.load(open(ic.DATA, encoding="utf-8")) if os.path.exists(ic.DATA) else {}
@@ -57,7 +67,8 @@ def main(folder, no_wall=False, report=None, only=None, main_only=False):
         if sec in ed["covers"]:
             rows.append((tag, name, "dup", key, sec)); continue
         big = f"covers/archive/{key}-{sec}.jpg"; small = f"covers/wall/{sec}-{key}.jpg"
-        render(Image.open(jpg), os.path.join(ic.ROOT, big), None if no_wall else os.path.join(ic.ROOT, small))
+        render(Image.open(jpg), os.path.join(ic.ROOT, big), None if no_wall else os.path.join(ic.ROOT, small),
+               zoom_src=os.path.join(folder, tag + "-zoom.jpg"), out_zoom=os.path.join(ic.ROOT, f"covers/zoom/{key}-{sec}.jpg"))
         ed["covers"][sec] = big
         ed.setdefault("texts", {})[sec] = ic.cover_text(text)
         ed.setdefault("source", {})[sec] = f"pdf:{it['path']}"
