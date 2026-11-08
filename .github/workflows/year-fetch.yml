@@ -49,8 +49,13 @@ jobs:
         if: always()
         run: |
           ROUND="${{ github.event.inputs.round || '1' }}"
-          if [ -f _year/raw/again ] && [ "$ROUND" -lt 12 ]; then
-            echo "$(cat _year/raw/again) covers left; starting round $((ROUND + 1))"
+          if [ -f _year/raw/again ] && [ "$ROUND" -lt 30 ]; then
+            read LEFT FETCHED < _year/raw/again
+            echo "$LEFT covers left ($FETCHED PDFs fetched this round); starting round $((ROUND + 1))"
+            if [ "${FETCHED:-0}" -eq 0 ]; then
+              echo "nothing came through: waiting an hour for Google's quota before the next round"
+              sleep 3600
+            fi
             gh workflow run year-fetch.yml --ref year-fetch -f round=$((ROUND + 1))
           fi
         env:
