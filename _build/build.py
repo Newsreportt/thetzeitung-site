@@ -576,11 +576,17 @@ def yomtov_of(key):
 def heb_year_label(key):
     return hdates.HebrewDate.from_pydate(date(*map(int, key.split("-"))) + timedelta(days=4)).hebrew_date_string().split()[-1]
 
+def section_label(ed, k):
+    """(English, Yiddish) name of a cover: the section's, unless the edition says otherwise
+    (a yom tov edition can carry a second Yiddishe Tzeit in the place of another supplement)."""
+    lab = ed.get("labels", {}).get(k)
+    return tuple(lab) if lab else SECTION_NAME[k]
+
 def edition_block(ed):
     figs = "".join(f"""
       <figure data-k="{k}">
-        <a href="#" data-zoom="{ed["covers"][k]}"{big_attr(ed, k)} aria-label="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}"><img src="{ed["covers"][k]}" alt="{SECTION_NAME[k][0]}, {nice_date(ed["date"])}" width="900" height="980" loading="lazy" draggable="false"></a>
-        <figcaption>{SECTION_NAME[k][0]}<span class="heb">{SECTION_NAME[k][1]}</span></figcaption>
+        <a href="#" data-zoom="{ed["covers"][k]}"{big_attr(ed, k)} aria-label="{section_label(ed, k)[0]}, {nice_date(ed["date"])}"><img src="{ed["covers"][k]}" alt="{section_label(ed, k)[0]}, {nice_date(ed["date"])}" width="900" height="980" loading="lazy" draggable="false"></a>
+        <figcaption>{section_label(ed, k)[0]}<span class="heb">{section_label(ed, k)[1]}</span></figcaption>
       </figure>""" for k, _, _, _ in SECTIONS if k in ed["covers"])
     number = f'<span class="no">No. {ed["no"]}</span>' if ed.get("no") else ""
     parsha = ed.get("parsha") or ""
@@ -614,7 +620,7 @@ BOILER = {sec: {w for w, n in _freq[sec].items() if _count[sec] >= 5 and n > 0.4
 def search_blob(ed, sec):
     words = [w for w in ed.get("texts", {}).get(sec, "").split() if _norm(w) not in BOILER[sec]][:110]
     y, m, d = map(int, ed["date"].split("-"))
-    bits = [SECTION_NAME[sec][0], SECTION_NAME[sec][1], nice_date(ed["date"]), ed["date"], date(y, m, d).strftime("%b %Y"),
+    bits = [section_label(ed, sec)[0], section_label(ed, sec)[1], nice_date(ed["date"]), ed["date"], date(y, m, d).strftime("%b %Y"),
             ed.get("hdate", ""), ed.get("hyear", ""), heb_month_of(ed["date"]),
             (ed.get("parsha") or "").replace(", ", "-"), (ed.get("parsha") or "").replace("פ' ", ""), " ".join(yomtov_of(ed["date"]) or ()),
             f"number {ed['no']} no {ed['no']} #{ed['no']}" if ed.get("no") else ""]

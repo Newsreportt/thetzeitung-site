@@ -10,7 +10,7 @@ name helps with the section), but the picture is already rendered. --no-wall kee
 of the drifting background on the home page. Run _build/build.py afterwards.
 """
 import json, os, re, subprocess, sys, tempfile
-from datetime import timedelta
+from datetime import date, timedelta
 from PIL import Image, ImageChops
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -55,7 +55,6 @@ def ocr_date(text, vol, no=None):
     """The month and day read off a masthead by OCR, placed in the civil year of the volume
     (OCR often garbles the two-digit year, never the volume folder). Around Rosh Hashana both
     years fit; the issue number says which end of the volume the paper belongs to."""
-    from datetime import date
     lo, hi = volume_window(vol)
     expected = lo + timedelta(weeks=(no or 26) - 1)
     best = None
@@ -105,14 +104,17 @@ def trim(im, pad=6):
         im = im.crop((max(box[0]-pad, 0), max(box[1]-pad, 0), min(box[2]+pad, im.width), min(box[3]+pad, im.height)))
     return im
 
-def render(im, out_big, out_small, zoom_src=None, out_zoom=None):
+def render(im, out_big, out_small, zoom_src=None, out_zoom=None, turn=0):
+    if turn: im = im.rotate(turn, expand=True)
     im = trim(im)
     if im.width > 900: im = im.resize((900, round(900 * im.height / im.width)), Image.LANCZOS)
     im.save(out_big, quality=84, optimize=True, progressive=True)
     if out_small:
         im.resize((320, round(320 * im.height / im.width)), Image.LANCZOS).save(out_small, quality=76, optimize=True)
     if zoom_src and out_zoom and os.path.exists(zoom_src):      # the sharper copy for zooming in
-        z = trim(Image.open(zoom_src), pad=round(6 * Image.open(zoom_src).width / max(im.width, 1)))
+        z = Image.open(zoom_src)
+        if turn: z = z.rotate(turn, expand=True)
+        z = trim(z, pad=round(6 * z.width / max(im.width, 1)))
         if z.width > ic.ZOOM_W: z = z.resize((ic.ZOOM_W, round(ic.ZOOM_W * z.height / z.width)), Image.LANCZOS)
         os.makedirs(os.path.dirname(out_zoom), exist_ok=True)
         z.save(out_zoom, quality=80, optimize=True, progressive=True)
@@ -144,56 +146,117 @@ def main(folder, no_wall=False, report=None, only=None, main_only=False):
         sec = ic.section_of(text, name)
         if it.get("kind") in ("g", "s") and sec == "a": sec = "d"
         return sec
-    # main covers with a readable date go first and anchor the others: undated main covers and
-    # thumbnails are then placed by counting weeks, and the supplements follow their issue folder
+    # what each page says about itself: its section, and its date when the text layer or the OCR
+    # of a thumbnail gives one
+    def volno(issue):
+        m = re.match(r"Vol\.? *(\d+)/0*(\d+)$", issue or "")
+        return (int(m.group(1)), int(m.group(2))) if m else (None, None)
+    def name_date(name):
+        """The edition date in a production file name such as 20171006_XDI_TZE_PG001.pdf."""
+        m = re.match(r"(\d{4})(\d{2})(\d{2})[_-]XDI_", name)
+        if not m: return None
+        try: return ic.to_friday(date(int(m.group(1)), int(m.group(2)), int(m.group(3))))
+        except ValueError: return None
+    manual = {"dates": {}, "rotate": {}, "skip": []}
+    if os.path.exists(os.path.join(folder, "manual.json")):      # dates read by eye, pages to turn
+        manual.update(json.load(open(os.path.join(folder, "manual.json"), encoding="utf-8")))
+    pre = {}
+    for tag, name, it, text, jpg in items:
+        sec = section(it, text, name)
+        vol, no = volno(it.get("issue"))
+        if it.get("thumb"): d = name_date(name) or (ocr_date(text, vol, no) if vol else None)
+        else: d = ic.date_of(text) or name_date(name)
+        if it.get("issue") in manual["dates"] and sec == "a": d = date.fromisoformat(manual["dates"][it["issue"]])
+        pre[tag] = (sec, d, vol, no)
+    # The weekly grid of each volume: anchored by editions already in the archive and by main
+    # covers whose text layer carries a date, filled in with the OCR readings of the thumbnails.
+    # Offset = date - 7 days * number: constant along a run of weekly issues, 7 days more after a
+    # skipped week. The offsets of a volume are fitted as one non-decreasing step function, so a
+    # misread digit is outvoted by the issues around it while a real skipped week is kept.
+    def offset(d, no): return d - timedelta(weeks=no)
+    known = {}                                   # (vol, no) -> [(offset, weight)]
+    for k, ed in data.items():
+        if ed.get("vol") and ed.get("no"):
+            known.setdefault((ed["vol"], ed["no"]), []).append((offset(date.fromisoformat(k), ed["no"]), 2.5))
+    for tag, name, it, text, jpg in items:
+        sec, d, vol, no = pre[tag]
+        if sec != "a" or not d or not vol: continue
+        within = it["path"][len(it["issue"]):].lstrip("/")
+        if re.match(r"\d{1,2}/", within): continue          # a copy of another issue filed here
+        known.setdefault((vol, no), []).append((offset(d, no), 2 if name_date(name) else 1 if it.get("thumb") else 3))
+    def fit(vol):
+        """The offset of every issue number of a volume, as the non-decreasing step function that
+        best fits the evidence: each reading votes for its offset with its weight, and every
+        skipped week (a step of 7 days) costs one vote. Returns {no: date}."""
+        ev = {m: lst for (v, m), lst in known.items() if v == vol}
+        if not ev: return {}
+        offsets = sorted({o for lst in ev.values() for o, w in lst})
+        lo, hi = min(ev), max(ev)
+        INF = float("inf")
+        cost = lambda n, o: -sum(w for oo, w in ev.get(n, []) if oo == o)
+        best = [cost(lo, o) for o in offsets]; back = []
+        for n in range(lo + 1, hi + 1):
+            cur, bk = [], []
+            for j, o in enumerate(offsets):
+                c, arg = INF, None
+                for i in range(j + 1):
+                    v = best[i] + (o - offsets[i]).days / 7
+                    if v < c: c, arg = v, i
+                cur.append(c + cost(n, o)); bk.append(arg)
+            best, back = cur, back + [bk]
+        j = min(range(len(offsets)), key=lambda j: best[j])
+        path = {hi: offsets[j]}
+        for n in range(hi, lo, -1):
+            j = back[n - lo - 1][j]; path[n - 1] = offsets[j]
+        return {n: path[n] + timedelta(weeks=n) for n in path}
+    fitted = {}
+    settled = {}
+    copies = set()
+    for tag, name, it, text, jpg in items:
+        sec, d, vol, no = pre[tag]
+        if sec != "a" or not vol: continue
+        if vol not in fitted: fitted[vol] = fit(vol)
+        sd = fitted[vol].get(no)
+        mvol, mno = ic.volno_of(text)
+        if d and mno and mno != no and (not mvol or mvol == vol) and fitted[vol].get(mno) == d:
+            # the masthead names another number, and its date fits that number: a copy of that
+            # issue filed in this folder; it stays with its own date (and is then a duplicate)
+            print(f"copy  {it['path']}: the page is no. {mno} of {d}, filed under {no}: left out")
+            copies.add(tag); continue
+        if it.get("issue") in manual["dates"]: continue
+        if it.get("thumb") or not d:
+            if sd and sd != d:
+                print(f"grid  {it['path']}: {'read as ' + str(d) + ', ' if d else ''}the volume's weekly grid puts it at {sd}")
+            elif not sd and d:
+                print(f"ocr   {it['path']}: {d} read off the page, nothing to compare with")
+            if sd: settled[tag] = sd
+        elif sd and abs((sd - d).days) > 10:
+            # a text layer can carry a stray date (an advertisement's, a template's): the grid wins
+            print(f"grid  {it['path']}: the text says {d}, the volume's weekly grid puts it at {sd}: taking the grid")
+            settled[tag] = sd
+    # main covers first (dated ones before the rest), then the supplements, which follow their issue folder
     def order(x):
         tag, name, it, text, jpg = x
-        sec = section(it, text, name)
-        if sec != "a": return (2, name)
-        if not it.get("thumb") and ic.date_of(text): return (0, name)
-        return (1, name)
+        sec, d, vol, no = pre[tag]
+        return (2 if sec != "a" else 0 if (d and not it.get("thumb")) else 1, name)
     items.sort(key=order)
     rows, added = [], 0
     issue_date = {}        # issue folder -> the date on its main cover
-    def week_guess(issue):
-        """The Friday of an issue whose masthead could not be read, counted in weeks from the
-        dated issues of the same volume; None when a skipped week in between makes it unsure."""
-        m = re.match(r"(.*?)/0*(\d+)$", issue or "")
-        if not m: return None
-        vol, n = m.group(1), int(m.group(2))
-        known = {}
-        for iss, dt in issue_date.items():
-            m2 = re.match(r"(.*?)/0*(\d+)$", iss)
-            if m2 and m2.group(1) == vol: known[int(m2.group(2))] = dt
-        if not known: return None
-        below = [k for k in known if k < n]; above = [k for k in known if k > n]
-        lo = max(below) if below else None; hi = min(above) if above else None
-        if lo is not None and hi is not None:
-            if (known[hi] - known[lo]).days == 7 * (hi - lo): return known[lo] + timedelta(weeks=n - lo)
-            return None                                   # a week was skipped somewhere in between
-        if lo is not None and n - lo <= 2: return known[lo] + timedelta(weeks=n - lo)
-        if hi is not None and hi - n <= 2: return known[hi] - timedelta(weeks=hi - n)
-        return None
     for tag, name, it, text, jpg in items:
         if only and tag not in only: continue
-        sec = section(it, text, name)
+        sec, d, vol, no = pre[tag]
         if sec == "inside":
             rows.append((tag, name, "inside", "", "")); print(f"skip  {it['path']}: an inside page, not a cover"); continue
+        if tag in copies:
+            rows.append((tag, name, "copy", "", sec)); continue
+        if it["path"] in manual["skip"]:
+            rows.append((tag, name, "skip", "", sec)); continue
         if main_only and sec != "a":
             rows.append((tag, name, "notmain", "", sec)); continue
         issue = it.get("issue")
-        mv = re.match(r"Vol\.? *(\d+)/0*(\d+)$", issue or "")
-        d = ocr_date(text, int(mv.group(1)), int(mv.group(2))) if it.get("thumb") and mv else ic.date_of(text)
-        if it.get("thumb") or (sec == "a" and not d):
-            # OCR misreads a digit now and then; counting weeks from the dated issues is surer
-            guess = week_guess(issue)
-            if guess and d != guess:
-                if d: print(f"count {it['path']}: OCR read {d}, counting weeks gives {guess}; taking the count")
-                else: print(f"count {it['path']}: {guess} by counting weeks")
-                d = guess
-            elif d and not guess:
-                print(f"ocr   {it['path']}: {d} read off the thumbnail, nothing to count from: check it")
-            if sec == "a" and d and issue: issue_date.setdefault(issue, d)
+        if tag in settled: d = settled[tag]
+        if sec != "a" and issue not in issue_date and vol and fitted.get(vol, {}).get(no):
+            d = d if d and abs((d - fitted[vol][no]).days) <= 10 else fitted[vol][no]     # no dated main cover: the grid places the supplement
         if sec == "a" and d and issue and issue not in issue_date:
             within = it["path"][len(issue):].lstrip("/")
             if not re.match(r"\d{1,2}/", within): issue_date[issue] = d     # not a copy of another issue filed here
@@ -205,8 +268,10 @@ def main(folder, no_wall=False, report=None, only=None, main_only=False):
             rows.append((tag, name, "nodate", "", sec)); print(f"skip  {name}: no date found"); continue
         key = d.isoformat()
         ed = data.setdefault(key, {"date": key, "vol": None, "no": None, "parsha": None, "covers": {}})
-        vol, no = ic.volno_of(text)
-        if vol and not ed.get("no"): ed["vol"], ed["no"] = vol, no
+        if not ed.get("no"):
+            mvol, mno = ic.volno_of(text)            # the masthead's VOL/NO line, else the issue folder
+            if mvol and not it.get("thumb"): ed["vol"], ed["no"] = mvol, mno
+            elif sec == "a" and vol: ed["vol"], ed["no"] = vol, no
         p = ic.parsha_of(text)
         if p and not ed.get("parsha"): ed["parsha"] = p
         if sec in ed["covers"]:
@@ -217,7 +282,7 @@ def main(folder, no_wall=False, report=None, only=None, main_only=False):
         big = f"covers/archive/{key}-{sec}.jpg"; small = f"covers/wall/{sec}-{key}.jpg"
         render(Image.open(jpg), os.path.join(ic.ROOT, big), None if no_wall else os.path.join(ic.ROOT, small),
                zoom_src=jpg if it.get("thumb") else os.path.join(folder, tag + "-zoom.jpg"),
-               out_zoom=os.path.join(ic.ROOT, f"covers/zoom/{key}-{sec}.jpg"))
+               out_zoom=os.path.join(ic.ROOT, f"covers/zoom/{key}-{sec}.jpg"), turn=manual["rotate"].get(it["path"], 0))
         ed["covers"][sec] = big
         ed.setdefault("texts", {})[sec] = ic.cover_text(text)
         ed.setdefault("source", {})[sec] = ("thumb:" if it.get("thumb") else "pdf:") + it["path"]
@@ -225,7 +290,7 @@ def main(folder, no_wall=False, report=None, only=None, main_only=False):
         ic.KNOWN_FRIDAYS.add(key)
         rows.append((tag, name, "added", key, sec))
         added += 1
-        print(f"added {name}: {key} section {sec}" + (f" vol {vol} no {no}" if vol else "") + (f" {p}" if p else ""), flush=True)
+        print(f"added {name}: {key} section {sec}" + (f" ({it['issue']})" if it.get("issue") else "") + (f" {p}" if p else ""), flush=True)
     ic.enrich(data)
     json.dump(dict(sorted(data.items())), open(ic.DATA, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     if report:
