@@ -70,7 +70,7 @@ def kind_of(name):
     m = re.search(r"_xdi_([a-z0-9]+)_pg0*1\.pdf$", n)
     if m: return CODE_KIND.get(m.group(1), ("a", 6))
     if re.search(r"_pg0*1\.pdf$", n): return "a", 6
-    if re.match(r"^0*1(?:[\s,.\-]*(?:color|\d+))*\.pdf$", n): return "a", 5   # 1.pdf, 01 color.pdf, 1,65-67.pdf
+    if re.match(r"^0*1(?=[\s,.\-]|\.pdf$)(?:[\s,.\-]+(?:color|\d+))*\.pdf$", n): return "a", 5   # 1.pdf, 01 color.pdf, 1,65-67.pdf
     if re.match(r"^(cover|front|shaar)", n): return "a", 4
     m = re.match(r"^\d\d-\d\d([a-e])\.pdf$", n)                               # 31-02a.pdf: whole section A
     if m: return m.group(1), 3 if m.group(1) == "a" else 5
