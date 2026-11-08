@@ -52,16 +52,23 @@ def children(folder_id):
         items.append((fid, name, is_folder))
     return items
 
+CODE_KIND = {"tze": ("a", 7), "tz1": ("b", 6), "tz2": ("d", 6), "gen": ("g", 5), "sp1": ("s", 5)}
 def kind_of(name):
-    n = name.lower()
+    """(kind, preference) of a file by its name: a = the main cover, b/c/d/e = a whole section whose
+    first page is a supplement's cover, g/s = the GEN and SP1 specials of 5778-5779 (the importer
+    reads the section off the page)."""
+    n = name.lower().strip()
     if not n.endswith(".pdf"): return None, 0
+    m = re.search(r"_xdi_([a-z0-9]+)_pg0*1\.pdf$", n)
+    if m: return CODE_KIND.get(m.group(1), ("a", 6))
     if re.search(r"_pg0*1\.pdf$", n): return "a", 6
-    if re.match(r"^0*1(?!\d)", n): return "a", 5
+    if re.match(r"^0*1(?:[\s,.\-]*(?:color|\d+))*\.pdf$", n): return "a", 5   # 1.pdf, 01 color.pdf, 1,65-67.pdf
     if re.match(r"^(cover|front|shaar)", n): return "a", 4
-    if re.match(r"^section\s*a\b", n): return "a", 3
-    if re.match(r"^(full|whole|complete|all)\b", n): return "a", 2
-    m = re.match(r"^section\s*([b-d])\b", n)
-    if m: return m.group(1), 5
+    m = re.match(r"^\d\d-\d\d([a-e])\.pdf$", n)                               # 31-02a.pdf: whole section A
+    if m: return m.group(1), 3 if m.group(1) == "a" else 5
+    m = re.match(r"^sect\w{0,3}\s*([a-e])(?:[\s\-_]*[a-e])?(?=[\s.\-_(\d])", n)   # Section A.pdf, Section A-B, Secton A, Section C Sup
+    if m: return m.group(1), 3 if m.group(1) == "a" else 5
+    if re.match(r"^(full|whole|complete|all)[\s\d_-]*\.pdf$", n): return "a", 2
     return None, 0
 
 issues = {}          # issue path -> {kind: (score, id, path)}
@@ -82,17 +89,36 @@ def walk(folder_id, path, issue, depth=0):
             if not cur or score > cur[0]: issues[issue][kind] = (score, fid, f"{path}/{name}")
     if nfolders % 25 == 0: print(f"{nfolders} folders, {len(issues)} issues so far", flush=True)
 
-SELECTED = f"{out}/selected.json"
-if os.path.exists(SELECTED):
-    selected = json.load(open(SELECTED, encoding="utf-8"))
-    print(f"reusing the selection of an earlier round: {len(selected)} cover files", flush=True)
-else:
+def crawl():
     for f in job["folders"]:
         walk(f["id"], f["name"], None)
-    selected = [{"id": fid, "path": p, "issue": iss, "kind": k} for iss, kinds in issues.items() for k, (score, fid, p) in sorted(kinds.items())]
-    print(f"crawled {nfolders} folders; {len(issues)} issues, {len(selected)} cover files; {len(denied)} folders denied", flush=True)
-    json.dump(selected, open(SELECTED, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    sel = [{"id": fid, "path": p, "issue": iss, "kind": k} for iss, kinds in issues.items() for k, (score, fid, p) in sorted(kinds.items())]
+    print(f"crawled {nfolders} folders; {len(issues)} issues, {len(sel)} cover files; {len(denied)} folders denied", flush=True)
     json.dump(denied, open(f"{out}/denied.json", "w"))
+    return sel
+
+SELECTED = f"{out}/selected.json"; VERSION = f"{out}/selection.version"
+version = str(job.get("selection", 1))
+if os.path.exists(SELECTED) and os.path.exists(VERSION) and open(VERSION).read().strip() == version:
+    selected = json.load(open(SELECTED, encoding="utf-8"))
+    print(f"reusing the selection of an earlier round: {len(selected)} cover files", flush=True)
+elif os.path.exists(SELECTED):
+    # the rules changed: crawl again, but keep every earlier file at its position so the tags of
+    # covers already rendered stay valid; files no longer chosen are skipped, new ones appended
+    selected = json.load(open(SELECTED, encoding="utf-8"))
+    fresh = {it["id"]: it for it in crawl()}
+    kept = 0
+    for it in selected:
+        if it["id"] in fresh:
+            it.update(fresh.pop(it["id"])); it.pop("skip", None); kept += 1
+        else:
+            it["skip"] = True
+    selected += list(fresh.values())
+    print(f"selection renewed: {kept} files kept, {len(selected) - kept - len(fresh)} dropped, {len(fresh)} added", flush=True)
+else:
+    selected = crawl()
+json.dump(selected, open(SELECTED, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+open(VERSION, "w").write(version)
 
 # what earlier rounds already rendered
 previous = {}
@@ -123,6 +149,7 @@ def download(fid, pdf):
 def grab(i, it):
     global throttled_files, consecutive
     tag = f"{i:05d}"; pdf = f"{out}/{tag}.pdf"
+    if it.get("skip"): return                    # no longer chosen by the rules
     if rendered(tag):
         with lock:
             rec = previous.get(tag) or {"tag": tag, "path": it["path"], "id": it["id"], "issue": it["issue"], "kind": it["kind"], "ok": True}
@@ -164,7 +191,7 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=2) as ex:
 listing.sort(key=lambda r: r["tag"])
 json.dump(listing, open(f"{out}/listing.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 done = sum(1 for l in listing if l.get("rendered"))
-left = len(selected) - len(listing)
+left = sum(1 for it in selected if not it.get("skip")) - len(listing)
 print(f"done: {done} rendered of {len(selected)}; {len(listing) - done} failed; {left} left for another round", flush=True)
 if left:
     open(AGAIN, "w").write(str(left))
