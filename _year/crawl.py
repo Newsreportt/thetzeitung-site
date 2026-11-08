@@ -42,7 +42,7 @@ def children(folder_id):
         seen.add(it[0]); uniq.append(it)
     return uniq
 
-COVER = re.compile(r"^(0*1(?!\d)|cover|front|shaar)", re.I)
+COVER = re.compile(r"^(0*1(?!\d)|cover|front|shaar|full\b|whole|complete|all\b)", re.I)   # page 1, or the whole paper
 selected, nfolders = [], 0
 def walk(folder_id, path, depth=0):
     global nfolders
