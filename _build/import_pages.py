@@ -170,7 +170,7 @@ def main(folder, no_wall=False, report=None, only=None, main_only=False):
         vol, no = volno(it.get("issue"))
         if it.get("thumb"): d = name_date(name) or (ocr_date(text, vol, no) if vol else None)
         else: d = ic.date_of(text) or name_date(name)
-        if it.get("issue") in manual["dates"] and sec == "a": d = date.fromisoformat(manual["dates"][it["issue"]])
+        if it.get("issue") in manual["dates"]: d = date.fromisoformat(manual["dates"][it["issue"]])   # the issue's date, settled by eye
         pre[tag] = (sec, d, vol, no)
     # The weekly grid of each volume: anchored by editions already in the archive and by main
     # covers whose text layer carries a date, filled in with the OCR readings of the thumbnails.
