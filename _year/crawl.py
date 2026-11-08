@@ -5,12 +5,21 @@ Per issue folder one main cover is chosen, by preference: a page-1 file (…_PG0
 01.pdf, 1,65-67.pdf), a file named cover/front, "Section A.pdf" (whole section), or the whole
 paper (full.pdf). "Section B/C/D.pdf" are taken as well: their first pages are the covers of the
 Yiddishe Tzeit and the other supplements. Each PDF is downloaded, its first page rendered and
-its text read, then the PDF is deleted. Writes out/listing.json, out/<tag>.jpg, <tag>-zoom.jpg, <tag>.txt."""
+its text read, then the PDF is deleted. Writes out/listing.json, out/<tag>.jpg, <tag>-zoom.jpg, <tag>.txt.
+
+The work resumes: an out/selected.json from an earlier round is reused instead of crawling again,
+and covers already rendered are skipped. Google throttles anonymous downloads from one address
+after a while; when that happens the round stops early and leaves ../again as a marker, so the
+workflow can start another round from a fresh runner.
+"""
 import html, json, os, re, subprocess, sys, time, urllib.request
+import concurrent.futures, threading
 
 job = json.load(open(sys.argv[1], encoding="utf-8"))
 out = sys.argv[2]
 os.makedirs(out, exist_ok=True)
+AGAIN = os.path.join(os.path.dirname(os.path.abspath(out)), "again")
+if os.path.exists(AGAIN): os.remove(AGAIN)
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36"}
 
 def fetch(url, tries=5):
@@ -73,32 +82,60 @@ def walk(folder_id, path, issue, depth=0):
             if not cur or score > cur[0]: issues[issue][kind] = (score, fid, f"{path}/{name}")
     if nfolders % 25 == 0: print(f"{nfolders} folders, {len(issues)} issues so far", flush=True)
 
-for f in job["folders"]:
-    walk(f["id"], f["name"], None)
-selected = [{"id": fid, "path": p, "issue": iss, "kind": k} for iss, kinds in issues.items() for k, (score, fid, p) in sorted(kinds.items())]
-print(f"crawled {nfolders} folders; {len(issues)} issues, {len(selected)} cover files; {len(denied)} folders denied", flush=True)
-json.dump(selected, open(f"{out}/selected.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-json.dump(denied, open(f"{out}/denied.json", "w"))
+SELECTED = f"{out}/selected.json"
+if os.path.exists(SELECTED):
+    selected = json.load(open(SELECTED, encoding="utf-8"))
+    print(f"reusing the selection of an earlier round: {len(selected)} cover files", flush=True)
+else:
+    for f in job["folders"]:
+        walk(f["id"], f["name"], None)
+    selected = [{"id": fid, "path": p, "issue": iss, "kind": k} for iss, kinds in issues.items() for k, (score, fid, p) in sorted(kinds.items())]
+    print(f"crawled {nfolders} folders; {len(issues)} issues, {len(selected)} cover files; {len(denied)} folders denied", flush=True)
+    json.dump(selected, open(SELECTED, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    json.dump(denied, open(f"{out}/denied.json", "w"))
 
-import concurrent.futures, threading
+# what earlier rounds already rendered
+previous = {}
+if os.path.exists(f"{out}/listing.json"):
+    for rec in json.load(open(f"{out}/listing.json", encoding="utf-8")):
+        previous[rec["tag"]] = rec
+def rendered(tag):
+    return all(os.path.exists(f"{out}/{tag}{s}") for s in (".jpg", "-zoom.jpg", ".txt"))
+
+THROTTLE = re.compile(r"many accesses|Cannot retrieve the public link|Too many users|unusual traffic|Too many requests|429", re.I)
 lock = threading.Lock()
-listing = []
+stop = threading.Event()
+listing, throttled_files, consecutive = [], 0, 0
+
+def download(fid, pdf):
+    """(ok, error text, throttled?)"""
+    try:
+        r = subprocess.run(["gdown", "--quiet", "--continue", fid, "-O", pdf], capture_output=True, text=True, timeout=420)
+        err = (r.stderr or "")[-300:]
+    except subprocess.TimeoutExpired:
+        err = "timeout"
+    if os.path.exists(pdf) and os.path.getsize(pdf) > 1000:
+        if open(pdf, "rb").read(5) == b"%PDF-": return True, "", False
+        err = "not a pdf: " + repr(open(pdf, "rb").read(80))
+    if os.path.exists(pdf): os.remove(pdf)
+    return False, err, bool(THROTTLE.search(err))
+
 def grab(i, it):
+    global throttled_files, consecutive
     tag = f"{i:05d}"; pdf = f"{out}/{tag}.pdf"
+    if rendered(tag):
+        with lock:
+            rec = previous.get(tag) or {"tag": tag, "path": it["path"], "id": it["id"], "issue": it["issue"], "kind": it["kind"], "ok": True}
+            rec["rendered"] = True; listing.append(rec)
+        return
+    if stop.is_set(): return                     # left for the next round
     rec = {"tag": tag, "path": it["path"], "id": it["id"], "issue": it["issue"], "kind": it["kind"], "ok": False, "rendered": False}
-    t0 = time.time()
-    for attempt in range(2):
-        try:
-            r = subprocess.run(["gdown", "--quiet", "--continue", it["id"], "-O", pdf], capture_output=True, text=True, timeout=420)
-            err = (r.stderr or "")[-300:]
-        except subprocess.TimeoutExpired:
-            err = "timeout"
-        if os.path.exists(pdf) and os.path.getsize(pdf) > 1000:
-            head = open(pdf, "rb").read(5)
-            if head == b"%PDF-": rec["ok"] = True; break
-            err = "not a pdf: " + repr(open(pdf, "rb").read(80))
-        if os.path.exists(pdf): os.remove(pdf)
-        time.sleep(8)
+    t0 = time.time(); throttled = False
+    for attempt in range(3):
+        ok, err, throttled = download(it["id"], pdf)
+        if ok: rec["ok"] = True; break
+        if stop.is_set(): break
+        time.sleep(90 if throttled else 8)       # a short throttle passes; a long one ends the round below
     rec["seconds"] = round(time.time() - t0)
     if rec["ok"]:
         info = subprocess.run(["pdfinfo", pdf], capture_output=True, text=True).stdout
@@ -107,18 +144,27 @@ def grab(i, it):
         subprocess.run(["pdftotext", "-f", "1", "-l", "1", pdf, f"{out}/{tag}.txt"], timeout=300)
         subprocess.run(["pdftoppm", "-f", "1", "-l", "1", "-r", "110", "-jpeg", "-jpegopt", "quality=88", "-singlefile", pdf, f"{out}/{tag}"], timeout=300)
         subprocess.run(["pdftoppm", "-f", "1", "-l", "1", "-r", "200", "-jpeg", "-jpegopt", "quality=85", "-singlefile", pdf, f"{out}/{tag}-zoom"], timeout=300)
+        if not os.path.exists(f"{out}/{tag}.txt"): open(f"{out}/{tag}.txt", "w").close()
         rec["rendered"] = os.path.exists(f"{out}/{tag}.jpg")
         os.remove(pdf)
     else:
         rec["error"] = err
     with lock:
-        listing.append(rec)
-        n = len(listing)
-        print(f"{n}/{len(selected)} {'ok' if rec['rendered'] else 'FAIL'} {rec['seconds']}s {rec.get('bytes', 0)//1000000}MB {it['path']}" + (f"  [{err}]" if not rec["ok"] else ""), flush=True)
-        if n % 20 == 0: json.dump(listing, open(f"{out}/listing.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        if rec["ok"]: consecutive = 0
+        elif throttled:
+            throttled_files += 1; consecutive += 1
+            if consecutive >= 3 and not stop.is_set():
+                stop.set(); print("throttled by Google: ending this round early", flush=True)
+        if rec["ok"] or not throttled: listing.append(rec)   # a throttled file is tried again next round
+        print(f"{len(listing)}/{len(selected)} {'ok' if rec['rendered'] else 'FAIL'} {rec['seconds']}s {rec.get('bytes', 0)//1000000}MB {it['path']}" + (f"  [{err}]" if not rec["ok"] else ""), flush=True)
+        if len(listing) % 20 == 0: json.dump(sorted(listing, key=lambda r: r["tag"]), open(f"{out}/listing.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
-with concurrent.futures.ThreadPoolExecutor(max_workers=3) as ex:
+with concurrent.futures.ThreadPoolExecutor(max_workers=2) as ex:
     list(ex.map(lambda a: grab(*a), enumerate(selected, 1)))
 listing.sort(key=lambda r: r["tag"])
 json.dump(listing, open(f"{out}/listing.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-print("done:", sum(1 for l in listing if l["rendered"]), "rendered of", len(listing))
+done = sum(1 for l in listing if l.get("rendered"))
+left = len(selected) - len(listing)
+print(f"done: {done} rendered of {len(selected)}; {len(listing) - done} failed; {left} left for another round", flush=True)
+if left:
+    open(AGAIN, "w").write(str(left))
