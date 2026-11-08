@@ -73,6 +73,29 @@ def ocr_date(text, vol, no=None):
                 if not best or cand[:2] > best[:2]: best = cand
     return best[2] if best else None
 
+HEB = "\u05d0-\u05ea"
+def _near(a, b, text, gap=60):
+    """Two whole words within `gap` characters of each other on one line, in either order."""
+    pat = lambda x, y: rf"(?<![{HEB}]){x}(?![{HEB}])[^\n|]{{0,{gap}}}?(?<![{HEB}]){y}(?![{HEB}])"
+    return re.search(pat(a, b), text) or re.search(pat(b, a), text)
+
+def page_kind(text):
+    """What a page is, by the words of its masthead: the main cover (a), a supplement's cover
+    (b/c/d/t/k), an inside page of the paper, or None when the text does not say. The text
+    layer of older PDFs stores Hebrew words backwards, so both readings are searched."""
+    head = re.sub(r"[\u200e\u200f\u202a-\u202e\u2066-\u2069]", "", text[:900])
+    flat = re.sub(r"\s+", " ", head)
+    both = flat + " | " + " ".join(w[::-1] for w in flat.split())
+    if re.search(r"VOL\.?\s*\d+", flat): return "a"
+    if _near("אידישע", "צייט", both): return "b"
+    if _near("חסידישע", "צייט", both): return "c"
+    if _near("יום טוב", "צייט", both) or _near("יו\"ט", "צייט", both): return "d"
+    if _near("תורה", "צייט", both, 3): return "t"
+    if _near("קהלה", "צייט", both, 3): return "k"
+    if re.search(r"FRIDAY|פרייטאג|גאטיירפ", both) and re.search(r"[-•·]\s*\d{1,3}(?!\d)|(?<!\d)\d{1,3}\s*[-•·]", flat[:500]):
+        return "inside"                                  # a running head with a page number
+    return None
+
 def trim(im, pad=6):
     """Cut the white page margin away, as the PDF importer does."""
     im = im.convert("RGB")
@@ -113,12 +136,23 @@ def main(folder, no_wall=False, report=None, only=None, main_only=False):
         text = open(txt, encoding="utf-8", errors="replace").read() if os.path.exists(txt) else ""
         items.append((tag, name, it, ic.normalize_text(text), jpg))
     def section(it, text, name):
+        k = page_kind(text)                      # what the page says about itself comes first
+        if k == "inside": return k
+        if k and it.get("kind") in ("g", "s") and k == "a": k = "d"   # a GEN/SP1 special is never the main paper
+        if k: return k
         if it.get("thumb") and it.get("kind") in ("a", "b", "c", "d"): return it["kind"]   # no text layer: go by the file name
         sec = ic.section_of(text, name)
-        if it.get("kind") in ("g", "s") and sec == "a": sec = "d"     # a GEN/SP1 special is never the main paper
+        if it.get("kind") in ("g", "s") and sec == "a": sec = "d"
         return sec
-    # main-section covers carry full dates: they go first and anchor the others
-    items.sort(key=lambda x: (0 if section(x[2], x[3], x[1]) == "a" else 1, 1 if x[2].get("thumb") else 0, x[1]))
+    # main covers with a readable date go first and anchor the others: undated main covers and
+    # thumbnails are then placed by counting weeks, and the supplements follow their issue folder
+    def order(x):
+        tag, name, it, text, jpg = x
+        sec = section(it, text, name)
+        if sec != "a": return (2, name)
+        if not it.get("thumb") and ic.date_of(text): return (0, name)
+        return (1, name)
+    items.sort(key=order)
     rows, added = [], 0
     issue_date = {}        # issue folder -> the date on its main cover
     def week_guess(issue):
@@ -143,12 +177,14 @@ def main(folder, no_wall=False, report=None, only=None, main_only=False):
     for tag, name, it, text, jpg in items:
         if only and tag not in only: continue
         sec = section(it, text, name)
+        if sec == "inside":
+            rows.append((tag, name, "inside", "", "")); print(f"skip  {it['path']}: an inside page, not a cover"); continue
         if main_only and sec != "a":
             rows.append((tag, name, "notmain", "", sec)); continue
         issue = it.get("issue")
         mv = re.match(r"Vol\.? *(\d+)/0*(\d+)$", issue or "")
         d = ocr_date(text, int(mv.group(1)), int(mv.group(2))) if it.get("thumb") and mv else ic.date_of(text)
-        if it.get("thumb"):
+        if it.get("thumb") or (sec == "a" and not d):
             # OCR misreads a digit now and then; counting weeks from the dated issues is surer
             guess = week_guess(issue)
             if guess and d != guess:
