@@ -65,7 +65,7 @@ def walk(folder_id, path, issue, depth=0):
         if is_folder:
             if "vol38" in name.lower() or "תשפ" in name: continue        # already in the archive
             walk(fid, f"{path}/{name}", issue or (f"{path}/{name}" if depth == 0 else None), depth + 1)
-            time.sleep(0.2)
+            time.sleep(0.05)
         else:
             kind, score = kind_of(name)
             if not kind or not issue: continue
@@ -80,28 +80,45 @@ print(f"crawled {nfolders} folders; {len(issues)} issues, {len(selected)} cover 
 json.dump(selected, open(f"{out}/selected.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 json.dump(denied, open(f"{out}/denied.json", "w"))
 
+import concurrent.futures, threading
+lock = threading.Lock()
 listing = []
-for i, it in enumerate(selected, 1):
+def grab(i, it):
     tag = f"{i:05d}"; pdf = f"{out}/{tag}.pdf"
-    ok = False
-    for attempt in range(3):
-        r = subprocess.run(["gdown", "--quiet", "--continue", it["id"], "-O", pdf], capture_output=True, text=True)
-        if r.returncode == 0 and os.path.exists(pdf) and os.path.getsize(pdf) > 1000: ok = True; break
+    rec = {"tag": tag, "path": it["path"], "id": it["id"], "issue": it["issue"], "kind": it["kind"], "ok": False, "rendered": False}
+    t0 = time.time()
+    for attempt in range(2):
+        try:
+            r = subprocess.run(["gdown", "--quiet", "--continue", it["id"], "-O", pdf], capture_output=True, text=True, timeout=420)
+            err = (r.stderr or "")[-300:]
+        except subprocess.TimeoutExpired:
+            err = "timeout"
+        if os.path.exists(pdf) and os.path.getsize(pdf) > 1000:
+            head = open(pdf, "rb").read(5)
+            if head == b"%PDF-": rec["ok"] = True; break
+            err = "not a pdf: " + repr(open(pdf, "rb").read(80))
         if os.path.exists(pdf): os.remove(pdf)
-        time.sleep(5 + 10 * attempt)
-    rec = {"tag": tag, "path": it["path"], "id": it["id"], "issue": it["issue"], "kind": it["kind"], "ok": ok, "rendered": False}
-    if ok:
+        time.sleep(8)
+    rec["seconds"] = round(time.time() - t0)
+    if rec["ok"]:
         info = subprocess.run(["pdfinfo", pdf], capture_output=True, text=True).stdout
         rec["pages"] = next((int(l.split()[-1]) for l in info.splitlines() if l.startswith("Pages:")), 0)
         rec["bytes"] = os.path.getsize(pdf)
-        subprocess.run(["pdftotext", "-f", "1", "-l", "1", pdf, f"{out}/{tag}.txt"])
-        subprocess.run(["pdftoppm", "-f", "1", "-l", "1", "-r", "110", "-jpeg", "-jpegopt", "quality=88", "-singlefile", pdf, f"{out}/{tag}"])
-        subprocess.run(["pdftoppm", "-f", "1", "-l", "1", "-r", "200", "-jpeg", "-jpegopt", "quality=85", "-singlefile", pdf, f"{out}/{tag}-zoom"])
+        subprocess.run(["pdftotext", "-f", "1", "-l", "1", pdf, f"{out}/{tag}.txt"], timeout=300)
+        subprocess.run(["pdftoppm", "-f", "1", "-l", "1", "-r", "110", "-jpeg", "-jpegopt", "quality=88", "-singlefile", pdf, f"{out}/{tag}"], timeout=300)
+        subprocess.run(["pdftoppm", "-f", "1", "-l", "1", "-r", "200", "-jpeg", "-jpegopt", "quality=85", "-singlefile", pdf, f"{out}/{tag}-zoom"], timeout=300)
         rec["rendered"] = os.path.exists(f"{out}/{tag}.jpg")
         os.remove(pdf)
-    listing.append(rec)
-    if i % 25 == 0:
-        print(f"{i}/{len(selected)} done", flush=True)
-        json.dump(listing, open(f"{out}/listing.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    else:
+        rec["error"] = err
+    with lock:
+        listing.append(rec)
+        n = len(listing)
+        print(f"{n}/{len(selected)} {'ok' if rec['rendered'] else 'FAIL'} {rec['seconds']}s {rec.get('bytes', 0)//1000000}MB {it['path']}" + (f"  [{err}]" if not rec["ok"] else ""), flush=True)
+        if n % 20 == 0: json.dump(listing, open(f"{out}/listing.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+
+with concurrent.futures.ThreadPoolExecutor(max_workers=3) as ex:
+    list(ex.map(lambda a: grab(*a), enumerate(selected, 1)))
+listing.sort(key=lambda r: r["tag"])
 json.dump(listing, open(f"{out}/listing.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("done:", sum(1 for l in listing if l["rendered"]), "rendered of", len(listing))
