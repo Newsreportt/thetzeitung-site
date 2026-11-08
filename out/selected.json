@@ -663,7 +663,8 @@
   "id": "1gvB0dzXoGJ1nCD1lGooCmzbOwLM1BUMr",
   "path": "Vol 25/09/07/PDF Full Pages/DONE/01 color.pdf",
   "issue": "Vol 25/09",
-  "kind": "a"
+  "kind": "a",
+  "skip": true
  },
  {
   "id": "1r0iKDGIVcIOESbUu4uXb_fV8AeH5zLV0",
@@ -1293,7 +1294,8 @@
   "id": "1zyGMHsQ6lsmMuThh7xdc3wN2v7ferQSC",
   "path": "Vol 26/17/PDF Full Pages/Section A.pdf",
   "issue": "Vol 26/17",
-  "kind": "a"
+  "kind": "a",
+  "skip": true
  },
  {
   "id": "1bj5JRVLT_adHSrb79rhwft45PhWw-F4A",
@@ -2601,7 +2603,8 @@
   "id": "1njZceljErh_jVOH5yJ-lcVvh8Qqlo0sX",
   "path": "Vol 28/25/1 7 התאחדות (1).pdf",
   "issue": "Vol 28/25",
-  "kind": "a"
+  "kind": "a",
+  "skip": true
  },
  {
   "id": "1mrqedrard4vmqeeKRzEhb3yMNTqxJTS8",
@@ -3207,7 +3210,8 @@
   "id": "1J14UcnK1xmvLHQgL9pEdYfmkcU0VWJYk",
   "path": "Vol 29/28/1st ad.pdf",
   "issue": "Vol 29/28",
-  "kind": "a"
+  "kind": "a",
+  "skip": true
  },
  {
   "id": "1wm0XyREBwn5YfuM-aXoHRF_JQNN7Y8D-",
@@ -3243,7 +3247,7 @@
   "id": "1EJr81LsLoYZiugM5DWIgr_Ik_lDzqxl-",
   "path": "Vol 29/31/Pages/DONE 2/20160422_XDI_SP1_PG001.pdf",
   "issue": "Vol 29/31",
-  "kind": "a"
+  "kind": "s"
  },
  {
   "id": "1Ohyb5yxxc77rvugy_iC9fIDNx_qv4L5T",
@@ -3525,7 +3529,7 @@
   "id": "1GE4xyh_QffVWU9p5ThO7iXoWxsGdLAZ_",
   "path": "Vol 30/02/Pages/GEN/20161014_XDI_GEN_PG001.pdf",
   "issue": "Vol 30/02",
-  "kind": "a"
+  "kind": "g"
  },
  {
   "id": "1QH2iTzegURwl4TzF5cGxQAmkOwjicjGY",
@@ -3807,7 +3811,7 @@
   "id": "1hzokXMWGKsK__kzHdTI6X2hnB-DG3FYz",
   "path": "Vol 30/26/Pages/GEN/20170407_XDI_GEN_PG001.pdf",
   "issue": "Vol 30/26",
-  "kind": "a"
+  "kind": "g"
  },
  {
   "id": "1hdOhtBicj-rEAxTN9KXHsNvN29e0NZzy",
@@ -4089,42 +4093,1400 @@
   "id": "1lIXWLKICRqCnj0CtzXcK_0G4L3Dtz_V1",
   "path": "Vol 31/02/Pages/GEN/20171006_XDI_GEN_PG001.pdf",
   "issue": "Vol 31/02",
-  "kind": "a"
+  "kind": "g"
  },
  {
   "id": "1u-WgJzEzErph7OKo7jXZsTHwXmX0YWs6",
   "path": "Vol 31/08/Full Care MANAGEMENT.pdf",
   "issue": "Vol 31/08",
-  "kind": "a"
+  "kind": "a",
+  "skip": true
  },
  {
   "id": "1kqzjgt8Lfq37U6Y2BONWCtzbneBYbbIU",
   "path": "Vol 31/26/Pages/GEN/20180330_XDI_GEN_PG001.pdf",
   "issue": "Vol 31/26",
-  "kind": "a"
+  "kind": "g"
  },
  {
   "id": "1S7nQRiqsQP9MxRFeBkBRYhkPWgEzzkCD",
   "path": "Vol 32/02/Pages/GEN/20180921_XDI_GEN_PG001.pdf",
   "issue": "Vol 32/02",
-  "kind": "a"
+  "kind": "g"
  },
  {
   "id": "1xZUurgGFJ8BzpTt0w-J4JPv33rBMJQKA",
   "path": "Vol 32/06/1maxi health flu ad 10x14.pdf",
   "issue": "Vol 32/06",
-  "kind": "a"
+  "kind": "a",
+  "skip": true
  },
  {
   "id": "1dcJgoHg_NAbjL-pHO6UZMtTCKc5G4Mmj",
   "path": "Vol 32/31/Pages/GEN/20190419_XDI_GEN_PG001.pdf",
   "issue": "Vol 32/31",
-  "kind": "a"
+  "kind": "g"
  },
  {
   "id": "1ji38lGox0zXe6TY-O8TNhfticUNl1ZHw",
   "path": "Vol 32/35/001.pdf",
   "issue": "Vol 32/35",
   "kind": "a"
+ },
+ {
+  "id": "1ThOmSxF2B8G2Lxiq7noHOIKAuoxamq5_",
+  "path": "Vol 25/09/PDF Ful Pages/DONE/01 color.pdf",
+  "issue": "Vol 25/09",
+  "kind": "a"
+ },
+ {
+  "id": "1L1HFX1hKwFgkV78e6RjeYO9J1UhGjxSG",
+  "path": "Vol 26/03/PDF Full Pages/26-03b.pdf",
+  "issue": "Vol 26/03",
+  "kind": "b"
+ },
+ {
+  "id": "1Y0MdjD7BBgKPXwk_yN5dpMJb7F2-Axct",
+  "path": "Vol 26/17/1497941.pdf",
+  "issue": "Vol 26/17",
+  "kind": "a"
+ },
+ {
+  "id": "11jDP6tJ8g5ezXgLbOnOANjq20rVyCOh0",
+  "path": "Vol 26/32/Pages/Section AB.pdf",
+  "issue": "Vol 26/32",
+  "kind": "a"
+ },
+ {
+  "id": "16R3MzIL8EWTSBi7iT6pjGf6CJL1DldsL",
+  "path": "Vol 27/02/Pages/27-02a.pdf",
+  "issue": "Vol 27/02",
+  "kind": "a"
+ },
+ {
+  "id": "17pol30GvJsXCJLsBA3a4a2sW5ivB-gbM",
+  "path": "Vol 27/02/Pages/Section E Sup.pdf",
+  "issue": "Vol 27/02",
+  "kind": "e"
+ },
+ {
+  "id": "1PmuaCiat9WL1cYQ8QwcRSWCvgyR754TN",
+  "path": "Vol 27/27/Pages/Secton A.pdf",
+  "issue": "Vol 27/27",
+  "kind": "a"
+ },
+ {
+  "id": "1ru7mUYaiQi1uWHdpQtqkKuBlUr_vz2Ap",
+  "path": "Vol 28/02/pages/Section E sup.pdf",
+  "issue": "Vol 28/02",
+  "kind": "e"
+ },
+ {
+  "id": "1LDTr-naQdzlMEgdUL5sAWF_bh7EwlY9H",
+  "path": "Vol 28/25/Pages/Section A-B.pdf",
+  "issue": "Vol 28/25",
+  "kind": "a"
+ },
+ {
+  "id": "1xOxTPV3m0-sH3IpuL9gKAPB9tWhhaf7K",
+  "path": "Vol 28/26/Pages/Section E.pdf",
+  "issue": "Vol 28/26",
+  "kind": "e"
+ },
+ {
+  "id": "1Z4Y7sre_duOsZRG2Rs1lVdAaHZk5VilC",
+  "path": "Vol 28/27/Pages/28-27a.pdf",
+  "issue": "Vol 28/27",
+  "kind": "a"
+ },
+ {
+  "id": "1vE806WRvgzuL0FAHMxyjhprJHzrcjfEU",
+  "path": "Vol 29/02/Pages/Section E.pdf",
+  "issue": "Vol 29/02",
+  "kind": "e"
+ },
+ {
+  "id": "1ahOvvjG0HfFAeWkuve0IO_xMLqRoqFoy",
+  "path": "Vol 29/03/Pages/29-03a.pdf",
+  "issue": "Vol 29/03",
+  "kind": "a"
+ },
+ {
+  "id": "1KUC6iV7Dj9rERgP7KbNpH1nYYjpKFwun",
+  "path": "Vol 29/03/Pages/29-03b.pdf",
+  "issue": "Vol 29/03",
+  "kind": "b"
+ },
+ {
+  "id": "1kUt1qHbP9xjs9enrKQdOJKdiTb-Xsu6L",
+  "path": "Vol 29/28/Pages/Section A.pdf",
+  "issue": "Vol 29/28",
+  "kind": "a"
+ },
+ {
+  "id": "1LNAbAr-lwnSuf8LCDOsbx6NzGt5RbHCX",
+  "path": "Vol 30/02/Pages/SP1/20161014_XDI_SP1_PG001.pdf",
+  "issue": "Vol 30/02",
+  "kind": "s"
+ },
+ {
+  "id": "18dI4h_XJUVsp2ENeV7TmcjQWzeTMG_Ms",
+  "path": "Vol 30/26/Pages/SP1/20170407_XDI_SP1_PG001.pdf",
+  "issue": "Vol 30/26",
+  "kind": "s"
+ },
+ {
+  "id": "1rFedmMbIaGUjFPV3KusVG8Vu23UO5x-6",
+  "path": "Vol 31/01/Pages/31-01a.pdf",
+  "issue": "Vol 31/01",
+  "kind": "a"
+ },
+ {
+  "id": "1zHdgPSrFK7hqXOgi9npH9ds877JTfowc",
+  "path": "Vol 31/01/Pages/31-01b.pdf",
+  "issue": "Vol 31/01",
+  "kind": "b"
+ },
+ {
+  "id": "1OWk82XuFJEGU9ara4bC_6dBUFBSIKWSt",
+  "path": "Vol 31/02/Pages/31-02a.pdf",
+  "issue": "Vol 31/02",
+  "kind": "a"
+ },
+ {
+  "id": "1bU44zhqSthy-GDhOqKLLJTn7iV3NlfHj",
+  "path": "Vol 31/02/Pages/31-02b.pdf",
+  "issue": "Vol 31/02",
+  "kind": "b"
+ },
+ {
+  "id": "1WL2pYBAbx3vBHp7eXxKMErwr-pZI66UK",
+  "path": "Vol 31/02/Pages/31-02c.pdf",
+  "issue": "Vol 31/02",
+  "kind": "c"
+ },
+ {
+  "id": "1YAVyyetiwQRLai-BCB9DA06WbIsEhYn6",
+  "path": "Vol 31/02/Pages/31-02d.pdf",
+  "issue": "Vol 31/02",
+  "kind": "d"
+ },
+ {
+  "id": "1eVnfNa6Josoj18LqNTK2_ux7NFhou9zg",
+  "path": "Vol 31/02/Pages/SP1/20171006_XDI_SP1_PG001.pdf",
+  "issue": "Vol 31/02",
+  "kind": "s"
+ },
+ {
+  "id": "1dYEB0STuGIUFdVGBHUl7MdM39BHkvvbO",
+  "path": "Vol 31/03/Pages/31-03a.pdf",
+  "issue": "Vol 31/03",
+  "kind": "a"
+ },
+ {
+  "id": "1BA4ZrEQp7FV7vP6YT19zjDEdpEPnFsOx",
+  "path": "Vol 31/03/Pages/31-03b.pdf",
+  "issue": "Vol 31/03",
+  "kind": "b"
+ },
+ {
+  "id": "1vbLb3Q35ZT_Nv_Y4s40zGGMijC2UHCyC",
+  "path": "Vol 31/04/Pages/31-04a.pdf",
+  "issue": "Vol 31/04",
+  "kind": "a"
+ },
+ {
+  "id": "1_BE8SuUkXRBq2vD8MojZN84O7BBCuXH3",
+  "path": "Vol 31/04/Pages/31-04b.pdf",
+  "issue": "Vol 31/04",
+  "kind": "b"
+ },
+ {
+  "id": "1_BcK6wIoh6yXfBaAo2WNS8zW3I-AtnSq",
+  "path": "Vol 31/05/Pages/31-05a.pdf",
+  "issue": "Vol 31/05",
+  "kind": "a"
+ },
+ {
+  "id": "1lqT5Gz1W9yCysLsG-SIOKy0bRiK7bU6s",
+  "path": "Vol 31/05/Pages/31-05b.pdf",
+  "issue": "Vol 31/05",
+  "kind": "b"
+ },
+ {
+  "id": "1NP72DIpx7qcSp3DV935zttIfz9gHhDAP",
+  "path": "Vol 31/06/Pages/31-06a.pdf",
+  "issue": "Vol 31/06",
+  "kind": "a"
+ },
+ {
+  "id": "1tX7kHUqRZASCJyv3mPFtUd0oqjwfUDy6",
+  "path": "Vol 31/06/Pages/31-06b.pdf",
+  "issue": "Vol 31/06",
+  "kind": "b"
+ },
+ {
+  "id": "1qZNjG1To3oS9FvtWfpBm3fq9xauQ0YkB",
+  "path": "Vol 31/07/Pages/31-07a.pdf",
+  "issue": "Vol 31/07",
+  "kind": "a"
+ },
+ {
+  "id": "1zPnGE5kSIEDl0pyh7UJD4iNNsIN5hp_j",
+  "path": "Vol 31/07/Pages/31-07b.pdf",
+  "issue": "Vol 31/07",
+  "kind": "b"
+ },
+ {
+  "id": "1EM86W2q7TZi_fuRlTxsoTX6K16kDUw9G",
+  "path": "Vol 31/08/Pages/31-08a.pdf",
+  "issue": "Vol 31/08",
+  "kind": "a"
+ },
+ {
+  "id": "1Z032XSVJqVjctpW-zG80WOo_rLSfbSGE",
+  "path": "Vol 31/08/Pages/31-08b.pdf",
+  "issue": "Vol 31/08",
+  "kind": "b"
+ },
+ {
+  "id": "1gO1JgNGWrF0sds0u4YdLfhxqer4QqnFm",
+  "path": "Vol 31/09/Pages/31-09a.pdf",
+  "issue": "Vol 31/09",
+  "kind": "a"
+ },
+ {
+  "id": "1QP4px75es0b15DFo_zWZWCdoiXyYpNgl",
+  "path": "Vol 31/09/Pages/31-09b.pdf",
+  "issue": "Vol 31/09",
+  "kind": "b"
+ },
+ {
+  "id": "1TA-vviXFUcwTw6RhZPV1Dvryevng0Mc9",
+  "path": "Vol 31/10/Pages/31-10a.pdf",
+  "issue": "Vol 31/10",
+  "kind": "a"
+ },
+ {
+  "id": "1Ct95PvCh0JlfQAmsWy_COO6BMcbjKbBh",
+  "path": "Vol 31/10/Pages/31-10b.pdf",
+  "issue": "Vol 31/10",
+  "kind": "b"
+ },
+ {
+  "id": "1eaRIfKUCBO7IUIiIr4GwwSOE2Y4vqSxJ",
+  "path": "Vol 31/11/Pages/31-11a.pdf",
+  "issue": "Vol 31/11",
+  "kind": "a"
+ },
+ {
+  "id": "1BA2wujgRzW6zFgiZLHaZKEIOMTYI8qRN",
+  "path": "Vol 31/11/Pages/31-11b.pdf",
+  "issue": "Vol 31/11",
+  "kind": "b"
+ },
+ {
+  "id": "1AjSQE2EelqlgXhFFH7AfWnCtzDR7SFEp",
+  "path": "Vol 31/12/Pages/31-12a.pdf",
+  "issue": "Vol 31/12",
+  "kind": "a"
+ },
+ {
+  "id": "1kNzz2TYXsbu19Y4m8TVrPGI1Y6F4rPH3",
+  "path": "Vol 31/12/Pages/32-12b.pdf",
+  "issue": "Vol 31/12",
+  "kind": "b"
+ },
+ {
+  "id": "1tTlDd_v68OQ1d7DY9eLpdPdKwnAFu6Fo",
+  "path": "Vol 31/13/Pages/31-13a.pdf",
+  "issue": "Vol 31/13",
+  "kind": "a"
+ },
+ {
+  "id": "1CQQA-qfXMYMhU325gaM7gdsV9ZRaTxkc",
+  "path": "Vol 31/13/Pages/31-13b.pdf",
+  "issue": "Vol 31/13",
+  "kind": "b"
+ },
+ {
+  "id": "1hQUrDE98spkCdCZ0rMRh7em-hCTvf1y4",
+  "path": "Vol 31/14/Pages/31-14a.pdf",
+  "issue": "Vol 31/14",
+  "kind": "a"
+ },
+ {
+  "id": "1FaYsLJ8ZyTrb0Uz6HUEQlKxah5OpdcV9",
+  "path": "Vol 31/14/Pages/31-14b.pdf",
+  "issue": "Vol 31/14",
+  "kind": "b"
+ },
+ {
+  "id": "1OLjihur70lXzZkoXDTQgqSiT-JboETcj",
+  "path": "Vol 31/15/Pages/31-15a.pdf",
+  "issue": "Vol 31/15",
+  "kind": "a"
+ },
+ {
+  "id": "14MKs0bZWrcUmz6VKAWAKRxp1sdVLFlqD",
+  "path": "Vol 31/15/Pages/31-15b.pdf",
+  "issue": "Vol 31/15",
+  "kind": "b"
+ },
+ {
+  "id": "1y774d0b9pJgN9Zl75gMNEvq9p3vojUkR",
+  "path": "Vol 31/16/Pages/31-16a.pdf",
+  "issue": "Vol 31/16",
+  "kind": "a"
+ },
+ {
+  "id": "1fWLWaRk4NdJR_cYlmCV9DBZvOempaJiv",
+  "path": "Vol 31/16/Pages/31-16b.pdf",
+  "issue": "Vol 31/16",
+  "kind": "b"
+ },
+ {
+  "id": "1p3xwHUVLEhbOQI_oE79iARxLooPWU-ru",
+  "path": "Vol 31/17/Pages/31-17a.pdf",
+  "issue": "Vol 31/17",
+  "kind": "a"
+ },
+ {
+  "id": "106fJOlmpvzbkAXU_j8EYs4Qt2ocRuHHH",
+  "path": "Vol 31/17/Pages/31-17b.pdf",
+  "issue": "Vol 31/17",
+  "kind": "b"
+ },
+ {
+  "id": "1Akr2SxaQzDJfzxa_HR83DHtz2Pn3IcNs",
+  "path": "Vol 31/18/Pages/31-18a.pdf",
+  "issue": "Vol 31/18",
+  "kind": "a"
+ },
+ {
+  "id": "1PbGkMLHbTgGYlXyTzSc-1NPwFbEWkh0u",
+  "path": "Vol 31/18/Pages/31-18b.pdf",
+  "issue": "Vol 31/18",
+  "kind": "b"
+ },
+ {
+  "id": "1iEfxsYIo0Awvpr1WNF-NILGP-1l1Nq5W",
+  "path": "Vol 31/19/Pages/31-19a.pdf",
+  "issue": "Vol 31/19",
+  "kind": "a"
+ },
+ {
+  "id": "1Dihemslibivm-jCVdDhD5x6zsmzPo40s",
+  "path": "Vol 31/19/Pages/31-19b.pdf",
+  "issue": "Vol 31/19",
+  "kind": "b"
+ },
+ {
+  "id": "1hEgtoK6Sn_nocaX4IIG3SZ7d5t0t5oAJ",
+  "path": "Vol 31/20/Pages/31-20a.pdf",
+  "issue": "Vol 31/20",
+  "kind": "a"
+ },
+ {
+  "id": "1l0abYdvAM-TfkudCWo8o_ZF7e0LbeAh8",
+  "path": "Vol 31/20/Pages/31-20b.pdf",
+  "issue": "Vol 31/20",
+  "kind": "b"
+ },
+ {
+  "id": "15hK118abMZ1zQyA4zo4EfgIeP2iIwcLB",
+  "path": "Vol 31/21/Pages/31-21a.pdf",
+  "issue": "Vol 31/21",
+  "kind": "a"
+ },
+ {
+  "id": "1k9JiDKJeCXr5W8n982tOzqWqxh_GLdyt",
+  "path": "Vol 31/21/Pages/31-21b.pdf",
+  "issue": "Vol 31/21",
+  "kind": "b"
+ },
+ {
+  "id": "1W4tgIe0rOSADoJRThfhL4tn5NWqXDdu1",
+  "path": "Vol 31/22/Pages/31-22a.pdf",
+  "issue": "Vol 31/22",
+  "kind": "a"
+ },
+ {
+  "id": "1GKjoLcaVbNT3IXGGfsxnkcQIZuGddQc0",
+  "path": "Vol 31/22/Pages/31-22b.pdf",
+  "issue": "Vol 31/22",
+  "kind": "b"
+ },
+ {
+  "id": "1gAvCbtd6sJhtd9BMgPCmTgh6mbNS7afC",
+  "path": "Vol 31/23/Pages/31-23a.pdf",
+  "issue": "Vol 31/23",
+  "kind": "a"
+ },
+ {
+  "id": "1gfDqZxbDf39Vk3Ar1_Tnt0E5Zmuo7gmx",
+  "path": "Vol 31/23/Pages/31-23b.pdf",
+  "issue": "Vol 31/23",
+  "kind": "b"
+ },
+ {
+  "id": "1BjrM0Kol8iU-Y58_q8Fx1RZ1I31XLjHV",
+  "path": "Vol 31/24/Pages/31-24a.pdf",
+  "issue": "Vol 31/24",
+  "kind": "a"
+ },
+ {
+  "id": "1UUF_gJB6AwcmFFtIKNTIt2XdLc0X1eVZ",
+  "path": "Vol 31/24/Pages/31-24b.pdf",
+  "issue": "Vol 31/24",
+  "kind": "b"
+ },
+ {
+  "id": "11xJQZKyjYsrs4vs2yHXZW8XU0sbGGF2U",
+  "path": "Vol 31/25/Pages/31-25a.pdf",
+  "issue": "Vol 31/25",
+  "kind": "a"
+ },
+ {
+  "id": "1bnM4PphIvmQPyfN2Weak6vmiM8HRmEHb",
+  "path": "Vol 31/25/Pages/31-25b.pdf",
+  "issue": "Vol 31/25",
+  "kind": "b"
+ },
+ {
+  "id": "1IHUVF13iEksQ5btFQ5gkWH2iM3lMf_dG",
+  "path": "Vol 31/26/Pages/SP1/20180330_XDI_SP1_PG001.pdf",
+  "issue": "Vol 31/26",
+  "kind": "s"
+ },
+ {
+  "id": "1VXZtZcYB4gPj3BNmwsV_9MxYep4ry-fd",
+  "path": "Vol 31/27/Pages/32-27a.pdf",
+  "issue": "Vol 31/27",
+  "kind": "a"
+ },
+ {
+  "id": "1dhYm_flqhX0B0JwtYlN41wMXMt8xHtAn",
+  "path": "Vol 31/27/Pages/32-27b.pdf",
+  "issue": "Vol 31/27",
+  "kind": "b"
+ },
+ {
+  "id": "1aH-jLS8_nT9vl_pzML1ZN1il7dN19lGq",
+  "path": "Vol 31/28/Pages/32-28a.pdf",
+  "issue": "Vol 31/28",
+  "kind": "a"
+ },
+ {
+  "id": "1BarNA0E0mNh1LmXtv6eDpGvOOacMALne",
+  "path": "Vol 31/28/Pages/32-28b.pdf",
+  "issue": "Vol 31/28",
+  "kind": "b"
+ },
+ {
+  "id": "1_3nqRrqMZZWt272b0M9g28sr_lzkhxgk",
+  "path": "Vol 31/29/Pages/32-29a.pdf",
+  "issue": "Vol 31/29",
+  "kind": "a"
+ },
+ {
+  "id": "1IsRDTFfN-HWn0b8zUyUiELFzkPxbZDTc",
+  "path": "Vol 31/29/Pages/32-29b.pdf",
+  "issue": "Vol 31/29",
+  "kind": "b"
+ },
+ {
+  "id": "158CIwIZb1VsBa6XAeWnwQ7Y09fLX9njs",
+  "path": "Vol 31/30/Pages/32-30a.pdf",
+  "issue": "Vol 31/30",
+  "kind": "a"
+ },
+ {
+  "id": "1HgO5Xcwp7I_p3AjlLuib5ODusvOjLpZZ",
+  "path": "Vol 31/30/Pages/32-30b.pdf",
+  "issue": "Vol 31/30",
+  "kind": "b"
+ },
+ {
+  "id": "1R1CW0KgHV3tga0LKaTai9_gQ9R4gJCUy",
+  "path": "Vol 31/31/Pages/31-31a.pdf",
+  "issue": "Vol 31/31",
+  "kind": "a"
+ },
+ {
+  "id": "123JfhmvO9cjpzNbioKcoh917VcXAxRrj",
+  "path": "Vol 31/31/Pages/31-31b.pdf",
+  "issue": "Vol 31/31",
+  "kind": "b"
+ },
+ {
+  "id": "1t6Ot5Aa_NfGBV3vMZ8jV3TX-XGz7cG7O",
+  "path": "Vol 31/32/Pages/31-32a.pdf",
+  "issue": "Vol 31/32",
+  "kind": "a"
+ },
+ {
+  "id": "1TxALZkweDssZCzbYse6o4_ThD7C8rUR_",
+  "path": "Vol 31/32/Pages/31-32b.pdf",
+  "issue": "Vol 31/32",
+  "kind": "b"
+ },
+ {
+  "id": "1pEVmZ_h_pTYsspgXePO-cx-3s_EqlZUk",
+  "path": "Vol 31/33/Pages/31-33a.pdf",
+  "issue": "Vol 31/33",
+  "kind": "a"
+ },
+ {
+  "id": "1wGijaMh4iBrGnDduGW9bgp9AHlSp1An4",
+  "path": "Vol 31/33/Pages/31-33b.pdf",
+  "issue": "Vol 31/33",
+  "kind": "b"
+ },
+ {
+  "id": "1Eq8QShpGfvjiLKCIK4529GMXstqr9F5g",
+  "path": "Vol 31/34/Pages/31-34a.pdf",
+  "issue": "Vol 31/34",
+  "kind": "a"
+ },
+ {
+  "id": "1REm2_bmklLYvmOJjZ67-OVwJM-ReOxAq",
+  "path": "Vol 31/34/Pages/31-34b.pdf",
+  "issue": "Vol 31/34",
+  "kind": "b"
+ },
+ {
+  "id": "1omH_MXdNyfNr2T9e9m1lBw2aYhHyhN3b",
+  "path": "Vol 31/35/Pages/31-35a.pdf",
+  "issue": "Vol 31/35",
+  "kind": "a"
+ },
+ {
+  "id": "15kK2gVc7HOknRqg7y4rjPL9k15Kbt7FZ",
+  "path": "Vol 31/35/Pages/31-35b.pdf",
+  "issue": "Vol 31/35",
+  "kind": "b"
+ },
+ {
+  "id": "14C4iNnhXbJDdr2-Tm8ARMJdjIY_lkDPv",
+  "path": "Vol 31/36/Pages/31-36a.pdf",
+  "issue": "Vol 31/36",
+  "kind": "a"
+ },
+ {
+  "id": "17wlr0X206CDw1e5DMEjkwNr4riTVBU0J",
+  "path": "Vol 31/36/Pages/31-36b.pdf",
+  "issue": "Vol 31/36",
+  "kind": "b"
+ },
+ {
+  "id": "1i8RKF0fG3OND9ZD4bqw8uLSL4QogBJNA",
+  "path": "Vol 31/37/Pages/31-37a.pdf",
+  "issue": "Vol 31/37",
+  "kind": "a"
+ },
+ {
+  "id": "12fk9jM5jcc9hNP-ZEIXPUx0oW8tn2kuN",
+  "path": "Vol 31/37/Pages/31-37b.pdf",
+  "issue": "Vol 31/37",
+  "kind": "b"
+ },
+ {
+  "id": "1j3wOKz2yw1KkfkGvD3BreawSN6w0GjwV",
+  "path": "Vol 31/38/Pages/31-38a.pdf",
+  "issue": "Vol 31/38",
+  "kind": "a"
+ },
+ {
+  "id": "1ofV8ujCmfdh3KVbulSu5ELZVLY-yK1_K",
+  "path": "Vol 31/38/Pages/31-38b.pdf",
+  "issue": "Vol 31/38",
+  "kind": "b"
+ },
+ {
+  "id": "1lSTy5tivB11TM20wxISrUgsKsCosu0fL",
+  "path": "Vol 31/39/Pages/31-39a.pdf",
+  "issue": "Vol 31/39",
+  "kind": "a"
+ },
+ {
+  "id": "1vb_EItPB1yEgFBnkDhcwsBjVkx9v90XM",
+  "path": "Vol 31/39/Pages/31-39b.pdf",
+  "issue": "Vol 31/39",
+  "kind": "b"
+ },
+ {
+  "id": "1SCXb-HlCKNkeamj4Biez3A0ROthAM_o-",
+  "path": "Vol 31/40/Pages/31-40a.pdf",
+  "issue": "Vol 31/40",
+  "kind": "a"
+ },
+ {
+  "id": "11xImMFEdmv33OS4XZVz8sf0PXz4mK-MF",
+  "path": "Vol 31/40/Pages/32-40b.pdf",
+  "issue": "Vol 31/40",
+  "kind": "b"
+ },
+ {
+  "id": "1PI_YRmrqqJMpTse4esGixPH1N3DgKbAI",
+  "path": "Vol 31/41/Pages/31-41a.pdf",
+  "issue": "Vol 31/41",
+  "kind": "a"
+ },
+ {
+  "id": "1kvmIsyuVC5yzMT9_bYWN_HcGo9dH56FR",
+  "path": "Vol 31/41/Pages/31-41b.pdf",
+  "issue": "Vol 31/41",
+  "kind": "b"
+ },
+ {
+  "id": "1iFtwMie9IV5gEmuJVR8Ckkwj8ZE29JFH",
+  "path": "Vol 31/42/Pages/31-42a.pdf",
+  "issue": "Vol 31/42",
+  "kind": "a"
+ },
+ {
+  "id": "10kikrZvQ4vUUlyY-ovixDhtWU97Jl5Vg",
+  "path": "Vol 31/42/Pages/31-42b.pdf",
+  "issue": "Vol 31/42",
+  "kind": "b"
+ },
+ {
+  "id": "1xZ7lWivZjim2eT20ucpmkIdJvgSev76i",
+  "path": "Vol 31/43/Pages/31-43a.pdf",
+  "issue": "Vol 31/43",
+  "kind": "a"
+ },
+ {
+  "id": "1QelHfrXAvGlLMUtxLbLzKUiRhtkuGipF",
+  "path": "Vol 31/43/Pages/31-43b.pdf",
+  "issue": "Vol 31/43",
+  "kind": "b"
+ },
+ {
+  "id": "1ybr63G_c_0vD3XYtJC5T0wWae25zGH4P",
+  "path": "Vol 31/44/Pages/31-44a.pdf",
+  "issue": "Vol 31/44",
+  "kind": "a"
+ },
+ {
+  "id": "1oaptlK-vwUf5gOPqgx5rsMHSEzXj6zjy",
+  "path": "Vol 31/44/Pages/31-44b.pdf",
+  "issue": "Vol 31/44",
+  "kind": "b"
+ },
+ {
+  "id": "1WVqGqGWKulnwnkniyKJnlZ1MT6oPc49b",
+  "path": "Vol 31/45/Pages/31-45a.pdf",
+  "issue": "Vol 31/45",
+  "kind": "a"
+ },
+ {
+  "id": "15YmOf2ijZ025iSYfHIyy5ptwVja3BKJ7",
+  "path": "Vol 31/45/Pages/31-45b.pdf",
+  "issue": "Vol 31/45",
+  "kind": "b"
+ },
+ {
+  "id": "14RNrgOQjkprQmac_-3gqPEtCnNgc1q6_",
+  "path": "Vol 31/46/Pages/31-46a.pdf",
+  "issue": "Vol 31/46",
+  "kind": "a"
+ },
+ {
+  "id": "1GdyPLV0oJT4ETErOupUOVDOmK_VMThHv",
+  "path": "Vol 31/46/Pages/31-46b.pdf",
+  "issue": "Vol 31/46",
+  "kind": "b"
+ },
+ {
+  "id": "1SCQ5GMY4RJ1j9zm6PVtvh2vLu6swJqmS",
+  "path": "Vol 31/47/Pages/31-47a.pdf",
+  "issue": "Vol 31/47",
+  "kind": "a"
+ },
+ {
+  "id": "1ahrLl0mGfPZAyrbrk4kblbx0Lcgz1w2A",
+  "path": "Vol 31/47/Pages/31-47b.pdf",
+  "issue": "Vol 31/47",
+  "kind": "b"
+ },
+ {
+  "id": "1bnGtysBrwf4t1vTTJpauh36jm6PQEHV3",
+  "path": "Vol 31/48/Pages/31-48a.pdf",
+  "issue": "Vol 31/48",
+  "kind": "a"
+ },
+ {
+  "id": "1q40ZnV7kfdB_bxdyOHKCWkLGSTlATjqS",
+  "path": "Vol 31/48/Pages/31-48b.pdf",
+  "issue": "Vol 31/48",
+  "kind": "b"
+ },
+ {
+  "id": "1HbMx8pcif5iGU_HsKNxxIDqNdtKsr0aD",
+  "path": "Vol 32/01/Pages/32-01a.pdf",
+  "issue": "Vol 32/01",
+  "kind": "a"
+ },
+ {
+  "id": "1cJE1vfC84WW2JwzXLhfwmD_dIZYxrglF",
+  "path": "Vol 32/01/Pages/32-01b.pdf",
+  "issue": "Vol 32/01",
+  "kind": "b"
+ },
+ {
+  "id": "14yzPVS6tqSWZKk7bhpADG5uFgZVYBtq_",
+  "path": "Vol 32/02/Pages/32-02a.pdf",
+  "issue": "Vol 32/02",
+  "kind": "a"
+ },
+ {
+  "id": "1c7OwVCfGTjBLOHh8YTwaALVsRUiKqMMf",
+  "path": "Vol 32/02/Pages/32-02b.pdf",
+  "issue": "Vol 32/02",
+  "kind": "b"
+ },
+ {
+  "id": "1tUJzuZRvwzbBkDGZOAbvAw--Eg07G8wg",
+  "path": "Vol 32/02/Pages/32-02c.pdf",
+  "issue": "Vol 32/02",
+  "kind": "c"
+ },
+ {
+  "id": "11u6Lwzj3LDn7VK3aqyxmynSiH9x13KPE",
+  "path": "Vol 32/02/Pages/32-02d.pdf",
+  "issue": "Vol 32/02",
+  "kind": "d"
+ },
+ {
+  "id": "1ffynJ3pJ6h2ibStZNFXFCbm7oNeCrD7E",
+  "path": "Vol 32/02/Pages/SP1/20180921_XDI_SP1_PG001.pdf",
+  "issue": "Vol 32/02",
+  "kind": "s"
+ },
+ {
+  "id": "16b54gXIhuxwvb1MyYOAXtROojDEmgIqU",
+  "path": "Vol 32/03/Pages/32-03a.pdf",
+  "issue": "Vol 32/03",
+  "kind": "a"
+ },
+ {
+  "id": "1B-u__rj5kmMtFS7x9xJvibbB_aRHgMD_",
+  "path": "Vol 32/03/Pages/32-03b.pdf",
+  "issue": "Vol 32/03",
+  "kind": "b"
+ },
+ {
+  "id": "1nccPDHx4GbzrAaG2BUYdnaj1PwAfDuFZ",
+  "path": "Vol 32/04/Pages/32-04a.pdf",
+  "issue": "Vol 32/04",
+  "kind": "a"
+ },
+ {
+  "id": "1XxKoSz1QGSxPWyFtfCBZV3Dp6hUpB-e5",
+  "path": "Vol 32/04/Pages/32-04b.pdf",
+  "issue": "Vol 32/04",
+  "kind": "b"
+ },
+ {
+  "id": "1mVlwQ_PpP06PDmN6Wq36hsjFbeakIeKo",
+  "path": "Vol 32/05/Pages/32-05a.pdf",
+  "issue": "Vol 32/05",
+  "kind": "a"
+ },
+ {
+  "id": "1bKy4xwFRTToKafL2zl4FkDtkNsRgHzDM",
+  "path": "Vol 32/05/Pages/32-05b.pdf",
+  "issue": "Vol 32/05",
+  "kind": "b"
+ },
+ {
+  "id": "1Zo5Nv5gSmNomwRi6BdYfstq-bpziYuvN",
+  "path": "Vol 32/06/Pages/32-06a.pdf",
+  "issue": "Vol 32/06",
+  "kind": "a"
+ },
+ {
+  "id": "1I-JfMtOaTbj9puHb2wxbIA4S_1bV-L89",
+  "path": "Vol 32/06/Pages/32-06b.pdf",
+  "issue": "Vol 32/06",
+  "kind": "b"
+ },
+ {
+  "id": "1TDuG7BsBelkYfjljaJ-049rtCf1dwZr4",
+  "path": "Vol 32/07/Pages/32-07a.pdf",
+  "issue": "Vol 32/07",
+  "kind": "a"
+ },
+ {
+  "id": "1FdOUSSZ7Z2CetPJoPzkhUpBlgwqcuaUx",
+  "path": "Vol 32/07/Pages/32-07b.pdf",
+  "issue": "Vol 32/07",
+  "kind": "b"
+ },
+ {
+  "id": "1kmUU1EL38vNtmLK7EgyI0B1wgkMtKon5",
+  "path": "Vol 32/08/Pages/32-08a.pdf",
+  "issue": "Vol 32/08",
+  "kind": "a"
+ },
+ {
+  "id": "1vZdYPxEvmF_OCF1maG0NXmEfS07CT6gK",
+  "path": "Vol 32/08/Pages/32-08b.pdf",
+  "issue": "Vol 32/08",
+  "kind": "b"
+ },
+ {
+  "id": "1iqZwoDi-K1FC6ufuWj8ZmmdwMUM1K41x",
+  "path": "Vol 32/09/Pages/32-09a.pdf",
+  "issue": "Vol 32/09",
+  "kind": "a"
+ },
+ {
+  "id": "1rxpFo-BBND8-MRWOR20MaNPksnLbQroi",
+  "path": "Vol 32/09/Pages/32-09b.pdf",
+  "issue": "Vol 32/09",
+  "kind": "b"
+ },
+ {
+  "id": "12BCp0Rf7YcCU6kPhOFx2lQMmvWD9zJG9",
+  "path": "Vol 32/10/Pages/32-10a.pdf",
+  "issue": "Vol 32/10",
+  "kind": "a"
+ },
+ {
+  "id": "1K7dWddp0ILG9HukwHiQBzRyzuJ6u4E1C",
+  "path": "Vol 32/10/Pages/32-10b.pdf",
+  "issue": "Vol 32/10",
+  "kind": "b"
+ },
+ {
+  "id": "1KY62A2iVwMJ-Q6eDGxFCeuyuQq3-ENsy",
+  "path": "Vol 32/11/Pages/32-11a.pdf",
+  "issue": "Vol 32/11",
+  "kind": "a"
+ },
+ {
+  "id": "12f8p2JRrN3ej7w9h8tGkABE1iJYl72AR",
+  "path": "Vol 32/11/Pages/32-11b.pdf",
+  "issue": "Vol 32/11",
+  "kind": "b"
+ },
+ {
+  "id": "1TLx2watQ-Q73L_ecW8A0io24iV290yYy",
+  "path": "Vol 32/12/Pages/32-12a.pdf",
+  "issue": "Vol 32/12",
+  "kind": "a"
+ },
+ {
+  "id": "1oh920HwAGte1Rz1dDEeTxtkDucwtnYSX",
+  "path": "Vol 32/12/Pages/32-12b.pdf",
+  "issue": "Vol 32/12",
+  "kind": "b"
+ },
+ {
+  "id": "1UnEMo0yb8T9lpSPMEbU4tfcbRGurtAK1",
+  "path": "Vol 32/13/Pages/32-13a.pdf",
+  "issue": "Vol 32/13",
+  "kind": "a"
+ },
+ {
+  "id": "1XhSmrzUUvmJ_HFf3Q-Yoo7sM49bea67b",
+  "path": "Vol 32/13/Pages/32-13b.pdf",
+  "issue": "Vol 32/13",
+  "kind": "b"
+ },
+ {
+  "id": "16Ea5t9VKTKo2iURFz-t59_KtAG3HFe_5",
+  "path": "Vol 32/14/Pages/32-14a.pdf",
+  "issue": "Vol 32/14",
+  "kind": "a"
+ },
+ {
+  "id": "1Ztvz8mDnn4hN7-_NDWhbuiNuBoksUAbv",
+  "path": "Vol 32/14/Pages/32-14b.pdf",
+  "issue": "Vol 32/14",
+  "kind": "b"
+ },
+ {
+  "id": "1aQNWHgt8X1MImjqHkJTjICuxM1Ea525W",
+  "path": "Vol 32/15/Pages/32-15a.pdf",
+  "issue": "Vol 32/15",
+  "kind": "a"
+ },
+ {
+  "id": "1HPrxTIDNwujFaufiSHppoMNS4I4v0-iF",
+  "path": "Vol 32/15/Pages/32-15b.pdf",
+  "issue": "Vol 32/15",
+  "kind": "b"
+ },
+ {
+  "id": "1e4gsQtOB1SRl7nMLMh-g84pL0pODSoak",
+  "path": "Vol 32/16/Pages/32-16a.pdf",
+  "issue": "Vol 32/16",
+  "kind": "a"
+ },
+ {
+  "id": "1e-M9mU54ejCxZ2M6bT_e7FrOO8tibnsT",
+  "path": "Vol 32/16/Pages/32-16b.pdf",
+  "issue": "Vol 32/16",
+  "kind": "b"
+ },
+ {
+  "id": "1eP10P1g_sxLBUi8B97-BTSGrWFMN0o6H",
+  "path": "Vol 32/17/Pages/32-17a.pdf",
+  "issue": "Vol 32/17",
+  "kind": "a"
+ },
+ {
+  "id": "1Jck8J29H0lcmA1Spq_GaheYtLUnaO_dX",
+  "path": "Vol 32/17/Pages/32-17b.pdf",
+  "issue": "Vol 32/17",
+  "kind": "b"
+ },
+ {
+  "id": "1HDmREroT590B71Qu9x9PuEEe_s4ts0Vp",
+  "path": "Vol 32/18/Pages/32-18a.pdf",
+  "issue": "Vol 32/18",
+  "kind": "a"
+ },
+ {
+  "id": "1_JT8WXOCgXibGZRrAj0kLLvHTOoPUPN1",
+  "path": "Vol 32/18/Pages/32-18b.pdf",
+  "issue": "Vol 32/18",
+  "kind": "b"
+ },
+ {
+  "id": "1F5Q5I_6tJjC7FnDsKe2Whz8DbBRAMFfU",
+  "path": "Vol 32/19/Pages/32-19a.pdf",
+  "issue": "Vol 32/19",
+  "kind": "a"
+ },
+ {
+  "id": "1aMRvpr1sw0h_me1StakKX1ylaYQlU91z",
+  "path": "Vol 32/19/Pages/32-19b.pdf",
+  "issue": "Vol 32/19",
+  "kind": "b"
+ },
+ {
+  "id": "1EGp23XPEjtlrNYKwPYdfyX8FmSjLlfXz",
+  "path": "Vol 32/20/Pages/32-20a.pdf",
+  "issue": "Vol 32/20",
+  "kind": "a"
+ },
+ {
+  "id": "1Mfbwc_YoNtKQE_ghqwtZmkxRq1tTNPs0",
+  "path": "Vol 32/20/Pages/32-20b.pdf",
+  "issue": "Vol 32/20",
+  "kind": "b"
+ },
+ {
+  "id": "1c0MjxWB3JfbmnM3RCk4zCuRt8oYCIl_M",
+  "path": "Vol 32/21/Pages/32-21a.pdf",
+  "issue": "Vol 32/21",
+  "kind": "a"
+ },
+ {
+  "id": "1QV-FoikPH1T0n7-nDL1_7XWdMjAMzMO7",
+  "path": "Vol 32/21/Pages/32-21b.pdf",
+  "issue": "Vol 32/21",
+  "kind": "b"
+ },
+ {
+  "id": "14z0WYof3xOBHxoJwHPvrOmJUjX9yecK2",
+  "path": "Vol 32/22/Pages/32-22a.pdf",
+  "issue": "Vol 32/22",
+  "kind": "a"
+ },
+ {
+  "id": "1OJD6_t9QqVGTR9CzS6k7Cpu7EPOGtXW2",
+  "path": "Vol 32/22/Pages/32-22b.pdf",
+  "issue": "Vol 32/22",
+  "kind": "b"
+ },
+ {
+  "id": "10gTRwv_stZFGYh3d71Uq7XqVHHNtegPM",
+  "path": "Vol 32/23/Pages/32-23a.pdf",
+  "issue": "Vol 32/23",
+  "kind": "a"
+ },
+ {
+  "id": "1uW84Egqzqypbw9TMZ9AwXwsCrO1xqq4_",
+  "path": "Vol 32/23/Pages/32-23b.pdf",
+  "issue": "Vol 32/23",
+  "kind": "b"
+ },
+ {
+  "id": "1XEXMHin13TSJMJzclakqYAC-h8xQKeCo",
+  "path": "Vol 32/24/Pages/32-24a.pdf",
+  "issue": "Vol 32/24",
+  "kind": "a"
+ },
+ {
+  "id": "1N_Pv7dVzENUsHdd0-OJg4xQzheE_UlDN",
+  "path": "Vol 32/24/Pages/32-24b.pdf",
+  "issue": "Vol 32/24",
+  "kind": "b"
+ },
+ {
+  "id": "1Df-zpmge2i1-fqEQKPwL4iN3Y1Zxjd6P",
+  "path": "Vol 32/25/Pages/32-25a.pdf",
+  "issue": "Vol 32/25",
+  "kind": "a"
+ },
+ {
+  "id": "1YPtjEWHe8lUxgn6W9WAanWw-XGgI4vtm",
+  "path": "Vol 32/25/Pages/32-25b.pdf",
+  "issue": "Vol 32/25",
+  "kind": "b"
+ },
+ {
+  "id": "1EdoGnGWmOkJP2q04BFV_x0Xn0rBL_1cG",
+  "path": "Vol 32/26/Pages/32-26a.pdf",
+  "issue": "Vol 32/26",
+  "kind": "a"
+ },
+ {
+  "id": "1DW54FAod4g4AQg4RyZhcflFdTig3Aj4c",
+  "path": "Vol 32/26/Pages/32-26b.pdf",
+  "issue": "Vol 32/26",
+  "kind": "b"
+ },
+ {
+  "id": "12QCYQ4S2QwddCcAz_jEE6xPNdfrIItUo",
+  "path": "Vol 32/27/Pages/32-27a.pdf",
+  "issue": "Vol 32/27",
+  "kind": "a"
+ },
+ {
+  "id": "17w_WFHGF9pDfPw8NTUILlMFP_KfWGlzE",
+  "path": "Vol 32/27/Pages/32-27b.pdf",
+  "issue": "Vol 32/27",
+  "kind": "b"
+ },
+ {
+  "id": "1DdBCKXM9gL38qqHC2uk5zFCILYIw1w2V",
+  "path": "Vol 32/28/Pages/32-28a.pdf",
+  "issue": "Vol 32/28",
+  "kind": "a"
+ },
+ {
+  "id": "1pYvuwxC9bAz51hzbAjJuDj0ShXlS-gFU",
+  "path": "Vol 32/28/Pages/32-28b.pdf",
+  "issue": "Vol 32/28",
+  "kind": "b"
+ },
+ {
+  "id": "1udkbNCW9jp9XayzLNHsn-UaUKLia0rYo",
+  "path": "Vol 32/29/Pages/32-29a.pdf",
+  "issue": "Vol 32/29",
+  "kind": "a"
+ },
+ {
+  "id": "1ni7cQnrkDWXgHBBYGpN6itkqNhPZeZa9",
+  "path": "Vol 32/29/Pages/32-29b.pdf",
+  "issue": "Vol 32/29",
+  "kind": "b"
+ },
+ {
+  "id": "1fsWEEwEQByuNBgvrvQtx0XDXMylbzBOC",
+  "path": "Vol 32/30/Pages/32-30a.pdf",
+  "issue": "Vol 32/30",
+  "kind": "a"
+ },
+ {
+  "id": "1rFh_0WJ5acBQsZJelETyeu0M_daFLf71",
+  "path": "Vol 32/30/Pages/32-30b.pdf",
+  "issue": "Vol 32/30",
+  "kind": "b"
+ },
+ {
+  "id": "1OvsIdV5hPtaBMbCsUbjK1_6CRHAu1Inp",
+  "path": "Vol 32/31/Pages/32-31a.pdf",
+  "issue": "Vol 32/31",
+  "kind": "a"
+ },
+ {
+  "id": "1_rABsNU1TUxqY8Z7pd5pptHEQZmlvyCr",
+  "path": "Vol 32/31/Pages/32-31b.pdf",
+  "issue": "Vol 32/31",
+  "kind": "b"
+ },
+ {
+  "id": "1FxQn-VF48PGV43szJimFB_0dYDspZ5q6",
+  "path": "Vol 32/31/Pages/32-31c.pdf",
+  "issue": "Vol 32/31",
+  "kind": "c"
+ },
+ {
+  "id": "1_08WMJ5HIlvnxk29b1MWLbutdNaeJz9r",
+  "path": "Vol 32/31/Pages/32-31d.pdf",
+  "issue": "Vol 32/31",
+  "kind": "d"
+ },
+ {
+  "id": "10YZg276PbqdF2psE3mP2FgFG669Dm39j",
+  "path": "Vol 32/31/Pages/SP1/20190419_XDI_SP1_PG001.pdf",
+  "issue": "Vol 32/31",
+  "kind": "s"
+ },
+ {
+  "id": "15dzjZMbeeEaEd1TIXPqWZlAovGYnhlw9",
+  "path": "Vol 32/32/Pages/32-32a.pdf",
+  "issue": "Vol 32/32",
+  "kind": "a"
+ },
+ {
+  "id": "17PRwdgTnCp5dRD2LYWjoofVcUqsTTC06",
+  "path": "Vol 32/32/Pages/32-32b.pdf",
+  "issue": "Vol 32/32",
+  "kind": "b"
+ },
+ {
+  "id": "1vD3j5w7eppuaUVG8gdRun0nhqjy33X63",
+  "path": "Vol 32/33/Pages/32-33a.pdf",
+  "issue": "Vol 32/33",
+  "kind": "a"
+ },
+ {
+  "id": "1C21f_rweUKi6aOJCAZXYcU7ps86Z1DIz",
+  "path": "Vol 32/33/Pages/32-33b.pdf",
+  "issue": "Vol 32/33",
+  "kind": "b"
+ },
+ {
+  "id": "1TBswyCEzr1f_MMMiuJzqS89YstmkPnrJ",
+  "path": "Vol 32/34/Pages/32-34a.pdf",
+  "issue": "Vol 32/34",
+  "kind": "a"
+ },
+ {
+  "id": "1Toa9S8Sn7LHstP2AlcwsNBd1lMhnerZK",
+  "path": "Vol 32/34/Pages/32-34b.pdf",
+  "issue": "Vol 32/34",
+  "kind": "b"
+ },
+ {
+  "id": "1pwgAsVH71oOp8sGaKcUA58ISZzU-qeP_",
+  "path": "Vol 32/35/Pages/32-35b.pdf",
+  "issue": "Vol 32/35",
+  "kind": "b"
+ },
+ {
+  "id": "1_7n114eGiLo3cqsAeJtkBYb71a0vZvFi",
+  "path": "Vol 32/36/Pages/32-36a.pdf",
+  "issue": "Vol 32/36",
+  "kind": "a"
+ },
+ {
+  "id": "1aaVqyuaz-4ay27h2GuEI0pi0lMaCZKPr",
+  "path": "Vol 32/36/Pages/32-36b.pdf",
+  "issue": "Vol 32/36",
+  "kind": "b"
+ },
+ {
+  "id": "1aUmR3Ct3lxkWNe0bE3ghbU3zGJibvgoB",
+  "path": "Vol 32/37/Pages/32-37a.pdf",
+  "issue": "Vol 32/37",
+  "kind": "a"
+ },
+ {
+  "id": "1aSGSmqrxcl-KFbr4f1RpbDvZoTSIhE5m",
+  "path": "Vol 32/37/Pages/32-37b.pdf",
+  "issue": "Vol 32/37",
+  "kind": "b"
+ },
+ {
+  "id": "1wULt0-bUZrZVeXKENqRkdZdutY7JzaMT",
+  "path": "Vol 32/38/Pages/32-38a.pdf",
+  "issue": "Vol 32/38",
+  "kind": "a"
+ },
+ {
+  "id": "1yrNZPj3AL-gTCAvioqDMY0giWGr_k50q",
+  "path": "Vol 32/38/Pages/32-38b.pdf",
+  "issue": "Vol 32/38",
+  "kind": "b"
+ },
+ {
+  "id": "1BoTKqR_sT3HCQ5HatAkG3AEu7CVJ_12w",
+  "path": "Vol 32/39/Pages/32-39a.pdf",
+  "issue": "Vol 32/39",
+  "kind": "a"
+ },
+ {
+  "id": "1zweDGGHjcBDSFmHX4sHoLhp33iP8wIOz",
+  "path": "Vol 32/39/Pages/32-39b.pdf",
+  "issue": "Vol 32/39",
+  "kind": "b"
+ },
+ {
+  "id": "1YOwfAup3BuozW6wlWf0MapOR7c7Otv9n",
+  "path": "Vol 32/40/Pages/32-40a.pdf",
+  "issue": "Vol 32/40",
+  "kind": "a"
+ },
+ {
+  "id": "1Sq72bjocYMPNDGMQqoX_EeHaBA6fzvHy",
+  "path": "Vol 32/40/Pages/32-40b.pdf",
+  "issue": "Vol 32/40",
+  "kind": "b"
+ },
+ {
+  "id": "1ELFjFwoDn7iBQr0nFkERyhPpoZdZzUGx",
+  "path": "Vol 32/41/Pages/32-41a.pdf",
+  "issue": "Vol 32/41",
+  "kind": "a"
+ },
+ {
+  "id": "1UJyr_cTGDQF4SxzUaSXgrMWQO5juKf3r",
+  "path": "Vol 32/41/Pages/32-41b.pdf",
+  "issue": "Vol 32/41",
+  "kind": "b"
+ },
+ {
+  "id": "1xb2-ZTgj8wZtouqDV0YfIFsT-rEyL5k2",
+  "path": "Vol 32/42/Pages/32-42a.pdf",
+  "issue": "Vol 32/42",
+  "kind": "a"
+ },
+ {
+  "id": "1hsYeDdeMZw9vEzMbR2bOaIbNOs9nH0y6",
+  "path": "Vol 32/42/Pages/32-42b.pdf",
+  "issue": "Vol 32/42",
+  "kind": "b"
+ },
+ {
+  "id": "1HZLQJUtlwQ69VSPok2l-MZQCyluXfC39",
+  "path": "Vol 32/43/Pages/32-43a.pdf",
+  "issue": "Vol 32/43",
+  "kind": "a"
+ },
+ {
+  "id": "1Z4gjgB4OdYlggns3Y-QblImb_vTm8yCV",
+  "path": "Vol 32/43/Pages/32-43b.pdf",
+  "issue": "Vol 32/43",
+  "kind": "b"
+ },
+ {
+  "id": "184fyBoGnpf_Q8QHdghXKqxq3CE6wdYVD",
+  "path": "Vol 32/44/Pages/32-44a.pdf",
+  "issue": "Vol 32/44",
+  "kind": "a"
+ },
+ {
+  "id": "1IwGWgFuKlrRjH7msKqx8tcQ04HmMaCTm",
+  "path": "Vol 32/44/Pages/32-44b.pdf",
+  "issue": "Vol 32/44",
+  "kind": "b"
+ },
+ {
+  "id": "146KLJEb6JCrL5D0u_NyBnGC0SN4UIOUk",
+  "path": "Vol 32/45/Pages/32-45a.pdf",
+  "issue": "Vol 32/45",
+  "kind": "a"
+ },
+ {
+  "id": "1WogshFmRt_NaUXh15V3jh_uXb4rLUPJV",
+  "path": "Vol 32/45/Pages/32-45b.pdf",
+  "issue": "Vol 32/45",
+  "kind": "b"
+ },
+ {
+  "id": "1K9lDsZhuVcVcJ_kU44o83imXiGZMF1vU",
+  "path": "Vol 32/46/Pages/32-46a.pdf",
+  "issue": "Vol 32/46",
+  "kind": "a"
+ },
+ {
+  "id": "1P8HvM9-TkMel_V6oEgqHUC7tpqEuZ2-S",
+  "path": "Vol 32/46/Pages/32-46b.pdf",
+  "issue": "Vol 32/46",
+  "kind": "b"
+ },
+ {
+  "id": "1kRqR7tQOaFyeMMWaVkmePzK5Z4tWdb1f",
+  "path": "Vol 32/47/Pages/32-47a.pdf",
+  "issue": "Vol 32/47",
+  "kind": "a"
+ },
+ {
+  "id": "1bYZ2nKDqv7puP_ZvwrZQMo6ZyKd7F1pM",
+  "path": "Vol 32/47/Pages/32-47b.pdf",
+  "issue": "Vol 32/47",
+  "kind": "b"
+ },
+ {
+  "id": "1Jw8RAtSYLiox6OptuFmPuUlMr4ypSTYn",
+  "path": "Vol 32/48/Pages/32-48a.pdf",
+  "issue": "Vol 32/48",
+  "kind": "a"
+ },
+ {
+  "id": "1P9UtewV6pu63MEItUCGGQfQbeg5mJQfh",
+  "path": "Vol 32/48/Pages/32-48b.pdf",
+  "issue": "Vol 32/48",
+  "kind": "b"
+ },
+ {
+  "id": "1n7vJwUXpyk15RpYSsx1eMFAzhO1JOaG1",
+  "path": "Vol 32/49/Pages/32-49a.pdf",
+  "issue": "Vol 32/49",
+  "kind": "a"
+ },
+ {
+  "id": "1wV3tA1sPrWnJzQk8lEp7QbqZH0GqAP33",
+  "path": "Vol 32/49/Pages/32-49b.pdf",
+  "issue": "Vol 32/49",
+  "kind": "b"
+ },
+ {
+  "id": "15MfzAKUjRtYYZD683Qw9WEG3ZeFdPj1E",
+  "path": "Vol 32/50/Pages/32-50a.pdf",
+  "issue": "Vol 32/50",
+  "kind": "a"
+ },
+ {
+  "id": "1vei-TMmforHgcGThGVLjckkI8S6r8VKc",
+  "path": "Vol 32/50/Pages/32-50b.pdf",
+  "issue": "Vol 32/50",
+  "kind": "b"
+ },
+ {
+  "id": "1hpbnKeDNGe0Hk-xfVoqWeGviH8TtcM8O",
+  "path": "Vol 32/51/1117-1.pdf",
+  "issue": "Vol 32/51",
+  "kind": "a"
+ },
+ {
+  "id": "13ppDTlCMKo-WT9gDuSCp1UVHR8YFD-Rz",
+  "path": "Vol 32/51/Pages/32-51b.pdf",
+  "issue": "Vol 32/51",
+  "kind": "b"
+ },
+ {
+  "id": "1Un6SQDw5mk22HS007V-sV_KNSRO86K91",
+  "path": "Vol 32/52/Pages/32-52a.pdf",
+  "issue": "Vol 32/52",
+  "kind": "a"
+ },
+ {
+  "id": "1ciz07w0Im8BHPiMgsa95tYlQUJyGqbr0",
+  "path": "Vol 32/52/Pages/32-52b.pdf",
+  "issue": "Vol 32/52",
+  "kind": "b"
+ },
+ {
+  "id": "14AwAergcn2FOaoDPzvWhBQKPI7Za0cgb",
+  "path": "Vol 32/53/Pages/32-53a.pdf",
+  "issue": "Vol 32/53",
+  "kind": "a"
+ },
+ {
+  "id": "1-LptENPOo_306jk3-Le5gMfd9Rxj5be9",
+  "path": "Vol 32/53/Pages/32-53b.pdf",
+  "issue": "Vol 32/53",
+  "kind": "b"
  }
 ]
