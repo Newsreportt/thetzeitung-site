@@ -50,7 +50,7 @@ jobs:
         run: |
           ROUND="${{ github.event.inputs.round || '1' }}"
           if [ -f _year/raw/again ] && [ "$ROUND" -lt 30 ]; then
-            read LEFT FETCHED < _year/raw/again
+            read -r LEFT FETCHED < _year/raw/again || true
             echo "$LEFT covers left ($FETCHED PDFs fetched this round); starting round $((ROUND + 1))"
             if [ "${FETCHED:-0}" -eq 0 ]; then
               echo "nothing came through: waiting an hour for Google's quota before the next round"
