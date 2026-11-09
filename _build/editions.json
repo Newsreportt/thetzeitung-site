@@ -10748,13 +10748,16 @@
   "no": 37,
   "parsha": "פ' במדבר",
   "covers": {
-   "b": "covers/archive/2016-06-10-b.jpg"
+   "b": "covers/archive/2016-06-10-b.jpg",
+   "a": "covers/archive/2016-06-10-a.jpg"
   },
   "texts": {
-   "b": "OP EOF NQ JUNE NMI DNS KKK PM DUM NS US VN VS VU VV TV UN UO UQ UR WW TN TO TQ TS טץטה וך xוףטכללש לזx טש כמל דה ץןץלשץ"
+   "b": "OP EOF NQ JUNE NMI DNS KKK PM DUM NS US VN VS VU VV TV UN UO UQ UR WW TN TO TQ TS טץטה וך xוףטכללש לזx טש כמל דה ץןץלשץ",
+   "a": "ארםפקר ד'קמ גרםבקר כם רקפשפד'קמ ידןגגןט קיא די צייטונג זעלבסטשטענדיגע אידישע FRIDAY JUNE VOL NO ץץץ"
   },
   "source": {
-   "b": "pdf:Vol 29/37/Pages/Section B.pdf"
+   "b": "pdf:Vol 29/37/Pages/Section B.pdf",
+   "a": "pdf:Vol 29/37/Section A.pdf"
   },
   "nowall": true,
   "hdate": "ד׳ סיון תשע״ו",
