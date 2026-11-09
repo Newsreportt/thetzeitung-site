@@ -93,7 +93,8 @@ def big_attr(ed, k):
     return f' data-big="{p}"' if os.path.exists(os.path.join(ROOT, p)) else ""
 
 PLACES = ["Monsey", "Monroe", "Williamsburg", "Boro Park", "Lakewood", "Jackson", "Linden", "Staten Island",
-          "Flatbush", "Crown Heights", "Tosh", "Montreal", "London", "Antwerp", "Eretz Yisroel"]
+          "Flatbush", "Crown Heights", "Miami", "North Miami", "Boca Raton", "West Palm Beach", "Lakefront",
+          "Tosh", "Montreal", "London", "Antwerp", "Eretz Yisroel"]
 
 SITE = "https://thetzeitung.com/"
 
@@ -389,7 +390,7 @@ about = band("About The Tzeitung", "Forty years of the independent Yiddish newsp
     <p class="lead">The Tzeitung, written in Yiddish as די צייטונג and often spelled Di Tzeitung or Dee Tzeitung, is Di Zelbstshtendige Yiddishe Tzeitung, the independent Yiddish newspaper. It was founded forty years ago by Rabbi Avrohom Friedman, who leads it to this day as founder and editor-in-chief.</p>
     <p>Published every week in Yiddish and known in English as News Report, The Yiddish Newspaper of Record, it has become one of the enduring institutions of the Yiddish printed word in America. A fresh edition reaches the stores every Wednesday morning.</p>
     <h2>Who reads it</h2>
-    <p>Thousands of readers around the world. The Tzeitung is on the stands every Wednesday morning in Monsey, Monroe, Williamsburg, Boro Park, Lakewood, Jackson, Linden, Staten Island, Flatbush and Crown Heights, in Tosh and Montreal, and across the ocean in London, Antwerp and Eretz Yisroel, with more to come.</p>
+    <p>Thousands of readers around the world. The Tzeitung is on the stands every Wednesday morning in Monsey, Monroe, Williamsburg, Boro Park, Lakewood, Jackson, Linden, Staten Island, Flatbush and Crown Heights, in Miami, North Miami, Boca Raton, West Palm Beach and Lakefront, in Tosh and Montreal, and across the ocean in London, Antwerp and Eretz Yisroel, with more to come.</p>
     <h2>How we report</h2>
     <p>Our mission is to bring the news with an impartial eye. The Tzeitung does not take sides in internal community disputes. Readers deserve clear, accurate reporting, and nothing more. In general American politics the paper keeps a measured tone, with the aim of maintaining good relations with local, city and federal agencies for the benefit of the community.</p>
     <h2>Inside every edition</h2>
