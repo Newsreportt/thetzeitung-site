@@ -125,11 +125,46 @@ def decode_keyboard(text):
         out.append("".join(_KB.get(ch, ch) for ch in line)[::-1])
     return "\n".join(out)
 
+_MASTHEAD = re.compile(r'\u05e2?\u05e8?\u05e9"\u05e7|\u05d1\u05e1"\u05d3|\u05e4\u05e8\u05e9\u05ea|\u05ea\u05e9[\u05d0-\u05ea]"[\u05d0-\u05d8]')
+
 def normalize_text(text):
-    """Whichever reading of the text layer yields the most Hebrew: as is, glyph-shifted, or keyboard-mapped."""
+    """Whichever reading of the text layer yields the most Hebrew: as is, glyph-shifted, or keyboard-mapped.
+    A decoding has to win clearly: the keyboard mapping turns punctuation into letters too (a comma
+    is \u05ea), so on real Hebrew it would always win by a hair and reverse every line. In a layer that
+    is real Hebrew, only a coded masthead line (set in another font) is decoded, on its own."""
     def heb(t): return len(re.findall(r"[\u05d0-\u05ea]", t))
-    cands = [text, decode_glyphs(text), decode_keyboard(text)]
-    return max(cands, key=heb)
+    base = heb(text)
+    best, best_n = text, base
+    for cand in (decode_glyphs(text), decode_keyboard(text)):
+        n = heb(cand)
+        if n > max(best_n * 1.5, best_n + 20): best, best_n = cand, n
+    if best is not text: return _orient(best)
+    out = []
+    for line in text.splitlines():
+        if heb(line) < 3:
+            for cand in (decode_keyboard(line), decode_glyphs(line)):
+                if _MASTHEAD.search(cand): line = cand; break
+        out.append(line)
+    return _orient("\n".join(out))
+
+_COMMON = re.compile(r"(?<![א-ת])(און|אין|פון|מיט|פאר|אויף|נאך|וואס|זיך|נישט|האט|וועט|דאס|געווען|האבן|זענען"
+                     r"|איבער|ישראל|תורה|שבת|פרשת|אידישע|צייטונג|חסידישע)(?![א-ת])")
+
+_FINAL_END = re.compile(r"(?<![א-ת])[א-ת]+[ךםןףץ](?![א-ת])")
+
+def _orient(text):
+    """Some text layers store the Hebrew in visual order, i.e. every line mirrored. Common words
+    and final letters at the end of words tell the reading direction of the layer, and of any
+    line that speaks for itself."""
+    hits = lambda t: len(_COMMON.findall(t)) + len(_FINAL_END.findall(t))
+    lines = text.splitlines()
+    doc_mirrored = hits("\n".join(l[::-1] for l in lines)) > hits(text)
+    out = []
+    for l in lines:
+        if not re.search(r"[א-ת]", l): out.append(l); continue
+        f, r = hits(l), hits(l[::-1])
+        out.append(l[::-1] if (doc_mirrored if f == r else r > f) else l)
+    return "\n".join(out)
 
 def looks_garbled(text):
     return len(re.findall(r"[\xAA-\xC9]", text)) > 20 and len(re.findall(r"[\u05d0-\u05ea]", text)) < 20
