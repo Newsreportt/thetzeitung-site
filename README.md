@@ -9,7 +9,10 @@ Source for the website. Netlify deploys `main` automatically.
    `covers/archive/` (and small copies into `covers/wall/` for the drifting background) and records
    the edition in `_build/editions.json`.
 2. Run `python3 _build/build.py` to regenerate the pages. The newest edition becomes "This week's
-   edition" on the home page; the Archives page lists every edition, newest first.
+   edition" on the home page; the Archives page lists every edition, newest first. The "in the
+   stores" poster beside the list of places (`ads/in-stores.jpg`) is rendered again with the newest
+   edition's three covers (`_build/stores_ad.py`: the background and the three page positions were
+   lifted once from the office's poster into `_build/stores-ad/`).
 3. Commit and push.
 
 When the week's covers come as pictures instead of PDFs:

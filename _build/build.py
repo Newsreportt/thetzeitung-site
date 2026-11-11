@@ -55,6 +55,20 @@ EDITIONS = json.load(open(os.path.join(ROOT, "_build", "editions.json"), encodin
 EDITION_KEYS = sorted(EDITIONS, reverse=True)          # newest first
 LATEST = EDITIONS[EDITION_KEYS[0]]
 
+def stores_poster():
+    """The 'in the stores' poster on the home page fans out the newest edition's three covers;
+    it is rendered again whenever a newer edition with all three has come in (_build/stores_ad.py)."""
+    if not all(s in LATEST["covers"] for s in "abc"): return
+    marker = os.path.join(ROOT, "_build", "stores-ad", "current.txt")
+    if os.path.exists(marker) and open(marker).read().strip() == EDITION_KEYS[0]: return
+    try:
+        import stores_ad
+    except ImportError as ex:
+        print("stores poster not rendered (", ex, ")"); return
+    stores_ad.render(EDITION_KEYS[0]); open(marker, "w").write(EDITION_KEYS[0] + "\n")
+    print("stores poster rendered for", EDITION_KEYS[0])
+stores_poster()
+
 def nice_date(iso):
     y, m, d = map(int, iso.split("-")); return date(y, m, d).strftime("%B %-d, %Y")
 def week_of(iso):                                        # the Wednesday the paper reaches the stores
