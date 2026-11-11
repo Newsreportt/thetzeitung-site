@@ -31,6 +31,14 @@ async function catalog() {
 
 function money(n) { return (Math.round(n * 100) / 100).toFixed(2); }
 
+/** A whole year's price: by how many years back it lies from the newest edition's year. */
+function yearPrice(c, hy) {
+  const age = (c.current_hy || 0) - Number(hy);
+  const tiers = c.year_tiers || [{ max_age: 999, price: c.year }];
+  for (const t of tiers) if (age <= t.max_age) return t.price;
+  return tiers[tiers.length - 1].price;
+}
+
 /** What `item` buys: {kind, dates, amount, description, label}. Throws on an unknown item. */
 async function resolve(item) {
   const { catalog: c, pdfs } = await catalog();
@@ -45,7 +53,7 @@ async function resolve(item) {
     const y = m[1]; const yr = c.years[y];
     const dates = Object.keys(pdfs).filter(d => c.editions[d] && String(c.editions[d].hy) === y).sort();
     if (!yr || dates.length < (c.year_min_issues || 1)) throw new Error("That year is not available as a bundle.");
-    return { kind: "year", dates, amount: c.year, year: y,
+    return { kind: "year", dates, amount: yearPrice(c, y), year: y,
              description: `The Tzeitung PDFs ${yr.label} (${dates.length} editions)`, label: `${yr.label} — ${dates.length} editions` };
   }
   throw new Error("Unknown item.");
@@ -146,4 +154,4 @@ function json(status, body) {
   return { statusCode: status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }, body: JSON.stringify(body) };
 }
 
-module.exports = { ready, catalog, resolve, charge, sign, verify, presign, presignUrl, links, json, money, SITE };
+module.exports = { ready, catalog, resolve, charge, sign, verify, presign, presignUrl, links, json, money, yearPrice, SITE };

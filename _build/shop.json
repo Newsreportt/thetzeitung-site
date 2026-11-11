@@ -1,7 +1,13 @@
 {
   "currency": "USD",
   "issue": 5.00,
-  "year": 99.00,
+  "year_tiers": [
+    {"max_age": 5, "price": 45.00},
+    {"max_age": 10, "price": 55.00},
+    {"max_age": 15, "price": 65.00},
+    {"max_age": 999, "price": 75.00}
+  ],
+  "year_tiers_note": "a whole Hebrew year, by how many years back it lies from the newest edition's year: up to 5 years $45, 5-10 $55, 10-15 $65, older $75",
   "year_min_issues": 20,
   "token_days": 30,
   "link_hours": 24
