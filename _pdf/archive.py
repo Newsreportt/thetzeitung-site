@@ -80,17 +80,43 @@ def pdfs_under(fid, depth=0):
     return out
 
 SKIP = [re.compile(p, re.I) for p in JOB.get("skip", [])]
+
+def section_of(name):
+    """The section a file belongs to, and its page number when the file is a single page:
+    'Section A 53.pdf' -> ('A', 53), 'Sec C sup.pdf' -> ('C', None), '39-01A.pdf' -> ('A', None),
+    'Section A-B.pdf' -> ('A-B', None), 'Tzeitung.pdf' -> ('', None)."""
+    n = re.sub(r"\.pdf$", "", name, flags=re.I).replace("_", " ")
+    m = re.search(r"(?i)\b(?:sec(?:tion)?|sup)\.?\s*([A-Z])\s*[-–]\s*([A-Z])\b", n)
+    if m: return (m.group(1).upper() + "-" + m.group(2).upper(), None)
+    m = re.search(r"(?i)\b(?:sec(?:tion)?|sup)\.?\s*([A-Z])\b", n) or re.search(r"\b\d\d-\d\d\s*([a-zA-Z])\b", n)
+    if not m: return ("", None)
+    sec = m.group(1).upper()
+    rest = n[m.end():]
+    p = re.fullmatch(r"\s*(\d{1,3})\s*", rest)     # a plain page number and nothing else
+    return (sec, int(p.group(1)) if p else None)
+
 def order_key(f, path):
-    """Sections in order, pages in order: 'Section A 53.pdf', 'Section A (1-16, 65-80).pdf', '31-02a.pdf', 'Sup D.pdf'."""
-    n = f["name"]
-    m = re.search(r"(?i)\b(?:sec(?:tion)?|sup)\s*([A-Z])\b|\b\d\d-\d\d([a-z])\b", n)
-    sec = (m.group(1) or m.group(2)).upper() if m else "Z"
-    nums = [int(x) for x in re.findall(r"\d+", re.sub(r"\b\d\d-\d\d[a-z]?\b", "", n))]
-    return (path, sec, nums[0] if nums else 0, n.lower())
+    """Sections in order, pages in order."""
+    sec, page = section_of(f["name"])
+    nums = [int(x) for x in re.findall(r"\d+", re.sub(r"\b\d\d-\d\d[a-z]?\b", "", f["name"]))]
+    return (path, sec or "Z", page if page is not None else (nums[0] if nums else 0), f["name"].lower())
 
 def pick(files):
     keep = [(f, p) for f, p in files if not any(s.search(f["name"]) or s.search(p) for s in SKIP) and int(f.get("size", 0)) > 20000]
     return sorted(keep, key=lambda fp: order_key(*fp))
+
+def plan(files):
+    """Some issue folders hold a section twice: the whole thing (39-01A.pdf) and the same pages one
+    by one (Section A 1.pdf … Section A 48.pdf). Keep one of the two. Which one is settled after the
+    whole-section files are read: they win when they carry at least as many pages as there are
+    single-page files, and otherwise (a cover, a part of the section) the page files do."""
+    groups = {}
+    for f, path in files:
+        sec, page = section_of(f["name"])
+        g = groups.setdefault((path, sec), {"pages": [], "whole": []})
+        (g["pages"] if page is not None else g["whole"]).append((f, path))
+    contested = [k for k, g in groups.items() if g["pages"] and g["whole"] and len(g["pages"]) > 2]
+    return groups, contested
 
 def issue_folders():
     root = JOB["root"]
@@ -123,14 +149,33 @@ def main():
         files = pick(pdfs_under(folder["id"]))
         if not files: print(f"Vol {vol}/{no:02d} -> {date}: no PDFs; skipped"); continue
         with tempfile.TemporaryDirectory() as td:
-            w = PdfWriter(); parts = []
-            for i, (f, path) in enumerate(files):
+            got = {}                                  # name -> (local file, page count)
+            def fetch(f, path, i):
                 dest = os.path.join(td, f"{i:03d}.pdf"); download(f["id"], dest)
                 try:
-                    r = PdfReader(dest); w.append(r); parts.append({"name": (path + "/" if path else "") + f["name"], "pages": len(r.pages), "bytes": int(f.get("size", 0))})
+                    n = len(PdfReader(dest).pages)
                 except Exception as ex:
-                    print(f"  unreadable {f['name']}: {ex}"); parts.append({"name": f["name"], "error": str(ex)[:120]})
-                os.unlink(dest)
+                    print(f"  unreadable {f['name']}: {ex}"); os.unlink(dest); return None
+                got[f["id"]] = (dest, n); return n
+            # a section held twice (whole file and page files): read the whole files, then drop one set
+            groups, contested = plan(files)
+            drop = set()
+            for key in contested:
+                g = groups[key]
+                whole = sum(fetch(f, p, 900 + len(got)) or 0 for f, p in g["whole"])
+                if whole >= len(g["pages"]):
+                    drop |= {f["id"] for f, _ in g["pages"]}
+                    print(f"  {key[1] or '?'}: {len(g['pages'])} page files left out, the whole section has {whole} pages")
+                else:
+                    drop |= {f["id"] for f, _ in g["whole"]}
+                    print(f"  {key[1] or '?'}: the whole-section file(s) ({whole} pages) left out, {len(g['pages'])} page files kept")
+            w = PdfWriter(); parts = []
+            for i, (f, path) in enumerate(files):
+                if f["id"] in drop: continue
+                if f["id"] not in got and fetch(f, path, i) is None:
+                    parts.append({"name": f["name"], "error": "unreadable"}); continue
+                dest, n = got.pop(f["id"])
+                w.append(PdfReader(dest)); parts.append({"name": (path + "/" if path else "") + f["name"], "pages": n, "bytes": int(f.get("size", 0))})
             out = os.path.join(td, "issue.pdf")
             w.add_metadata({"/Title": f"Di Tzeitung {date} (vol. {vol} no. {no})", "/Author": "The Tzeitung — News Report"})
             with open(out, "wb") as fh: w.write(fh)
@@ -139,7 +184,7 @@ def main():
         public[date] = {"bytes": size, "pages": pages}
         manifest[date] = {"vol": vol, "no": no, "folder": folder["name"], "bytes": size, "pages": pages, "files": parts}
         done += 1
-        print(f"Vol {vol}/{no:02d} -> {date}: {len(files)} files, {pages} pages, {size / 1e6:.0f} MB" + ("   (few pages?)" if pages < 40 else ""), flush=True)
+        print(f"Vol {vol}/{no:02d} -> {date}: {len(parts)} files, {pages} pages, {size / 1e6:.0f} MB" + ("   (few pages?)" if pages < 40 else ""), flush=True)
         if done % 20 == 0: save()
     save()
     print(f"{done} issues done this run, {left} left for the next; {len(public)} PDFs in the archive")
