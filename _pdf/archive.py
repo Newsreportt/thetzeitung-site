@@ -110,17 +110,16 @@ def pick(files):
     return sorted(keep, key=lambda fp: order_key(*fp))
 
 def plan(files):
-    """Some issue folders hold a section twice: the whole thing (39-01A.pdf) and the same pages one
-    by one (Section A 1.pdf … Section A 48.pdf). Keep one of the two. Which one is settled after the
-    whole-section files are read: they win when they carry at least as many pages as there are
-    single-page files, and otherwise (a cover, a part of the section) the page files do."""
+    """Group an issue's PDFs by section. The same pages can sit in a folder more than once: the
+    whole section (39-01A.pdf) beside its pages one by one (Section A 1.pdf … 48.pdf), or two
+    subfolders holding the same thing (Pages/ and PDF Full Pages/). Each of those is a variant:
+    {section letter: {variant key: [files]}}, where a variant is one subfolder's whole-section
+    files, or one subfolder's single-page files."""
     groups = {}
     for f, path in files:
         sec, page = section_of(f["name"])
-        g = groups.setdefault((path, sec), {"pages": [], "whole": []})
-        (g["pages"] if page is not None else g["whole"]).append((f, path))
-    contested = [k for k, g in groups.items() if g["pages"] and g["whole"] and len(g["pages"]) > 2]
-    return groups, contested
+        groups.setdefault(sec, {}).setdefault((path, page is not None), []).append((f, path))
+    return groups
 
 def issue_folders():
     root = JOB["root"]
@@ -153,30 +152,32 @@ def main():
         files = pick(pdfs_under(folder["id"]))
         if not files: print(f"Vol {vol}/{no:02d} -> {date}: no PDFs; skipped"); continue
         with tempfile.TemporaryDirectory() as td:
-            got = {}                                  # name -> (local file, page count)
-            def fetch(f, path, i):
-                dest = os.path.join(td, f"{i:03d}.pdf"); download(f["id"], dest)
+            got = {}; seq = [0]                       # id -> (local file, page count)
+            def fetch(f, path, i=None):
+                seq[0] += 1
+                dest = os.path.join(td, f"{seq[0]:04d}.pdf"); download(f["id"], dest)
                 try:
                     n = len(PdfReader(dest).pages)
                 except Exception as ex:
                     print(f"  unreadable {f['name']}: {ex}"); os.unlink(dest); return None
                 got[f["id"]] = (dest, n); return n
-            # a section held twice (whole file and page files): read the whole files, then drop one set
-            groups, contested = plan(files)
+            # a section held more than once: read the whole-section variants (few files each) and
+            # keep whichever variant carries the most pages
             drop = set()
-            for key in contested:
-                g = groups[key]
-                whole = sum(fetch(f, p, 900 + len(got)) or 0 for f, p in g["whole"])
-                if whole >= len(g["pages"]):
-                    drop |= {f["id"] for f, _ in g["pages"]}
-                    print(f"  {key[1] or '?'}: {len(g['pages'])} page files left out, the whole section has {whole} pages")
-                else:
-                    drop |= {f["id"] for f, _ in g["whole"]}
-                    print(f"  {key[1] or '?'}: the whole-section file(s) ({whole} pages) left out, {len(g['pages'])} page files kept")
+            for sec, variants in plan(files).items():
+                if len(variants) < 2: continue
+                size = {}
+                for key, fs in variants.items():
+                    size[key] = sum(fetch(f, p) or 0 for f, p in fs) if not key[1] else len(fs)
+                best = max(size, key=lambda k: (size[k], not k[1]))
+                for key, fs in variants.items():
+                    if key != best: drop |= {f["id"] for f, _ in fs}
+                kept = f"{len(variants[best])} file(s) from '{best[0] or '.'}'" + (" one page each" if best[1] else "")
+                print(f"  section {sec or '?'} is in the folder {len(variants)} times; kept {kept}, {size[best]} pages", flush=True)
             w = PdfWriter(); parts = []
             for i, (f, path) in enumerate(files):
                 if f["id"] in drop: continue
-                if f["id"] not in got and fetch(f, path, i) is None:
+                if f["id"] not in got and fetch(f, path) is None:
                     parts.append({"name": f["name"], "error": "unreadable"}); continue
                 dest, n = got.pop(f["id"])
                 w.append(PdfReader(dest)); parts.append({"name": (path + "/" if path else "") + f["name"], "pages": n, "bytes": int(f.get("size", 0))})
