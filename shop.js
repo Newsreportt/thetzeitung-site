@@ -11,11 +11,13 @@
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   function niceDate(iso) { var p = iso.split('-'); return MONTHS[+p[1] - 1] + ' ' + (+p[2]) + ', ' + p[0]; }
   function bdi(text) { return el('bdi', { text: text }); }
-  function yearPrice(hy) {
-    var age = (catalog.current_hy || 0) - Number(hy), tiers = catalog.year_tiers || [{ max_age: 999, price: catalog.year }];
+  function tierPrice(hy, tiers) {
+    var age = (catalog.current_hy || 0) - Number(hy);
+    tiers = tiers || catalog.issue_tiers || [{ max_age: 999, price: catalog.issue }];
     for (var i = 0; i < tiers.length; i++) if (age <= tiers[i].max_age) return tiers[i].price;
     return tiers[tiers.length - 1].price;
   }
+  function issuePrice(date) { var ed = catalog.editions[date] || {}; return tierPrice(ed.hy); }
   function el(tag, attrs, children) {
     var e = document.createElement(tag);
     Object.keys(attrs || {}).forEach(function (k) {
@@ -33,16 +35,16 @@
       var ed = document.getElementById('e-' + date); if (!ed) return;
       var head = ed.querySelector('.ed-head'); if (!head) return;
       var b = el('button', { type: 'button', 'class': 'pdf-btn', 'data-item': date, title: 'Buy this edition as a PDF' },
-                 [el('span', { text: 'PDF' }), ' ', el('b', { text: money(catalog.issue) })]);
+                 [el('span', { text: 'PDF' }), ' ', el('b', { text: money(issuePrice(date)) })]);
       head.appendChild(b);
       var y = ed.closest('.year'); if (y) (years[y.id] = years[y.id] || []).push(date);
     });
-    Object.keys(years).forEach(function (yid) {
+    if (catalog.year_tiers) Object.keys(years).forEach(function (yid) {
       var meta = catalog.editions[years[yid][0]]; if (!meta) return;
       if (years[yid].length < (catalog.year_min_issues || 1)) return;
       var y = document.getElementById(yid), head = y && y.querySelector('.year-head'); if (!head) return;
       var b = el('button', { type: 'button', 'class': 'pdf-btn year', 'data-item': 'year:' + meta.hy, title: 'Buy every edition of this year as PDFs' },
-                 [el('span', { text: 'All ' + years[yid].length + ' PDFs of this year' }), ' ', el('b', { text: money(yearPrice(meta.hy)) })]);
+                 [el('span', { text: 'All ' + years[yid].length + ' PDFs of this year' }), ' ', el('b', { text: money(tierPrice(meta.hy, catalog.year_tiers)) })]);
       head.appendChild(b);
     });
     var note = document.querySelector('.pdf-note'); if (note) note.hidden = false;
@@ -55,10 +57,10 @@
   function describe(item) {
     if (/^year:/.test(item)) {
       var hy = item.slice(5), yr = catalog.years[hy], n = Object.keys(pdfs).filter(function (d) { return catalog.editions[d] && String(catalog.editions[d].hy) === hy; }).length;
-      return { title: 'Every edition of ' + (yr ? yr.label : hy) + ' as PDFs', sub: n + ' editions, each a full PDF of the paper', amount: yearPrice(hy) };
+      return { title: 'Every edition of ' + (yr ? yr.label : hy) + ' as PDFs', sub: n + ' editions, each a full PDF of the paper', amount: tierPrice(hy, catalog.year_tiers) };
     }
     var ed = catalog.editions[item] || {};
-    return { title: 'The edition of ' + niceDate(item) + ' as a PDF', sub: [ed.parsha, ed.hdate, ed.no ? 'No. ' + ed.no : ''].filter(Boolean).join(' · '), amount: catalog.issue };
+    return { title: 'The edition of ' + niceDate(item) + ' as a PDF', sub: [ed.parsha, ed.hdate, ed.no ? 'No. ' + ed.no : ''].filter(Boolean).join(' · '), amount: issuePrice(item) };
   }
 
   // ---- iFields (Sola): the card number and CVV live in Sola's iframes --------------------

@@ -691,13 +691,14 @@ _catalog["editions"] = {k: {kk: vv for kk, vv in (("vol", e.get("vol")), ("no", 
                         for k, e in EDITIONS.items()}
 _catalog["years"] = {str(hy): {"label": label, "editions": len(keys)} for hy, label, keys in YEARS}
 _catalog["current_hy"] = heb_year_of(LAST_KEY)
-def year_price(hy):
-    """The price of a whole year: by how many years back it lies from the newest edition's year."""
+def tier_price(hy):
+    """The price of an edition: by how many years back its Hebrew year lies from the newest edition's."""
     age = _catalog["current_hy"] - int(hy)
-    for t in SHOP["year_tiers"]:
+    for t in SHOP["issue_tiers"]:
         if age <= t["max_age"]: return t["price"]
-    return SHOP["year_tiers"][-1]["price"]
-YEAR_PRICES = [t["price"] for t in SHOP["year_tiers"]]
+    return SHOP["issue_tiers"][-1]["price"]
+TIERS = SHOP["issue_tiers"]
+PRICE_RANGE = f'${TIERS[0]["price"]:g}–${TIERS[-1]["price"]:g}'
 open(os.path.join(ROOT, "shop-catalog.json"), "w", encoding="utf-8").write(json.dumps(_catalog, ensure_ascii=False, separators=(",", ":")))
 SHOP_V = _fp("shop.js")
 SHOP_SCRIPT = f'\n<script src="shop.js?v={SHOP_V}" defer></script>'
@@ -717,7 +718,7 @@ archive = band("Archives", "You may request back issues or a copy of a past arti
       </div>
     </div>
   </div>
-  <p class="pdf-note" hidden>Any edition is available as a full PDF of the whole paper: <b>${SHOP["issue"]:g} an edition</b>, or every edition of a year for <b>${YEAR_PRICES[0]:g}–${YEAR_PRICES[-1]:g}</b>, by how far back it lies. Look for the PDF button beside an edition or a year. <a href="pdfs.html">How it works</a></p>
+  <p class="pdf-note" hidden>Any edition is available as a full PDF of the whole paper, <b>{PRICE_RANGE}</b> by how far back it lies. Look for the PDF button beside an edition. <a href="pdfs.html">How it works</a></p>
   <p class="none">No cover matches that. Try a parsha, a yom tov, a month or a year, or a word from a headline.</p>
   {archive_body}
   <button class="to-top" type="button" aria-label="Back to the top">&uarr;</button>
@@ -735,13 +736,16 @@ pdfs_page = band("Back issues as PDF", "Every edition of The Tzeitung, the whole
   <div id="your-downloads" class="your-downloads" hidden></div>
   <div class="prose">
     <p class="lead">Every edition of The Tzeitung since {heb_year_label(FIRST_KEY)} can be bought as a PDF of the whole paper — the main section, the Yiddishe Tzeit and the Chassidishe Tzeit, every page as it was printed.</p>
-    <div class="price-cards">
-      <div class="price-card"><b>${SHOP["issue"]:g}</b><span>one edition</span><p>The full PDF of any single week.</p></div>
-      <div class="price-card"><b>${YEAR_PRICES[0]:g}–${YEAR_PRICES[-1]:g}</b><span>a whole year</span><p>Every edition of a Hebrew year, each as its own PDF: ${SHOP["year_tiers"][0]["price"]:g} for a year up to {SHOP["year_tiers"][0]["max_age"]} years back, ${SHOP["year_tiers"][1]["price"]:g} up to {SHOP["year_tiers"][1]["max_age"]}, ${SHOP["year_tiers"][2]["price"]:g} up to {SHOP["year_tiers"][2]["max_age"]}, and ${SHOP["year_tiers"][3]["price"]:g} for the oldest years.</p></div>
+    <div class="price-cards tiers">
+      <div class="price-card"><b>${TIERS[0]["price"]:g}</b><span>up to {TIERS[0]["max_age"]} years back</span><p>The full PDF of an edition from the last {TIERS[0]["max_age"]} years.</p></div>
+      <div class="price-card"><b>${TIERS[1]["price"]:g}</b><span>{TIERS[0]["max_age"]} to {TIERS[1]["max_age"]} years back</span><p>An edition from {TIERS[0]["max_age"]} to {TIERS[1]["max_age"]} years ago.</p></div>
+      <div class="price-card"><b>${TIERS[2]["price"]:g}</b><span>{TIERS[1]["max_age"]} to {TIERS[2]["max_age"]} years back</span><p>An edition from {TIERS[1]["max_age"]} to {TIERS[2]["max_age"]} years ago.</p></div>
+      <div class="price-card"><b>${TIERS[3]["price"]:g}</b><span>older than {TIERS[2]["max_age"]} years</span><p>An edition from the earliest years of the archive.</p></div>
     </div>
+    <p>The years count from the Hebrew year of the newest edition.</p>
     <h2>How it works</h2>
     <ol>
-      <li>Find the edition in the <a href="archive.html">Archives</a> — by date, parsha, yom tov or a word from a headline — and press the <b>PDF</b> button beside it, or the button beside a year for the whole year.</li>
+      <li>Find the edition in the <a href="archive.html">Archives</a> — by date, parsha, yom tov or a word from a headline — and press the <b>PDF</b> button beside it.</li>
       <li>Pay with a card. The payment is handled by Sola; the card number never reaches our site.</li>
       <li>The download links appear at once. Keep the address of your downloads page, shown with them: it works for {SHOP["token_days"]} days, and you can also email it to yourself from there.</li>
     </ol>

@@ -31,10 +31,11 @@ async function catalog() {
 
 function money(n) { return (Math.round(n * 100) / 100).toFixed(2); }
 
-/** A whole year's price: by how many years back it lies from the newest edition's year. */
-function yearPrice(c, hy) {
+/** The price of an edition (or, with `tiers`, of any tiered item): by how many years back its
+ * Hebrew year lies from the newest edition's year. */
+function tierPrice(c, hy, tiers) {
   const age = (c.current_hy || 0) - Number(hy);
-  const tiers = c.year_tiers || [{ max_age: 999, price: c.year }];
+  tiers = tiers || c.issue_tiers || [{ max_age: 999, price: c.issue }];
   for (const t of tiers) if (age <= t.max_age) return t.price;
   return tiers[tiers.length - 1].price;
 }
@@ -45,15 +46,15 @@ async function resolve(item) {
   if (/^\d{4}-\d{2}-\d{2}$/.test(item)) {
     if (!pdfs[item] || !c.editions[item]) throw new Error("That edition is not available as a PDF.");
     const ed = c.editions[item];
-    return { kind: "issue", dates: [item], amount: c.issue,
+    return { kind: "issue", dates: [item], amount: tierPrice(c, ed.hy),
              description: `The Tzeitung PDF ${item}`, label: editionLabel(item, ed) };
   }
   const m = /^year:(\d{4})$/.exec(item);
-  if (m) {
+  if (m && c.year_tiers) {
     const y = m[1]; const yr = c.years[y];
     const dates = Object.keys(pdfs).filter(d => c.editions[d] && String(c.editions[d].hy) === y).sort();
     if (!yr || dates.length < (c.year_min_issues || 1)) throw new Error("That year is not available as a bundle.");
-    return { kind: "year", dates, amount: yearPrice(c, y), year: y,
+    return { kind: "year", dates, amount: tierPrice(c, y, c.year_tiers), year: y,
              description: `The Tzeitung PDFs ${yr.label} (${dates.length} editions)`, label: `${yr.label} — ${dates.length} editions` };
   }
   throw new Error("Unknown item.");
@@ -154,4 +155,4 @@ function json(status, body) {
   return { statusCode: status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }, body: JSON.stringify(body) };
 }
 
-module.exports = { ready, catalog, resolve, charge, sign, verify, presign, presignUrl, links, json, money, yearPrice, SITE };
+module.exports = { ready, catalog, resolve, charge, sign, verify, presign, presignUrl, links, json, money, tierPrice, SITE };
