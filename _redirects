@@ -4,3 +4,7 @@ https://ditzeitung.com/*      https://thetzeitung.com/:splat  301!
 https://www.ditzeitung.com/*  https://thetzeitung.com/:splat  301!
 http://ditzeitung.com/*       https://thetzeitung.com/:splat  301!
 http://www.ditzeitung.com/*   https://thetzeitung.com/:splat  301!
+# the function sources and the build folder are not pages
+/netlify/*   /index.html   404!
+/_build/*    /index.html   404!
+/_pdf/*      /index.html   404!

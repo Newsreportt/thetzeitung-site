@@ -43,6 +43,31 @@ earlier, and honours `raw/out/manual.json` (kept as `_build/drive-manual.json`: 
 `section` settled by eye, `rotate` for yom tov spreads, `skip` for stray files). A yom tov edition's second Yiddishe Tzeit section is labelled through
 `labels` in `editions.json`.
 
+## The PDF shop (back issues as PDF)
+Any edition can be bought as a PDF of the whole paper (`pdfs.html`; the buttons appear in the
+Archives). Prices are in `_build/shop.json` (per edition, per Hebrew year; a year needs
+`year_min_issues` PDFs to be offered). The pieces:
+- `pdfs.json` (site root) says which editions exist as PDFs; the PDFs themselves sit in a
+  Cloudflare R2 bucket as `pdf/<date>.pdf`. `.github/workflows/pdf-archive.yml` keeps both up:
+  it walks the office's Google Drive (`_pdf/job.json`: the "News Report old" root, the Vol N /
+  NN issue folders), merges each issue's section or page PDFs into one (`_pdf/archive.py`, with
+  the file list in `_pdf/manifest.json`), uploads it and commits `pdfs.json`. It runs every
+  Monday night for new issues and can be run by hand (Actions → PDF archive → Run workflow).
+- `shop.js` puts the buttons into the archive, opens the checkout (the card number and CVV are
+  Sola iFields iframes, so card data never touches the site) and shows the download links;
+  `pdfs.html?t=<token>` shows a buyer's links again for `token_days`.
+- `netlify/functions/`: `shop-config` (is the shop on, the public iFields key), `buy` (one Sola
+  `cc:sale` with the iFields tokens, then signed download links), `downloads` (fresh links for
+  a token). `build.py` writes `shop-catalog.json` (prices and every edition's label and year) for
+  them and the browser.
+Nothing shows on the site until these environment variables are set in Netlify (Site
+configuration → Environment variables): `SOLA_XKEY` (the Sola API key, server side only),
+`SOLA_IFIELDS_KEY` (the public iFields key), `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`,
+`R2_SECRET_ACCESS_KEY`, `R2_BUCKET`, `SHOP_SECRET` (any long random string). The archive
+workflow needs the R2 values and `GDRIVE_SA_JSON` (a Google service-account key whose email the
+Drive folder is shared with) as repository secrets (Settings → Secrets and variables → Actions).
+Optional: `SOLA_GATEWAY_URL`, `SOLA_IFIELDS_VERSION`.
+
 Primary domain is thetzeitung.com; ditzeitung.com redirects to it (see `_redirects`).
 Forms (subscribe, advertise, contact) are Netlify Forms; notifications go to mk@thetzeitung.com.
 The email list form posts to Mailchimp.

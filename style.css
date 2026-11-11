@@ -477,3 +477,47 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
   .stage .slide, .btn, .top nav a { transition: none; }
   .pick.on .bar { width: 100%; }
 }
+
+/* ---- the PDF shop: buttons in the archive, the checkout, the downloads ---- */
+.pdf-note { margin: 0 0 26px; padding: 14px 18px; border: 1px solid var(--gold); background: var(--ivory); font-size: 16px; }
+.pdf-note a { color: var(--gold-deep); font-weight: 500; }
+.pdf-btn { font-family: var(--sans, Jost, sans-serif); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--forest); background: var(--ivory); border: 1px solid var(--gold); border-radius: 3px; padding: 7px 12px; cursor: pointer; white-space: nowrap; }
+.pdf-btn b { color: var(--gold-deep); font-weight: 600; }
+.pdf-btn:hover { background: var(--gold); color: var(--forest); } .pdf-btn:hover b { color: var(--forest); }
+.pdf-btn.year { font-size: 12px; }
+.checkout { position: fixed; inset: 0; z-index: 90; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(10,46,30,.72); backdrop-filter: blur(2px); }
+.checkout.on { display: flex; } body.co-open { overflow: hidden; }
+.co-box { position: relative; width: 100%; max-width: 520px; max-height: 96vh; overflow: auto; background: var(--ivory); color: var(--ink); padding: 34px 36px 28px; border: 1px solid var(--gold); box-shadow: 0 50px 90px -40px rgba(0,0,0,.6); }
+.co-box h3 { font-size: 27px; line-height: 1.2; margin: 0 40px 6px 0; }
+.co-sub { color: var(--ink-2); margin: 0 0 18px; font-size: 15px; }
+.co-close { position: absolute; top: 14px; right: 16px; width: 36px; height: 36px; border: 0; background: transparent; font-size: 30px; line-height: 1; cursor: pointer; color: var(--ink-2); }
+.co-price { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0; margin-bottom: 14px; border-top: 1px solid var(--parchment-2); border-bottom: 1px solid var(--parchment-2); font-size: 15px; letter-spacing: .1em; text-transform: uppercase; }
+.co-price b { font-family: var(--display); font-size: 28px; letter-spacing: 0; text-transform: none; }
+.co-box label { display: block; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 12px; }
+.co-box input, .co-frame { display: block; width: 100%; margin-top: 6px; font: 16px/1.3 var(--sans, Jost, sans-serif); color: var(--ink); background: #fff; border: 1px solid #c9bfa8; border-radius: 4px; padding: 10px 12px; box-sizing: border-box; letter-spacing: 0; text-transform: none; }
+.co-frame { padding: 0; height: 44px; overflow: hidden; }
+.co-frame iframe { width: 100%; height: 44px; border: 0; display: block; }
+.co-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 12px; }
+.co-err { color: #9c2b1f; min-height: 1.4em; font-size: 15px; margin: 2px 0 10px; }
+.co-pay { width: 100%; font-size: 15px; padding: 15px; }
+.co-pay[disabled] { opacity: .6; cursor: wait; }
+.co-fine { font-size: 13px; color: var(--ink-2); margin: 16px 0 0; line-height: 1.5; }
+.co-fine a { color: var(--gold-deep); word-break: break-all; }
+.dl-list { list-style: none; padding: 0; margin: 18px 0; }
+.dl-list li { display: flex; align-items: center; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--parchment-2); }
+.dl-list .btn { padding: 9px 16px; font-size: 12px; }
+.dl-label { font-size: 15px; }
+.your-downloads { margin: 0 auto 50px; max-width: 760px; padding: 26px 30px; border: 1px solid var(--gold); background: var(--ivory); }
+.your-downloads h2 { margin-top: 0; }
+.pdfs .prose ol { max-width: 66ch; color: var(--ink-2); padding-left: 22px; } .pdfs .prose ol li { margin-bottom: 10px; }
+.co-mini { display: inline-block; margin-top: 8px; margin-right: 10px; font: 500 12px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--forest); background: transparent; border: 1px solid var(--gold); border-radius: 3px; padding: 7px 10px; cursor: pointer; text-decoration: none; }
+.co-mini:hover { background: var(--gold); }
+.price-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 30px 0 36px; }
+.price-card { border: 1px solid var(--gold); background: var(--ivory); padding: 24px 26px; }
+.price-card b { display: block; font-family: var(--display); font-size: 44px; line-height: 1; color: var(--forest); }
+.price-card span { display: block; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-deep); margin: 8px 0 12px; }
+.price-card p { margin: 0; font-size: 16px; }
+@media (max-width: 640px) {
+  .co-box { padding: 26px 20px 22px; } .co-row { grid-template-columns: 1fr 1fr; } .co-row label:first-child { grid-column: 1 / -1; }
+  .price-cards { grid-template-columns: 1fr; }
+}

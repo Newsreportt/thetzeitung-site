@@ -147,7 +147,7 @@ ORG_JSONLD = """<script type="application/ld+json">
 }
 </script>"""
 
-def shell(title, desc, body, page="index.html"):
+def shell(title, desc, body, page="index.html", scripts=""):
     nav = "".join(f'<li><a href="{h}">{t}</a></li>' for h, t in NAV)
     url = SITE if page == "index.html" else SITE + page
     return f'''<!DOCTYPE html>
@@ -213,7 +213,7 @@ def shell(title, desc, body, page="index.html"):
     </div>
     <div class="bottom">
       <span>© <span id="year"></span> The Tzeitung · TheTzeitung.com</span>
-      <span><a href="advertise.html">Advertise</a> &nbsp;&nbsp; <a href="subscribe.html">Subscribe</a> &nbsp;&nbsp; <a href="index.html#email">Email list</a> &nbsp;&nbsp; <a href="contact.html">Contact</a></span>
+      <span><a href="advertise.html">Advertise</a> &nbsp;&nbsp; <a href="subscribe.html">Subscribe</a> &nbsp;&nbsp; <a href="pdfs.html">Back issues (PDF)</a> &nbsp;&nbsp; <a href="index.html#email">Email list</a> &nbsp;&nbsp; <a href="contact.html">Contact</a></span>
     </div>
   </div>
 </footer>
@@ -225,7 +225,7 @@ def shell(title, desc, body, page="index.html"):
   <figure><div class="lb-pic"><img src="" alt="" draggable="false"><span class="shield"></span></div><figcaption></figcaption></figure>
   <button class="lb-next" type="button" aria-label="Next cover">&#8250;</button>
 </div>
-<script src="site.js?v={JS_V}"></script>
+<script src="site.js?v={JS_V}"></script>{scripts}
 </body>
 </html>
 '''
@@ -681,6 +681,19 @@ year_links = "".join(f'<a href="#y-{hy}" class="heb">{label}</a>' for hy, label,
 total_covers = sum(len(e["covers"]) for e in EDITIONS.values())
 FIRST_KEY, LAST_KEY = EDITION_KEYS[-1], EDITION_KEYS[0]
 
+# ======================= THE PDF SHOP =======================
+# Prices in _build/shop.json; which editions exist as PDFs in pdfs.json (kept up by the pdf-archive
+# workflow, which puts pdf/<date>.pdf into the R2 bucket); the checkout is shop.js + netlify/functions.
+SHOP = json.load(open(os.path.join(ROOT, "_build", "shop.json"), encoding="utf-8"))
+_catalog = dict(SHOP)
+_catalog["editions"] = {k: {kk: vv for kk, vv in (("vol", e.get("vol")), ("no", e.get("no")), ("parsha", e.get("parsha")),
+                                                   ("hdate", e.get("hdate")), ("hy", heb_year_of(k))) if vv}
+                        for k, e in EDITIONS.items()}
+_catalog["years"] = {str(hy): {"label": label, "editions": len(keys)} for hy, label, keys in YEARS}
+open(os.path.join(ROOT, "shop-catalog.json"), "w", encoding="utf-8").write(json.dumps(_catalog, ensure_ascii=False, separators=(",", ":")))
+SHOP_V = _fp("shop.js")
+SHOP_SCRIPT = f'\n<script src="shop.js?v={SHOP_V}" defer></script>'
+
 archive = band("Archives", "You may request back issues or a copy of a past article from the office.") + f"""
 <section class="page-body surface parchment archive"><div class="wrap">
   <div class="finder">
@@ -696,6 +709,7 @@ archive = band("Archives", "You may request back issues or a copy of a past arti
       </div>
     </div>
   </div>
+  <p class="pdf-note" hidden>Any edition is available as a full PDF of the whole paper: <b>${SHOP["issue"]:g} an edition</b>, or <b>${SHOP["year"]:g} for every edition of a year</b>. Look for the PDF button beside an edition or a year. <a href="pdfs.html">How it works</a></p>
   <p class="none">No cover matches that. Try a parsha, a yom tov, a month or a year, or a word from a headline.</p>
   {archive_body}
   <button class="to-top" type="button" aria-label="Back to the top">&uarr;</button>
@@ -705,7 +719,30 @@ archive = band("Archives", "You may request back issues or a copy of a past arti
   </div>
 </div></section>
 """
-write("archive.html", shell("Archives — The Tzeitung", f"The covers of every edition of The Tzeitung since {heb_year_label(FIRST_KEY)}, by Hebrew year and date, with a search of every cover.", archive, page="archive.html"))
+write("archive.html", shell("Archives — The Tzeitung", f"The covers of every edition of The Tzeitung since {heb_year_label(FIRST_KEY)}, by Hebrew year and date, with a search of every cover.", archive, page="archive.html", scripts=SHOP_SCRIPT))
+
+# ======================= BACK ISSUES AS PDF =======================
+pdfs_page = band("Back issues as PDF", "Every edition of The Tzeitung, the whole paper, as a PDF to keep.") + f"""
+<section class="page-body surface parchment pdfs"><div class="wrap">
+  <div id="your-downloads" class="your-downloads" hidden></div>
+  <div class="prose">
+    <p class="lead">Every edition of The Tzeitung since {heb_year_label(FIRST_KEY)} can be bought as a PDF of the whole paper — the main section, the Yiddishe Tzeit and the Chassidishe Tzeit, every page as it was printed.</p>
+    <div class="price-cards">
+      <div class="price-card"><b>${SHOP["issue"]:g}</b><span>one edition</span><p>The full PDF of any single week.</p></div>
+      <div class="price-card"><b>${SHOP["year"]:g}</b><span>a whole year</span><p>Every edition of a Hebrew year, each as its own PDF.</p></div>
+    </div>
+    <h2>How it works</h2>
+    <ol>
+      <li>Find the edition in the <a href="archive.html">Archives</a> — by date, parsha, yom tov or a word from a headline — and press the <b>PDF</b> button beside it, or the button beside a year for the whole year.</li>
+      <li>Pay with a card. The payment is handled by Sola; the card number never reaches our site.</li>
+      <li>The download links appear at once. Keep the address of your downloads page, shown with them: it works for {SHOP["token_days"]} days, and you can also email it to yourself from there.</li>
+    </ol>
+    <p>The PDFs are for your own reading. They may not be reprinted, resold or posted. For a back issue in print, a special edition, or a copy of a particular article, call {PHONE} or write to <a href="mailto:mk@thetzeitung.com"><b>mk@thetzeitung.com</b></a>.</p>
+    <p class="btn-row"><a class="btn" href="archive.html">Go to the Archives</a></p>
+  </div>
+</div></section>
+"""
+write("pdfs.html", shell("Back issues as PDF — The Tzeitung", "Buy any edition of The Tzeitung as a PDF of the whole paper, or a whole year at once.", pdfs_page, page="pdfs.html", scripts=SHOP_SCRIPT))
 
 # ======================= THANKS =======================
 thanks = band("Thank you", "We received your message and will be in touch shortly.") + '''

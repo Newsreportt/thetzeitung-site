@@ -1,0 +1,5 @@
+{
+ "root": "1BvV2AVY2VhYqn3A3amonm4fpkutvSmiA",
+ "root_name": "News Report old (the Vol N folders)",
+ "skip": ["invoice", "^\\d{5,}\\.pdf$", "התאחדות", "MANAGEMENT", "\\bads?\\b", "flyer"]
+}

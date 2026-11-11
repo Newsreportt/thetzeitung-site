@@ -1,0 +1,5 @@
+# Netlify: the site is the repository as it is (publish directory set in the Netlify UI);
+# the PDF shop runs in the functions below. Keys are environment variables, see README.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

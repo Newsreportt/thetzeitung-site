@@ -1,0 +1,8 @@
+{
+  "currency": "USD",
+  "issue": 5.00,
+  "year": 99.00,
+  "year_min_issues": 20,
+  "token_days": 30,
+  "link_hours": 24
+}
