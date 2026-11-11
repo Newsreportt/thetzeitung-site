@@ -72,6 +72,12 @@ def read_volno(im):
         if vol and 25 <= vol <= 45 and no and 1 <= no <= 60: return vol, no
     return None, None
 
+def for_ocr(im):
+    """Tesseract wants body text a good 20 px tall: a cover picture of 600-900 px is read at 3x."""
+    im = im.convert("L")
+    if im.width < 1800: im = im.resize((im.width * 3, im.height * 3), Image.LANCZOS)
+    return im
+
 def render(im, out_big, out_small):
     from regreen import regreen
     im = regreen(im.convert("RGB"))          # print green, not the bright green of an unmanaged JPEG
@@ -132,7 +138,7 @@ def main(manifest, imgdir, decisions_path=None, report=None):
         if sec == "a" and not ed.get("no"):
             vol, no = read_volno(final)
             if vol: ed["vol"], ed["no"], ed["volno_read"] = vol, no, True
-        ed.setdefault("texts", {})[sec] = cover_text(ocr(final.convert("L")))
+        ed.setdefault("texts", {})[sec] = cover_text(ocr(for_ocr(final)))
         ed.setdefault("source", {})[sec] = f"mailchimp:{name}"
         out.append((uid, name, "added", key, sec))
         added += 1
