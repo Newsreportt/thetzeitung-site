@@ -86,9 +86,9 @@ def section_of(name):
     'Section A 53.pdf' -> ('A', 53), 'Sec C sup.pdf' -> ('C', None), '39-01A.pdf' -> ('A', None),
     'Section A-B.pdf' -> ('A-B', None), 'Tzeitung.pdf' -> ('', None)."""
     n = re.sub(r"\.pdf$", "", name, flags=re.I).replace("_", " ")
-    m = re.search(r"(?i)\b(?:sec(?:tion)?|sup)\.?\s*([A-Z])\s*[-–]\s*([A-Z])\b", n)
+    m = re.search(r"(?i)\b(?:sec\w*|sup\w*)\.?\s*([A-Z])\s*[-–]\s*([A-Z])\b", n)
     if m: return (m.group(1).upper() + "-" + m.group(2).upper(), None)
-    m = re.search(r"(?i)\b(?:sec(?:tion)?|sup)\.?\s*([A-Z])\b", n) or re.search(r"\b\d\d-\d\d\s*([a-zA-Z])\b", n)
+    m = re.search(r"(?i)\b(?:sec\w*|sup\w*)\.?\s*([A-Z])\b", n) or re.search(r"\b\d\d-\d\d\s*([a-zA-Z])\b", n)
     if not m: return ("", None)
     sec = m.group(1).upper()
     rest = n[m.end():]
@@ -101,8 +101,12 @@ def order_key(f, path):
     nums = [int(x) for x in re.findall(r"\d+", re.sub(r"\b\d\d-\d\d[a-z]?\b", "", f["name"]))]
     return (path, sec or "Z", page if page is not None else (nums[0] if nums else 0), f["name"].lower())
 
+OWN = re.compile(r"^\d\d-\d\d[a-z]\.pdf$", re.I)      # the office's own whole-section files, 39-01a.pdf
+
 def pick(files):
     keep = [(f, p) for f, p in files if not any(s.search(f["name"]) or s.search(p) for s in SKIP) and int(f.get("size", 0)) > 20000]
+    own = [(f, p) for f, p in keep if OWN.match(f["name"])]
+    if own: keep = own          # that set is the whole paper; anything else beside it is a second copy
     return sorted(keep, key=lambda fp: order_key(*fp))
 
 def plan(files):
