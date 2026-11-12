@@ -265,6 +265,7 @@ p { max-width: 62ch; }
 .stands .tag { font-family: var(--display); font-style: italic; font-weight: 500; font-size: 27px; line-height: 1.3; color: var(--forest); max-width: 22ch; margin: 0 auto 26px; }
 .places { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 0; max-width: 680px; margin: 0 auto; padding: 0; }
 .places li { font-family: var(--display); font-weight: 600; font-size: 24px; color: var(--forest); padding: 0 20px; position: relative; line-height: 1.2; }
+.places li small { display: block; font-family: var(--sans); font-weight: 400; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-deep); margin-top: 2px; }
 .places li + li::before { content: ""; position: absolute; left: -4px; top: 50%; width: 7px; height: 7px; background: var(--gold); transform: translate(-50%, -50%) rotate(45deg); }
 .stands .more { margin: 26px auto 0; font-family: var(--display); font-style: italic; font-size: 21px; color: var(--gold-deep); }
 .stands .more::before, .stands .more::after { content: ""; display: inline-block; width: 38px; height: 1px; background: var(--gold); vertical-align: middle; margin: 0 14px; }
@@ -443,7 +444,8 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
   .poster { max-width: 340px; margin: 0 auto; }
   .stands .tag { font-size: 22px; }
   .places li { font-size: 19px; padding: 0 14px; }
-  .places li + li::before { width: 5px; height: 5px; left: -2px; }
+  .places li small { display: block; font-family: var(--sans); font-weight: 400; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-deep); margin-top: 2px; }
+.places li + li::before { width: 5px; height: 5px; left: -2px; }
   .stands .more { font-size: 18px; }
   .finder { margin: -80px -20px 0; padding: 14px 20px 12px; }
   .archive-search { margin-bottom: 10px; }
