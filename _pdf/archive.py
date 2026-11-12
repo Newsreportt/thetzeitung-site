@@ -10,10 +10,15 @@ _build/editions.json knows the volume and number of every edition.
 
   python3 _pdf/archive.py [--only "Vol 39"] [--redo] [--limit N] [--hours H]
 """
-import io, json, os, re, sys, time, tempfile, subprocess
+import io, json, os, re, sys, time, tempfile, subprocess, traceback
 import requests
+import pypdf.filters
 from pypdf import PdfReader, PdfWriter
 import boto3
+
+# pypdf guards against a hostile PDF declaring an enormous stream; the office's own pages can
+# carry a picture larger than its 75 MB default, so the guard is raised rather than tripped over.
+pypdf.filters.MAX_DECLARED_STREAM_LENGTH = 600_000_000
 from google.oauth2 import service_account
 from google.auth.transport.requests import Request
 
@@ -81,18 +86,24 @@ def pdfs_under(fid, depth=0):
 
 SKIP = [re.compile(p, re.I) for p in JOB.get("skip", [])]
 
+QUALIFIER = re.compile(r"(?i)\b(colou?r|bw|b&w|new|final|copy|done|pix)\b")
+RANGE = re.compile(r"\d+\s*[-–,]\s*\d+")              # '(26-27)', '(1-16, 65-80)': several pages
+
 def section_of(name):
     """The section a file belongs to, and its page number when the file is a single page:
-    'Section A 53.pdf' -> ('A', 53), 'Sec C sup.pdf' -> ('C', None), '39-01A.pdf' -> ('A', None),
-    'Section A-B.pdf' -> ('A-B', None), 'Tzeitung.pdf' -> ('', None)."""
+    'Section A 53.pdf' -> ('A', 53), '02 color.pdf' -> ('', 2), 'Sup - part of B - 7.pdf' -> ('B', 7),
+    'Section A (1).pdf' -> ('A', 1), 'Section A (26-27).pdf' -> ('A', None) (a spread),
+    '39-01A.pdf' -> ('A', None), 'Section A-B.pdf' -> ('A-B', None), 'full.pdf' -> ('', None)."""
     n = re.sub(r"\.pdf$", "", name, flags=re.I).replace("_", " ")
-    m = re.search(r"(?i)\b(?:sec\w*|sup\w*)\.?\s*([A-Z])\s*[-–]\s*([A-Z])\b", n)
+    n = QUALIFIER.sub(" ", n)
+    sec = ""
+    m = re.search(r"(?i)\b(?:sec\w*|sup\w*|part\s+of)\b\.?\s*[-–]?\s*([A-Z])\s*[-–]\s*([A-Z])\b", n)
     if m: return (m.group(1).upper() + "-" + m.group(2).upper(), None)
-    m = re.search(r"(?i)\b(?:sec\w*|sup\w*)\.?\s*([A-Z])\b", n) or re.search(r"\b\d\d-\d\d\s*([a-zA-Z])\b", n)
-    if not m: return ("", None)
-    sec = m.group(1).upper()
-    rest = n[m.end():]
-    p = re.fullmatch(r"\s*(\d{1,3})\s*", rest)     # a plain page number and nothing else
+    m = re.search(r"(?i)\b(?:sec\w*|sup\w*|part\s+of)\b\.?\s*[-–]?\s*([A-Z])\b", n) or re.search(r"\b\d\d-\d\d\s*([a-zA-Z])\b", n)
+    if m: sec, n = m.group(1).upper(), n[m.end():]
+    elif re.match(r"(?i)\s*sup\b", n): sec = "SUP"     # 'Sup 5.pdf': a supplement page, section unnamed
+    if RANGE.search(n): return (sec, None)             # a spread or a run of pages, not one page
+    p = re.search(r"(?:^|[\s\-–(])(\d{1,3})\s*\)?\s*$", n)
     return (sec, int(p.group(1)) if p else None)
 
 def order_key(f, path):
@@ -102,11 +113,15 @@ def order_key(f, path):
     return (path, sec or "Z", page if page is not None else (nums[0] if nums else 0), f["name"].lower())
 
 OWN = re.compile(r"^\d\d-\d\d[a-z]\.pdf$", re.I)      # the office's own whole-section files, 39-01a.pdf
+PAGES_DIR = re.compile(r"(?i)pag")                     # 'Pages', 'PDF Full Pages/DONE', 'PDF Ful Pages'
 
 def pick(files):
     keep = [(f, p) for f, p in files if not any(s.search(f["name"]) or s.search(p) for s in SKIP) and int(f.get("size", 0)) > 20000]
     own = [(f, p) for f, p in keep if OWN.match(f["name"])]
     if own: keep = own          # that set is the whole paper; anything else beside it is a second copy
+    else:
+        pages = [(f, p) for f, p in keep if PAGES_DIR.search(p)]
+        if pages: keep = pages  # the paper lives in the Pages folder; what lies beside it is advertising
     return sorted(keep, key=lambda fp: order_key(*fp))
 
 def plan(files):
@@ -138,7 +153,7 @@ def main():
     s3 = boto3.client("s3", endpoint_url=f"https://{os.environ['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com", region_name="auto",
                       aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"], aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"])
     bucket = os.environ["R2_BUCKET"]
-    done = 0; left = 0
+    done = 0; left = 0; failed = 0
     def save():
         json.dump(dict(sorted(public.items())), open(PUBLIC, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
         json.dump(dict(sorted(manifest.items())), open(MANIFEST, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
@@ -151,48 +166,62 @@ def main():
         if time.time() - T0 > HOURS * 3600 or (LIMIT and done >= LIMIT): left += 1; continue
         files = pick(pdfs_under(folder["id"]))
         if not files: print(f"Vol {vol}/{no:02d} -> {date}: no PDFs; skipped"); continue
-        with tempfile.TemporaryDirectory() as td:
-            got = {}; seq = [0]                       # id -> (local file, page count)
-            def fetch(f, path, i=None):
-                seq[0] += 1
-                dest = os.path.join(td, f"{seq[0]:04d}.pdf"); download(f["id"], dest)
-                try:
-                    n = len(PdfReader(dest).pages)
-                except Exception as ex:
-                    print(f"  unreadable {f['name']}: {ex}"); os.unlink(dest); return None
-                got[f["id"]] = (dest, n); return n
-            # a section held more than once: read the whole-section variants (few files each) and
-            # keep whichever variant carries the most pages
-            drop = set()
-            for sec, variants in plan(files).items():
-                if len(variants) < 2: continue
-                size = {}
-                for key, fs in variants.items():
-                    size[key] = sum(fetch(f, p) or 0 for f, p in fs) if not key[1] else len(fs)
-                best = max(size, key=lambda k: (size[k], not k[1]))
-                for key, fs in variants.items():
-                    if key != best: drop |= {f["id"] for f, _ in fs}
-                kept = f"{len(variants[best])} file(s) from '{best[0] or '.'}'" + (" one page each" if best[1] else "")
-                print(f"  section {sec or '?'} is in the folder {len(variants)} times; kept {kept}, {size[best]} pages", flush=True)
-            w = PdfWriter(); parts = []
-            for i, (f, path) in enumerate(files):
-                if f["id"] in drop: continue
-                if f["id"] not in got and fetch(f, path) is None:
-                    parts.append({"name": f["name"], "error": "unreadable"}); continue
-                dest, n = got.pop(f["id"])
-                w.append(PdfReader(dest)); parts.append({"name": (path + "/" if path else "") + f["name"], "pages": n, "bytes": int(f.get("size", 0))})
-            out = os.path.join(td, "issue.pdf")
-            w.add_metadata({"/Title": f"Di Tzeitung {date} (vol. {vol} no. {no})", "/Author": "The Tzeitung — News Report"})
-            with open(out, "wb") as fh: w.write(fh)
-            pages = len(PdfReader(out).pages); size = os.path.getsize(out)
-            s3.upload_file(out, bucket, f"pdf/{date}.pdf", ExtraArgs={"ContentType": "application/pdf"})
+        try:
+            with tempfile.TemporaryDirectory() as td:
+                got = {}; seq = [0]                       # id -> (local file, page count)
+                def fetch(f, path, i=None):
+                    seq[0] += 1
+                    dest = os.path.join(td, f"{seq[0]:04d}.pdf"); download(f["id"], dest)
+                    try:
+                        n = len(PdfReader(dest).pages)
+                    except Exception as ex:
+                        print(f"  unreadable {f['name']}: {ex}"); os.unlink(dest); return None
+                    got[f["id"]] = (dest, n); return n
+                # a section held more than once: read the whole-section variants (few files each) and
+                # keep whichever variant carries the most pages
+                drop = set()
+                for sec, variants in plan(files).items():
+                    if len(variants) < 2: continue
+                    size = {}
+                    for key, fs in variants.items():
+                        size[key] = sum(fetch(f, p) or 0 for f, p in fs) if not key[1] else len(fs)
+                    best = max(size, key=lambda k: (size[k], not k[1]))
+                    for key, fs in variants.items():
+                        if key != best: drop |= {f["id"] for f, _ in fs}
+                    if not best[1] and len(variants[best]) > 1:   # one file holding nearly the whole
+                        pp = {f["id"]: got.get(f["id"], (None, 0))[1] for f, _ in variants[best]}
+                        top = max(pp, key=pp.get)                 # section: the rest are its spreads
+                        if pp[top] >= 0.8 * max(1, sum(pp.values())): drop |= set(pp) - {top}
+                    kept = f"{len(variants[best])} file(s) from '{best[0] or '.'}'" + (" one page each" if best[1] else "")
+                    print(f"  section {sec or '?'} is in the folder {len(variants)} times; kept {kept}, {size[best]} pages", flush=True)
+                w = PdfWriter(); parts = []
+                for i, (f, path) in enumerate(files):
+                    if f["id"] in drop: continue
+                    if f["id"] not in got and fetch(f, path) is None:
+                        parts.append({"name": f["name"], "error": "unreadable"}); continue
+                    dest, n = got.pop(f["id"])
+                    try:
+                        w.append(PdfReader(dest))
+                    except Exception as ex:
+                        print(f"  could not be merged, left out — {f['name']}: {ex}", flush=True)
+                        parts.append({"name": f["name"], "error": str(ex)[:160]}); continue
+                    parts.append({"name": (path + "/" if path else "") + f["name"], "pages": n, "bytes": int(f.get("size", 0))})
+                out = os.path.join(td, "issue.pdf")
+                w.add_metadata({"/Title": f"Di Tzeitung {date} (vol. {vol} no. {no})", "/Author": "The Tzeitung — News Report"})
+                with open(out, "wb") as fh: w.write(fh)
+                pages = len(PdfReader(out).pages); size = os.path.getsize(out)
+                s3.upload_file(out, bucket, f"pdf/{date}.pdf", ExtraArgs={"ContentType": "application/pdf"})
+        except Exception as ex:
+            failed += 1
+            print(f"Vol {vol}/{no:02d} -> {date}: left for later, it did not come together — {ex}", flush=True)
+            traceback.print_exc(); continue
         public[date] = {"bytes": size, "pages": pages}
         manifest[date] = {"vol": vol, "no": no, "folder": folder["name"], "bytes": size, "pages": pages, "files": parts}
         done += 1
         print(f"Vol {vol}/{no:02d} -> {date}: {len(parts)} files, {pages} pages, {size / 1e6:.0f} MB" + ("   (few pages?)" if pages < 40 else ""), flush=True)
         if done % 20 == 0: save()
     save()
-    print(f"{done} issues done this run, {left} left for the next; {len(public)} PDFs in the archive")
+    print(f"{done} issues done this run, {failed} did not come together, {left} left for the next; {len(public)} PDFs in the archive")
     open(os.path.join(ROOT, "_pdf", "again"), "w").write(f"{left}\n")
 
 if __name__ == "__main__":
