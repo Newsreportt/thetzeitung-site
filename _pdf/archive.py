@@ -157,8 +157,19 @@ def issue_folders():
         if m and (not ONLY or ONLY.lower() in f["name"].lower()): vols.append((int(m.group(1)), f))
     for vol, vf in sorted(vols):
         for f in children(vf["id"]):
-            m = re.match(r"\s*(\d{1,2})\b", f["name"]) if f["mimeType"] == FOLDER else None
-            if m: yield vol, int(m.group(1)), f
+            if f["mimeType"] != FOLDER: continue
+            no = issue_no(f["name"])
+            if no: yield vol, no, f
+
+MONTHS = re.compile(r"(?i)\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w*\.?\s*\d{1,2}\s*[-–]?\s*\d{0,2}")
+
+def issue_no(name):
+    """The issue number of a folder: '07 - פ' חיי שרה - nov 4-6' is 7, and so is
+    'פ' לך לך - 07 - oct 21-23', where the number does not come first. The dates in the name
+    are set aside before looking, so 'oct 21-23' is not mistaken for the number."""
+    n = MONTHS.sub(" ", name)
+    m = re.match(r"\s*(\d{1,2})\b", n) or re.search(r"(?:^|[\s\-–])(\d{1,2})(?=[\s\-–]|$)", n)
+    return int(m.group(1)) if m else None
 
 def main():
     public = json.load(open(PUBLIC, encoding="utf-8")) if os.path.exists(PUBLIC) else {}
