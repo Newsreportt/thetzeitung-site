@@ -114,6 +114,7 @@ def section_of(name):
     m = re.search(r"(?i)\b(?:sec\w*|sup\w*|part\s+of)\b\.?\s*[-–]?\s*([A-Z])\b", n) or re.search(r"\b\d\d-\d\d\s*([a-zA-Z])\b", n)
     if m: sec, n = m.group(1).upper(), n[m.end():]
     elif re.match(r"(?i)\s*sup\b", n): sec = "SUP"     # 'Sup 5.pdf': a supplement page, section unnamed
+    n = re.sub(r"(?i)\bp\.?g\.?\s*(\d{1,3})\s*$", r" \1", n)   # '…_TZE_PG029.pdf' is page 29
     if RANGE.search(n): return (sec, None)             # a spread or a run of pages, not one page
     p = re.search(r"(?:^|[\s\-–(])(\d{1,3})\s*\)?\s*$", n)
     return (sec, int(p.group(1)) if p else None)
@@ -152,7 +153,7 @@ def issue_folders():
     root = JOB["root"]
     vols = []
     for f in children(root):
-        m = re.match(r"\s*Vol\s*(\d+)", f["name"]) if f["mimeType"] == FOLDER else None
+        m = re.match(r"(?i)\s*vol\.?\s*(\d+)", f["name"]) if f["mimeType"] == FOLDER else None
         if m and (not ONLY or ONLY.lower() in f["name"].lower()): vols.append((int(m.group(1)), f))
     for vol, vf in sorted(vols):
         for f in children(vf["id"]):
@@ -181,7 +182,7 @@ def main():
         try:
             with tempfile.TemporaryDirectory() as td:
                 got = {}; seq = [0]                       # id -> (local file, page count)
-                def fetch(f, path, i=None):
+                def fetch(f, path=None):
                     seq[0] += 1
                     dest = os.path.join(td, f"{seq[0]:04d}.pdf"); download(f["id"], dest)
                     try:
@@ -189,14 +190,18 @@ def main():
                     except Exception as ex:
                         print(f"  unreadable {f['name']}: {ex}"); os.unlink(dest); return None
                     got[f["id"]] = (dest, n); return n
-                # a section held more than once: read the whole-section variants (few files each) and
-                # keep whichever variant carries the most pages
-                drop = set()
-                for sec, variants in plan(files).items():
-                    if len(variants) < 2: continue
-                    size = {}
+                # Every whole-section file is read first: there are few of them and their page
+                # counts settle which copy of a section, and which loose pages, are the paper.
+                groups = plan(files)
+                for variants in groups.values():
                     for key, fs in variants.items():
-                        size[key] = sum(fetch(f, p) or 0 for f, p in fs) if not key[1] else len(fs)
+                        if not key[1]:
+                            for f, _ in fs: fetch(f)
+                pages_of = lambda fs: sum(got.get(f["id"], (None, 0))[1] for f, _ in fs)
+                drop = set()
+                for sec, variants in groups.items():
+                    if len(variants) < 2: continue
+                    size = {k: (len(fs) if k[1] else pages_of(fs)) for k, fs in variants.items()}
                     best = max(size, key=lambda k: (size[k], not k[1]))
                     for key, fs in variants.items():
                         if key != best: drop |= {f["id"] for f, _ in fs}
@@ -206,10 +211,17 @@ def main():
                         if pp[top] >= 0.8 * max(1, sum(pp.values())): drop |= set(pp) - {top}
                     kept = f"{len(variants[best])} file(s) from '{best[0] or '.'}'" + (" one page each" if best[1] else "")
                     print(f"  section {sec or '?'} is in the folder {len(variants)} times; kept {kept}, {size[best]} pages", flush=True)
+                # loose pages of no named section (20151023_XDI_TZE_PG029.pdf) beside whole sections
+                # that already carry as much: a second copy of the paper, or part of one
+                whole_pages = sum(n for fid, (_, n) in got.items() if fid not in drop)
+                loose = [f for key, fs in groups.get("", {}).items() if key[1] for f, _ in fs if f["id"] not in drop]
+                if loose and whole_pages >= len(loose):
+                    drop |= {f["id"] for f in loose}
+                    print(f"  {len(loose)} loose page files left out; the whole sections carry {whole_pages} pages", flush=True)
                 w = PdfWriter(); parts = []
                 for i, (f, path) in enumerate(files):
                     if f["id"] in drop: continue
-                    if f["id"] not in got and fetch(f, path) is None:
+                    if f["id"] not in got and fetch(f) is None:
                         parts.append({"name": f["name"], "error": "unreadable"}); continue
                     dest, n = got.pop(f["id"])
                     try:
