@@ -56,9 +56,11 @@ jobs:
         if: always()
         run: |
           LEFT=$(cat _pdf/again 2>/dev/null || echo 0)
-          if [ "${LEFT:-0}" -gt 0 ]; then
+          if [ -n "${{ github.event.inputs.limit }}" ]; then
+            echo "a short run with a limit does not start another one"
+          elif [ "${LEFT:-0}" -gt 0 ]; then
             echo "$LEFT issues left: starting another run"
-            gh workflow run pdf-archive.yml --ref main -f only="${{ github.event.inputs.only }}" -f redo=false
+            gh workflow run pdf-archive.yml --ref main -f only="${{ github.event.inputs.only }}" -f redo="${{ github.event.inputs.redo }}"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
