@@ -12,13 +12,25 @@ _build/editions.json knows the volume and number of every edition.
 """
 import io, json, os, re, sys, time, tempfile, subprocess, traceback
 import requests
-import pypdf.filters
+import pypdf
 from pypdf import PdfReader, PdfWriter
 import boto3
 
 # pypdf guards against a hostile PDF declaring an enormous stream; the office's own pages can
 # carry a picture larger than its 75 MB default, so the guard is raised rather than tripped over.
-pypdf.filters.MAX_DECLARED_STREAM_LENGTH = 600_000_000
+# pypdf 7 moved the setting out of pypdf.filters into Configuration.
+def _raise_stream_limit(limit=600_000_000):
+    try:
+        from pypdf import Configuration
+        Configuration.maximum_declared_stream_length = limit; return "Configuration"
+    except ImportError:
+        pass
+    try:
+        import pypdf.filters
+        pypdf.filters.MAX_DECLARED_STREAM_LENGTH = limit; return "pypdf.filters"
+    except Exception as ex:
+        return f"not raised ({ex})"
+print(f"pypdf {pypdf.__version__}, stream limit via {_raise_stream_limit()}", flush=True)
 from google.oauth2 import service_account
 from google.auth.transport.requests import Request
 

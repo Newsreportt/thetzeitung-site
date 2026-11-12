@@ -11,6 +11,9 @@ on:
       redo:
         description: "Make the PDFs again even where they exist (true/false)"
         default: "false"
+      limit:
+        description: "Stop after this many issues (a smoke test); empty means no limit"
+        default: ""
   schedule:
     - cron: "17 3 * * 1"
 permissions:
@@ -30,7 +33,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -q requests pypdf boto3 google-auth
+      - run: pip install -q requests "pypdf<8" boto3 google-auth
       - name: Build the PDFs
         env:
           GDRIVE_SA_JSON: ${{ secrets.GDRIVE_SA_JSON }}
@@ -39,8 +42,8 @@ jobs:
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
         run: |
-          ONLY="${{ github.event.inputs.only }}"; REDO="${{ github.event.inputs.redo }}"
-          python3 _pdf/archive.py ${ONLY:+--only "$ONLY"} $([ "$REDO" = "true" ] && echo --redo) --hours 5.2
+          ONLY="${{ github.event.inputs.only }}"; REDO="${{ github.event.inputs.redo }}"; LIMIT="${{ github.event.inputs.limit }}"
+          python3 _pdf/archive.py ${ONLY:+--only "$ONLY"} ${LIMIT:+--limit "$LIMIT"} $([ "$REDO" = "true" ] && echo --redo) --hours 5.2
       - name: Record which PDFs exist
         if: always()
         run: |
