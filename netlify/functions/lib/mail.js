@@ -72,14 +72,20 @@ function sale({ invoice, label, kind, dates, amount, refnum, card, name, email, 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#fffdf7;border:1px solid #e7e1d5;border-radius:6px;">
         <tr><td style="background:#14442a;padding:16px 22px;font:600 15px/1.2 Georgia,serif;color:#f4efe4;">A PDF was sold</td></tr>
-        <tr><td style="padding:20px 22px;">
+        <tr><td style="padding:20px 22px 0;">
+          <p style="margin:0 0 4px;font:600 20px/1.25 Georgia,serif;color:#1d2d20;">${esc(name)}</p>
+          <p style="margin:0 0 14px;font:14px/1.5 Helvetica,Arial,sans-serif;color:#5d5a52;">
+            <a href="mailto:${esc(email)}" style="color:#9a7b36;">${esc(email)}</a>
+          </p>
+        </td></tr>
+        <tr><td style="padding:0 22px 20px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font:14px/1.6 Helvetica,Arial,sans-serif;color:#1d2d20;">
             ${rows.map(([k, v]) => `<tr><td style="padding:5px 0;color:#5d5a52;width:150px;">${esc(k)}</td><td style="padding:5px 0;"><bdi>${esc(v)}</bdi></td></tr>`).join("")}
           </table>${list}
         </td></tr>
       </table>
     </td></tr></table></body></html>`;
-  const text = rows.map(([k, v]) => `${k}: ${v}`).join("\n") + (list ? "\n\n" + dates.join("\n") : "");
+  const text = `${name} <${email}>\n\n` + rows.map(([k, v]) => `${k}: ${v}`).join("\n") + (list ? "\n\n" + dates.join("\n") : "");
   return { html, text };
 }
 

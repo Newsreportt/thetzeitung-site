@@ -86,7 +86,7 @@ exports.handler = async (event) => {
       refnum: String(res.xRefNum || ""), card: res.xMaskedCardNumber || "", name, email,
       when: new Date().toLocaleString("en-US", { timeZone: "America/New_York" }) + " (New York)", emailed,
     });
-    await mail.send({ to: mail.OFFICE, subject: `Sold: ${what.label} — $${shop.money(what.amount)}`,
+    await mail.send({ to: mail.OFFICE, subject: `${name} bought ${what.label} — $${shop.money(what.amount)}`,
                       html: note.html, text: note.text, replyTo: email });
   } catch (ex) { console.error("office not told", invoice, ex.message); }
 
