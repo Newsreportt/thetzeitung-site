@@ -141,9 +141,11 @@
     box.appendChild(el('h3', { text: 'Thank you — your PDF' + (res.links.length > 1 ? 's are' : ' is') + ' ready' }));
     box.appendChild(el('p', { 'class': 'co-sub' }, [bdi(res.label), ' · ' + money(+res.amount) + ' charged to the card ending ' + res.card.slice(-4) + ' · ref. ' + res.refnum]));
     box.appendChild(linkList(res.links));
-    var keep = el('p', { 'class': 'co-fine' }, ['Each link above is good for a few hours. To download again within ' + res.days + ' days, keep the address of your downloads page: ',
-      el('a', { href: res.downloads, text: res.downloads.replace(/^https?:\/\//, '') }), ' ']);
-    var copy = el('button', { type: 'button', 'class': 'co-mini', text: 'Copy the address' });
+    // The address carries the buyer's own token, so it is kept behind a link and a copy button
+    // rather than printed out: a line of that length reads like a mistake on the page.
+    var keep = el('p', { 'class': 'co-fine' }, ['Each link above is good for a few hours. To download again within ' + res.days + ' days, keep your downloads page: ',
+      el('a', { href: res.downloads, text: 'open it' }), ' — and ']);
+    var copy = el('button', { type: 'button', 'class': 'co-mini', text: 'Copy the link' });
     copy.addEventListener('click', function () {
       (navigator.clipboard ? navigator.clipboard.writeText(res.downloads) : Promise.reject()).then(function () { copy.textContent = 'Copied'; }, function () { prompt('Copy this address:', res.downloads); });
     });
