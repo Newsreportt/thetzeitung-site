@@ -8,7 +8,7 @@ NAV = [("index.html", "Home"), ("archive.html", "Archives"), ("about.html", "Abo
 # The cover wall (the covers drifting behind the hero and the page bands) is laid out here, not in the
 # browser: every cover comes with its size and a tiny blurred preview baked into the page, so the rows
 # are complete and moving the moment the page appears, and the real pictures sharpen in as they arrive.
-import glob, random, base64, io
+import glob, random, base64, io, hashlib
 from PIL import Image as _Image
 _WALL_FILES = sorted(glob.glob(os.path.join(ROOT, "covers", "wall", "*.jpg")))
 _WALL_META = {}
@@ -230,8 +230,69 @@ def shell(title, desc, body, page="index.html", scripts=""):
 </html>
 '''
 
+WRITTEN = []
 def write(fname, html):
     open(os.path.join(ROOT, fname), "w", encoding="utf-8").write(html); print("wrote", fname)
+    WRITTEN.append((fname, html))
+
+# ---- the headers Netlify serves: caching, and the rules that keep the site hard to misuse ----
+CSP_SOURCES = {
+    "script-src": "'self' https://cdn.cardknox.com",      # iFields, loaded only on the shop pages
+    "style-src": "'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src": "'self' https://fonts.gstatic.com",
+    "img-src": "'self' data:",
+    "connect-src": "'self'",
+    "frame-src": "https://cdn.cardknox.com",              # the card number and CVV live in Sola's frames
+    "form-action": "'self' https://thetzeitung.us19.list-manage.com",
+    "frame-ancestors": "'none'", "base-uri": "'self'", "object-src": "'none'",
+    "default-src": "'self'",
+}
+
+def write_headers():
+    """_headers for Netlify. The pages carry their structured data in inline <script> tags, so the
+    policy names their hashes rather than allowing inline script at large."""
+    hashes = sorted({"'sha256-" + base64.b64encode(hashlib.sha256(m.group(1).encode()).digest()).decode() + "'"
+                     for _, html in WRITTEN for m in re.finditer(r"<script[^>]*>(.*?)</script>", html, re.S) if m.group(1).strip()})
+    parts = dict(CSP_SOURCES)
+    parts["script-src"] += " " + " ".join(hashes)
+    csp = "; ".join(f"{k} {v}" for k, v in parts.items()) + "; upgrade-insecure-requests"
+    out = f"""# Written by _build/build.py — do not edit by hand.
+
+# Every page and file: no framing, no sniffing, no sideways use of the browser's powers.
+/*
+  Content-Security-Policy: {csp}
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+  X-Permitted-Cross-Domain-Policies: none
+
+# The downloads page carries a buyer's token in its address: it is never passed on to another site.
+/pdfs.html
+  Referrer-Policy: no-referrer
+
+# Nothing under these is a page.
+/_build/*
+  X-Robots-Tag: noindex, nofollow
+/_pdf/*
+  X-Robots-Tag: noindex, nofollow
+
+# The covers rarely change; the stylesheet and the scripts carry a version in their URL.
+/covers/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+/style.css
+  Cache-Control: public, max-age=31536000, immutable
+/site.js
+  Cache-Control: public, max-age=31536000, immutable
+/shop.js
+  Cache-Control: public, max-age=31536000, immutable
+/archive-index.json
+  Cache-Control: public, max-age=31536000, immutable
+"""
+    open(os.path.join(ROOT, "_headers"), "w", encoding="utf-8").write(out)
+    print(f"wrote _headers ({len(hashes)} inline-script hashes)")
 
 def band(h1, p):
     return f'''<section class="band">
@@ -772,3 +833,5 @@ thanks = band("Thank you", "We received your message and will be in touch shortl
 </div></section>
 '''
 write("thanks.html", shell("Thank you — The Tzeitung", "Thank you.", thanks, page="thanks.html"))
+
+write_headers()

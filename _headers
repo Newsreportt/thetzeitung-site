@@ -1,9 +1,34 @@
-# Netlify cache rules: the covers rarely change, the stylesheet and script carry a version in their URL
+# Written by _build/build.py — do not edit by hand.
+
+# Every page and file: no framing, no sniffing, no sideways use of the browser's powers.
+/*
+  Content-Security-Policy: script-src 'self' https://cdn.cardknox.com 'sha256-Kud/m7xDuCrmsOvY6GpRO9XN+zZBdQESMz0QdoVpUwM=' 'sha256-VYrdl2cs5sg02uas++4UDvMRrpGIhTKxiVzDoDU5SMU='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-src https://cdn.cardknox.com; form-action 'self' https://thetzeitung.us19.list-manage.com; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; default-src 'self'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+  X-Permitted-Cross-Domain-Policies: none
+
+# The downloads page carries a buyer's token in its address: it is never passed on to another site.
+/pdfs.html
+  Referrer-Policy: no-referrer
+
+# Nothing under these is a page.
+/_build/*
+  X-Robots-Tag: noindex, nofollow
+/_pdf/*
+  X-Robots-Tag: noindex, nofollow
+
+# The covers rarely change; the stylesheet and the scripts carry a version in their URL.
 /covers/*
   Cache-Control: public, max-age=604800, stale-while-revalidate=86400
 /style.css
   Cache-Control: public, max-age=31536000, immutable
 /site.js
+  Cache-Control: public, max-age=31536000, immutable
+/shop.js
   Cache-Control: public, max-age=31536000, immutable
 /archive-index.json
   Cache-Control: public, max-age=31536000, immutable
