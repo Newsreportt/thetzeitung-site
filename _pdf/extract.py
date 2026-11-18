@@ -1,8 +1,8 @@
 """Read the words out of the PDFs in the bucket, page by page, for the archive's search.
 
 Every issue PDF (pdf/<date>.pdf in R2) is fetched, pdftotext reads each page, the Yiddish is
-straightened out the same way the covers are (import_covers.normalize_text: a coded font, a
-layer stored in visual order), and the result goes back into the bucket as text/<date>.json.gz
+straightened out — a coded font, a layer stored the way the page looks rather than the way it
+reads — and the result goes back into the bucket as text/<date>.json.gz
 — {"date", "pages": [{"n": 1, "t": "…"}, …]}. _pdf/index.py builds the search index from those.
 Fetching and reading is the slow part, so it is done once and kept.
 
@@ -17,10 +17,32 @@ from botocore.exceptions import ClientError
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "_build"))
 import import_covers as ic
-from import_covers import normalize_text
 
 HEB = re.compile(r"[א-ת]")
 WORD = re.compile(r"[א-ת]{2,}")
+BIDI = re.compile(r"[‎‏‪-‮⁦-⁩]")
+# Everyday Yiddish: how a reading of the text layer is judged. A page of the paper is full of them.
+COMMON = re.compile(r"(?<![א-ת])(און|אין|פון|מיט|אויף|נאך|פאר|דער|די|דאס|דעם|זיך|זיין|האט|האבן|"
+                    r"וועט|וועלן|איז|זענען|נישט|ווי|אז|אויך|ווערט|געווען|אלע|ביי|וואס|וועלכע|"
+                    r"יאר|טאג|גאר|שוין|נאר|מען|זיי|ער|עס|אים|איר|דארט|דא|גאנץ|גרויס)(?![א-ת])")
+
+def mirror(text):
+    """A text layer stored the way the page looks, every line back to front, read the right way."""
+    return "\n".join(line[::-1] for line in text.splitlines())
+
+def best_reading(text):
+    """Which way of reading this page's text layer gives real Yiddish: as it comes, with the
+    glyphs of a coded font decoded, or off a Hebrew keyboard — each of those as it stands or
+    turned round. Everyday words decide; where none are found the most Hebrew letters win."""
+    text = BIDI.sub("", text)
+    best, score, letters = text, -1, -1
+    for read in (lambda t: t, ic.decode_glyphs, ic.decode_keyboard):
+        try: cand = read(text)
+        except Exception: continue
+        for t in (cand, mirror(cand)):
+            s, h = len(COMMON.findall(t)), len(HEB.findall(t))
+            if s > score or (s == score == 0 and h > letters): best, score, letters = t, s, h
+    return best
 
 args = sys.argv[1:]
 def opt(flag, default=None):
