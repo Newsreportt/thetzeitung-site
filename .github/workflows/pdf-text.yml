@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils > /dev/null
-      - run: pip install -q boto3
+      - run: pip install -q boto3 pillow pyluach
       - name: Read the text
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
