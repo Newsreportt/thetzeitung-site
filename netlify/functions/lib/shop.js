@@ -7,6 +7,7 @@
 //   R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET   the bucket with pdf/<date>.pdf
 //   SHOP_SECRET          any long random string: signs the download tokens
 const crypto = require("crypto");
+const zlib = require("zlib");
 
 const SITE = (process.env.URL || "https://thetzeitung.com").replace(/\/$/, "");
 const SOFTWARE = "thetzeitung.com";
@@ -145,7 +146,10 @@ async function getJson(key) {
   const r = await fetch(bucketUrl(key, 60, "GET"));
   if (r.status === 404) return null;
   if (!r.ok) throw new Error(`read ${key}: ${r.status}`);
-  return r.json();
+  const buf = Buffer.from(await r.arrayBuffer());
+  // the index files are stored packed; whether they arrive unpacked depends on the fetch
+  const text = buf[0] === 0x1f && buf[1] === 0x8b ? zlib.gunzipSync(buf).toString("utf8") : buf.toString("utf8");
+  return JSON.parse(text);
 }
 
 async function putJson(key, value) {

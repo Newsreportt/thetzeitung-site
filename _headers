@@ -30,5 +30,7 @@
   Cache-Control: public, max-age=31536000, immutable
 /shop.js
   Cache-Control: public, max-age=31536000, immutable
+/search.js
+  Cache-Control: public, max-age=31536000, immutable
 /archive-index.json
   Cache-Control: public, max-age=31536000, immutable

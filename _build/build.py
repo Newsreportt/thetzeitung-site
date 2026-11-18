@@ -213,7 +213,7 @@ def shell(title, desc, body, page="index.html", scripts=""):
     </div>
     <div class="bottom">
       <span>© <span id="year"></span> The Tzeitung · TheTzeitung.com</span>
-      <span><a href="advertise.html">Advertise</a> &nbsp;&nbsp; <a href="subscribe.html">Subscribe</a> &nbsp;&nbsp; <a href="pdfs.html">Back issues (PDF)</a> &nbsp;&nbsp; <a href="index.html#email">Email list</a> &nbsp;&nbsp; <a href="contact.html">Contact</a></span>
+      <span><a href="advertise.html">Advertise</a> &nbsp;&nbsp; <a href="subscribe.html">Subscribe</a> &nbsp;&nbsp; <a href="search.html">Search the papers</a> &nbsp;&nbsp; <a href="pdfs.html">Back issues (PDF)</a> &nbsp;&nbsp; <a href="index.html#email">Email list</a> &nbsp;&nbsp; <a href="contact.html">Contact</a></span>
     </div>
   </div>
 </footer>
@@ -287,6 +287,8 @@ def write_headers():
 /site.js
   Cache-Control: public, max-age=31536000, immutable
 /shop.js
+  Cache-Control: public, max-age=31536000, immutable
+/search.js
   Cache-Control: public, max-age=31536000, immutable
 /archive-index.json
   Cache-Control: public, max-age=31536000, immutable
@@ -775,6 +777,7 @@ def tier_bands():
 open(os.path.join(ROOT, "shop-catalog.json"), "w", encoding="utf-8").write(json.dumps(_catalog, ensure_ascii=False, separators=(",", ":")))
 SHOP_V = _fp("shop.js")
 SHOP_SCRIPT = f'\n<script src="shop.js?v={SHOP_V}" defer></script>'
+SEARCH_SCRIPT = f'\n<script src="search.js?v={_fp("search.js")}" defer></script>'
 
 archive = band("Archives", "You may request back issues or a copy of a past article from the office.") + f"""
 <section class="page-body surface parchment archive"><div class="wrap">
@@ -825,6 +828,26 @@ pdfs_page = band("Back issues as PDF", "Every edition of The Tzeitung, the whole
 </div></section>
 """
 write("pdfs.html", shell("Back issues as PDF — The Tzeitung", "Buy any edition of The Tzeitung as a PDF of the whole paper, or a whole year at once.", pdfs_page, page="pdfs.html", scripts=SHOP_SCRIPT))
+
+# ======================= SEARCH INSIDE THE PAPERS =======================
+search_page = band("Search the papers", "Every word of every page, back to the first edition — and exactly where it stands.") + f"""
+<section class="page-body surface parchment search"><div class="wrap">
+  <p class="se-lead">Type a word — a town, a family name, a writer, anything — and the archive says which
+    editions it stands in, which section of the paper, and on which pages. The pages themselves are
+    not shown here: once you know the week, the edition's PDF can be bought on the
+    <a href="pdfs.html">back issues</a> page.</p>
+  <p id="se-status" class="se-status">Opening the index…</p>
+  <form id="se-form" class="se-form" hidden>
+    <input id="se-q" type="search" name="q" placeholder="קאשוי" autocomplete="off" spellcheck="false" dir="rtl" aria-label="A word to look for">
+    <button type="submit" class="btn gold">Search</button>
+  </form>
+  <div id="se-out" class="se-out"></div>
+  <p class="se-fine">The search reads the printed pages themselves. Older papers were set in fonts of
+    their own and a page here and there cannot be read by machine, so a word may stand in an edition
+    the search does not name. For help finding something, call {PHONE}.</p>
+</div></section>
+"""
+write("search.html", shell("Search the papers — The Tzeitung", "Search every word of every page of The Tzeitung, back to the first edition, and see exactly which editions and pages it stands in.", search_page, page="search.html", scripts=SEARCH_SCRIPT))
 
 # ======================= THANKS =======================
 thanks = band("Thank you", "We received your message and will be in touch shortly.") + '''
