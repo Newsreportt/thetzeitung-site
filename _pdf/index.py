@@ -49,16 +49,20 @@ def shard_of(key):
     return key[:2]
 
 def sections_of(entry):
-    """Where each section of the paper starts, read off the files the issue was made of."""
+    """Where each section of the paper runs, read off the files the issue was made of. An older
+    issue was kept a page to a file, so a run of pages belonging to one section is written as the
+    one stretch it is; where the files say nothing about sections, the stretch is left unnamed."""
     import archive as ar
     out, page = [], 1
     for f in entry.get("files", []):
         n = f.get("pages")
         if not n: continue
         sec, _ = ar.section_of(f["name"].split("/")[-1])
-        out.append((page, page + n - 1, sec or ""))
+        sec = (sec or "").lower()
+        if out and out[-1][2] == sec: out[-1][1] = page + n - 1
+        else: out.append([page, page + n - 1, sec])
         page += n
-    return out
+    return [tuple(x) for x in out]
 
 def section_at(bounds, page):
     for lo, hi, sec in bounds:

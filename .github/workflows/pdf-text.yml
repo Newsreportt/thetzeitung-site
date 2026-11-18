@@ -29,6 +29,8 @@ jobs:
   text:
     runs-on: ubuntu-latest
     timeout-minutes: 350
+    outputs:
+      left: ${{ steps.again.outputs.left }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,6 +41,7 @@ jobs:
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils > /dev/null
       - run: pip install -q boto3 pillow pyluach
       - name: Read the text
+        id: read
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -48,14 +51,43 @@ jobs:
           PROBE="${{ github.event.inputs.probe }}"; ONLY="${{ github.event.inputs.only }}"; REDO="${{ github.event.inputs.redo }}"; DUMP="${{ github.event.inputs.dump }}"
           python3 _pdf/extract.py ${DUMP:+--dump "$DUMP"} ${PROBE:+--probe "$PROBE"} ${ONLY:+--only "$ONLY"} $([ "$REDO" = "true" ] && echo --redo) --hours 5.0
       - name: Another run if issues are left
+        id: again
         if: always()
         run: |
           LEFT=$(cat _pdf/again 2>/dev/null || echo 0)
+          echo "left=${LEFT:-0}" >> "$GITHUB_OUTPUT"
           if [ -n "${{ github.event.inputs.probe }}${{ github.event.inputs.dump }}" ]; then
             echo "a probe does not start another run"
           elif [ "${LEFT:-0}" -gt 0 ]; then
             echo "$LEFT issues left: starting another run"
-            gh workflow run pdf-text.yml --ref main -f only="${{ github.event.inputs.only }}" -f redo=false
+            gh workflow run pdf-text.yml --ref main -f only="${{ github.event.inputs.only }}" -f redo=false -f index="${{ github.event.inputs.index }}"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Only once every issue has been read, so the index is built over the whole archive at once.
+  index:
+    needs: text
+    if: >-
+      needs.text.outputs.left == '0'
+      && github.event.inputs.index != 'false'
+      && github.event.inputs.probe == '' && github.event.inputs.dump == ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # _pdf/index.py reads the section names off the files each issue was made of, through
+      # _pdf/archive.py, so that module's own imports have to be here as well.
+      - run: pip install -q boto3 requests "pypdf<8" google-auth
+      - name: Build the search index
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: python3 _pdf/index.py

@@ -6,8 +6,8 @@
   var FN = '/.netlify/functions/search-index?s=';
   var meta = null, shards = {}, pending = {};
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  var SECTION = { a: 'The main section', b: 'Yiddishe Tzeit', c: 'Chassidishe Tzeit', d: 'Yom Tov Tzeit', t: 'Torah Tzeit', k: 'Kehila Tzeit' };
-  var SECTION_YI = { a: 'די צייטונג', b: 'אידישע צייט', c: 'חסידישע צייט', d: 'יום טוב צייט', t: 'תורה צייט', k: 'קהלה צייט' };
+  var SECTION = { a: 'The main section', b: 'Yiddishe Tzeit', c: 'Chassidishe Tzeit', d: 'Yom Tov Tzeit', e: 'Section E', f: 'Section F', g: 'Section G', t: 'Torah Tzeit', k: 'Kehila Tzeit', sup: 'The supplement' };
+  var SECTION_YI = { a: 'די צייטונג', b: 'אידישע צייט', c: 'חסידישע צייט', d: 'יום טוב צייט', t: 'תורה צייט', k: 'קהלה צייט', sup: 'ביילאגע' };
 
   function el(tag, attrs, kids) {
     var e = document.createElement(tag);
