@@ -52,16 +52,49 @@ function receipt({ label, amount, refnum, card, links, hours }) {
   return { html, text };
 }
 
-async function send({ to, subject, html, text }) {
+/** The office's own word that something was sold, with everything needed to answer a reader
+ *  who calls about it. */
+function sale({ invoice, label, kind, dates, amount, refnum, card, name, email, when, emailed }) {
+  const rows = [
+    ["What", label],
+    ["Amount", "$" + amount],
+    ["Buyer", name],
+    ["Email", email],
+    ["Card", card],
+    ["Sola ref.", refnum],
+    ["Invoice", invoice],
+    ["When", when],
+    ["Letter to the buyer", emailed ? "sent" : "NOT SENT — the reader has no link"],
+  ];
+  const list = kind === "basket" || (dates || []).length > 1
+    ? `<p style="margin:14px 0 0;font:13px/1.7 Helvetica,Arial,sans-serif;color:#5d5a52;">${dates.join("<br>")}</p>` : "";
+  const html = `<!doctype html><html><body style="margin:0;background:#f4efe4;padding:24px 14px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#fffdf7;border:1px solid #e7e1d5;border-radius:6px;">
+        <tr><td style="background:#14442a;padding:16px 22px;font:600 15px/1.2 Georgia,serif;color:#f4efe4;">A PDF was sold</td></tr>
+        <tr><td style="padding:20px 22px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font:14px/1.6 Helvetica,Arial,sans-serif;color:#1d2d20;">
+            ${rows.map(([k, v]) => `<tr><td style="padding:5px 0;color:#5d5a52;width:150px;">${esc(k)}</td><td style="padding:5px 0;"><bdi>${esc(v)}</bdi></td></tr>`).join("")}
+          </table>${list}
+        </td></tr>
+      </table>
+    </td></tr></table></body></html>`;
+  const text = rows.map(([k, v]) => `${k}: ${v}`).join("\n") + (list ? "\n\n" + dates.join("\n") : "");
+  return { html, text };
+}
+
+async function send({ to, subject, html, text, replyTo }) {
   if (!ready()) throw new Error("no mail key");
   const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify({ from: process.env.MAIL_FROM, to: [to], subject, html, text,
-                           reply_to: process.env.MAIL_REPLY_TO || undefined }),
+                           reply_to: replyTo || process.env.MAIL_REPLY_TO || undefined }),
   });
   if (!r.ok) throw new Error(`resend ${r.status}: ${(await r.text()).slice(0, 200)}`);
   return r.json();
 }
 
-module.exports = { ready, receipt, send, SITE_NAME };
+const OFFICE = process.env.MAIL_OFFICE || "mk@thetzeitung.com";
+
+module.exports = { ready, receipt, sale, send, SITE_NAME, OFFICE };

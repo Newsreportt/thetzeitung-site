@@ -76,6 +76,17 @@ exports.handler = async (event) => {
     emailed = true;
   } catch (ex) { console.error("letter not sent", invoice, email, ex.message); }
 
+  // and the office is told, with everything needed to answer a reader who calls about it
+  try {
+    const note = mail.sale({
+      invoice, label: what.label, kind: what.kind, dates: what.dates, amount: shop.money(what.amount),
+      refnum: String(res.xRefNum || ""), card: res.xMaskedCardNumber || "", name, email,
+      when: new Date().toLocaleString("en-US", { timeZone: "America/New_York" }) + " (New York)", emailed,
+    });
+    await mail.send({ to: mail.OFFICE, subject: `Sold: ${what.label} — $${shop.money(what.amount)}`,
+                      html: note.html, text: note.text, replyTo: email });
+  } catch (ex) { console.error("office not told", invoice, ex.message); }
+
   console.log("sold", invoice, item, shop.money(what.amount), res.xRefNum, res.xMaskedCardNumber, emailed ? "emailed" : "NOT emailed");
   return shop.json(200, {
     ok: true, item, kind: what.kind, label: what.label, amount: shop.money(what.amount),
