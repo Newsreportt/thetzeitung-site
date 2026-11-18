@@ -4,9 +4,12 @@ const shop = require("./lib/shop.js");
 
 exports.handler = async () => {
   const on = shop.ready();
-  return shop.json(200, {
+  const out = {
     enabled: on,
     ifieldsKey: on ? process.env.SOLA_IFIELDS_KEY : null,
     ifieldsVersion: process.env.SOLA_IFIELDS_VERSION || "2.15.2309.2601",
-  });
+  };
+  // while the shop is off, say which settings are still missing — the names only, never a value
+  if (!on) out.missing = shop.missing();
+  return shop.json(200, out);
 };
