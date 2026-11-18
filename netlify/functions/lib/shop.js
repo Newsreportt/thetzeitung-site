@@ -107,7 +107,7 @@ function rfc3986(s) { return encodeURIComponent(s).replace(/[!'()*]/g, c => "%" 
 function hmac(key, s) { return crypto.createHmac("sha256", key).update(s).digest(); }
 function sha256(s) { return crypto.createHash("sha256").update(s).digest("hex"); }
 
-function presignUrl({ host, path, region, akid, secret, params, seconds, now }) {
+function presignUrl({ host, path, region, akid, secret, params, seconds, now, method }) {
   const amzDate = now.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
   const day = amzDate.slice(0, 8), service = "s3";
   const scope = `${day}/${region}/${service}/aws4_request`;
@@ -119,7 +119,7 @@ function presignUrl({ host, path, region, akid, secret, params, seconds, now }) 
     "X-Amz-SignedHeaders": "host",
   }, params || {});
   const query = Object.keys(all).sort().map(k => `${rfc3986(k)}=${rfc3986(all[k])}`).join("&");
-  const canonical = ["GET", path, query, `host:${host}\n`, "host", "UNSIGNED-PAYLOAD"].join("\n");
+  const canonical = [method || "GET", path, query, `host:${host}\n`, "host", "UNSIGNED-PAYLOAD"].join("\n");
   const toSign = ["AWS4-HMAC-SHA256", amzDate, scope, sha256(canonical)].join("\n");
   const kSigning = hmac(hmac(hmac(hmac("AWS4" + secret, day), region), service), "aws4_request");
   const signature = crypto.createHmac("sha256", kSigning).update(toSign).digest("hex");
@@ -127,14 +127,32 @@ function presignUrl({ host, path, region, akid, secret, params, seconds, now }) 
 }
 
 function presign(key, filename, seconds, now = new Date()) {
-  const bucket = process.env.R2_BUCKET;
+  return bucketUrl(key, seconds, "GET",
+    { "response-content-disposition": `attachment; filename="${filename.replace(/["\\]/g, "")}"` });
+}
+
+function bucketUrl(key, seconds, method, params) {
   return presignUrl({
     host: `${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-    path: `/${bucket}/` + key.split("/").map(rfc3986).join("/"),
+    path: `/${process.env.R2_BUCKET}/` + key.split("/").map(rfc3986).join("/"),
     region: "auto", akid: process.env.R2_ACCESS_KEY_ID, secret: process.env.R2_SECRET_ACCESS_KEY,
-    params: { "response-content-disposition": `attachment; filename="${filename.replace(/["\\]/g, "")}"` },
-    seconds, now,
+    params, seconds, now: new Date(), method,
   });
+}
+
+// ---- the bucket as a small store: one record per purchase, so downloads can be counted ----------
+async function getJson(key) {
+  const r = await fetch(bucketUrl(key, 60, "GET"));
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error(`read ${key}: ${r.status}`);
+  return r.json();
+}
+
+async function putJson(key, value) {
+  const r = await fetch(bucketUrl(key, 60, "PUT"), {
+    method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(value),
+  });
+  if (!r.ok) throw new Error(`write ${key}: ${r.status}`);
 }
 
 /** Download links for a list of edition dates. */
@@ -154,4 +172,4 @@ function json(status, body) {
   return { statusCode: status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }, body: JSON.stringify(body) };
 }
 
-module.exports = { ready, missing, catalog, resolve, charge, sign, verify, presign, presignUrl, links, json, money, tierPrice, SITE };
+module.exports = { ready, missing, catalog, resolve, charge, sign, verify, presign, presignUrl, links, json, money, tierPrice, getJson, putJson, SITE };

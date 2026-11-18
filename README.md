@@ -60,6 +60,12 @@ Archives). Prices are in `_build/shop.json` (`issue_tiers`: per edition, by how 
   `cc:sale` with the iFields tokens, then signed download links), `downloads` (fresh links for
   a token). `build.py` writes `shop-catalog.json` (prices and every edition's label and year) for
   them and the browser.
+Keeping it honest: the bucket is private and a PDF is only ever reached through a link signed
+for a few hours (`link_hours`); each purchase is written down as `receipts/<invoice>.json` in the
+same bucket, and the downloads page refuses once one purchase has been handed links more than
+`max_downloads` times (the record also keeps the addresses it was fetched from). `_headers`, written
+by `build.py`, carries the site's content policy and the rest of the browser rules.
+
 Nothing shows on the site until these environment variables are set in Netlify (Site
 configuration → Environment variables): `SOLA_XKEY` (the Sola API key, server side only),
 `SOLA_IFIELDS_KEY` (the public iFields key), `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`,

@@ -39,6 +39,14 @@ exports.handler = async (event) => {
   const days = c.token_days || 30;
   const token = shop.sign({ i: item, r: String(res.xRefNum || ""), n: invoice, exp: Math.floor(Date.now() / 1000) + days * 86400 });
   const links = await shop.links(what.dates);
+  // the purchase is written down, so the downloads page can count what it hands out
+  try {
+    await shop.putJson(`receipts/${invoice}.json`, {
+      invoice, item, kind: what.kind, dates: what.dates, amount: shop.money(what.amount),
+      refnum: String(res.xRefNum || ""), card: res.xMaskedCardNumber || "", name, email,
+      bought_at: new Date().toISOString(), bought_ip: ip, handed_out: 1, last_at: new Date().toISOString(),
+    });
+  } catch (ex) { console.error("receipt not written", invoice, ex.message); }
   console.log("sold", invoice, item, shop.money(what.amount), res.xRefNum, res.xMaskedCardNumber);
   return shop.json(200, {
     ok: true, item, kind: what.kind, label: what.label, amount: shop.money(what.amount),

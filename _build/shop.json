@@ -1,13 +1,30 @@
 {
   "currency": "USD",
   "issue_tiers": [
-    {"max_age": 1, "price": 75.00},
-    {"max_age": 5, "price": 45.00},
-    {"max_age": 10, "price": 55.00},
-    {"max_age": 15, "price": 65.00},
-    {"max_age": 999, "price": 75.00}
+    {
+      "max_age": 1,
+      "price": 75.0
+    },
+    {
+      "max_age": 5,
+      "price": 45.0
+    },
+    {
+      "max_age": 10,
+      "price": 55.0
+    },
+    {
+      "max_age": 15,
+      "price": 65.0
+    },
+    {
+      "max_age": 999,
+      "price": 75.0
+    }
   ],
   "issue_tiers_note": "one edition, by how many years back its Hebrew year lies from the newest edition's year: this year and last $75, then $45 up to 5 years back, $55 up to 10, $65 up to 15, $75 for the oldest",
   "token_days": 30,
-  "link_hours": 24
+  "link_hours": 6,
+  "max_downloads": 40,
+  "max_downloads_note": "how many times one purchase may be handed fresh download links before the office is asked"
 }
