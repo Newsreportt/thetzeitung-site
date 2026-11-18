@@ -815,7 +815,7 @@ archive = band("Archives", "You may request back issues or a copy of a past arti
       </div>
     </div>
   </div>
-  <p class="pdf-note" hidden>Any edition is available as a full PDF of the whole paper, <b>{PRICE_RANGE}</b> by how far back it lies. Look for the PDF button beside an edition. <a href="pdfs.html">How it works</a></p>
+  <p class="pdf-note" hidden>Any edition is available as a full PDF of the whole paper, <b>{PRICE_RANGE}</b> by how far back it lies. Press the PDF button beside an edition — press as many as you like and pay for them all at once. <a href="pdfs.html">How it works</a></p>
   <p class="none">No cover matches that. Try a parsha, a yom tov, a month or a year, or a word from a headline.</p>
   {archive_body}
   <button class="to-top" type="button" aria-label="Back to the top">&uarr;</button>
@@ -838,7 +838,7 @@ pdfs_page = band("Back issues as PDF", "Every edition of The Tzeitung, the whole
     <p>The years count from the Hebrew year of the newest edition.</p>
     <h2>How it works</h2>
     <ol>
-      <li>Find the edition in the <a href="archive.html">Archives</a> — by date, parsha, yom tov or a word from a headline — and press the <b>PDF</b> button beside it.</li>
+      <li>Find the edition in the <a href="archive.html">Archives</a> — by date, parsha, yom tov or a word from a headline — and press the <b>PDF</b> button beside it. Press as many as you want: they gather at the foot of the page and are paid for together, once.</li>
       <li>Pay with a card. The payment is handled by Sola; the card number never reaches our site.</li>
       <li>The download comes up at once, and the PDF is emailed to the address you gave. That emailed link is good for {SHOP["email_hours"]} hours; the one in the page lasts as long as the page stays open.</li>
     </ol>

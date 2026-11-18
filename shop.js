@@ -28,24 +28,85 @@
     var eds = document.querySelectorAll('.edition[data-pdf]');
     for (var i = 0; i < eds.length; i++) {
       var ed = eds[i], head = ed.querySelector('.ed-head'); if (!head) continue;
-      var b = el('button', { type: 'button', 'class': 'pdf-btn', 'data-item': ed.id.slice(2), title: 'Buy this edition as a PDF' },
-                 [el('span', { text: 'PDF' }), ' ', el('b', { text: money(+ed.getAttribute('data-pdf')) })]);
-      head.appendChild(b);
+      head.appendChild(pdfButton(ed.id.slice(2), +ed.getAttribute('data-pdf')));
     }
     if (!eds.length) return;
     var note = document.querySelector('.pdf-note'); if (note) note.hidden = false;
     document.addEventListener('click', function (e) {
       var b = e.target.closest && e.target.closest('.pdf-btn'); if (!b) return;
-      e.preventDefault(); openCheckout(b.getAttribute('data-item'));
+      e.preventDefault(); toggle(b.getAttribute('data-item'));
     });
+    restore(); draw();
   }
 
-  /** What the reader is about to buy, read off the edition in the page itself. */
+  function pdfButton(date, price) {
+    return el('button', { type: 'button', 'class': 'pdf-btn', 'data-item': date, 'data-price': price.toFixed(2),
+                          title: 'Put this edition in the basket' },
+              [el('span', { 'class': 'pdf-btn-k', text: 'PDF' }), ' ', el('b', { text: money(price) })]);
+  }
+
+  // ---- the basket: a reader buying three weeks pays once --------------------------------------
+  var basket = [];
+  var KEEP = 'tz-basket';
+
+  function price(date) {
+    var ed = document.getElementById('e-' + date);
+    return ed ? +ed.getAttribute('data-pdf') || 0 : 0;
+  }
+  function total() { return basket.reduce(function (a, d) { return a + price(d); }, 0); }
+  function toggle(date) {
+    var i = basket.indexOf(date);
+    if (i < 0) basket.push(date); else basket.splice(i, 1);
+    save(); draw();
+  }
+  function save() { try { localStorage.setItem(KEEP, basket.join(',')); } catch (e) {} }
+  function restore() {
+    var raw = '';
+    try { raw = localStorage.getItem(KEEP) || ''; } catch (e) {}
+    basket = raw.split(',').filter(function (d) { return /^\d{4}-\d{2}-\d{2}$/.test(d) && document.getElementById('e-' + d); });
+  }
+  function clear() { basket = []; save(); draw(); }
+
+  /** The buttons and the bar at the foot of the page say what is in the basket. */
+  function draw() {
+    var btns = document.querySelectorAll('.pdf-btn');
+    for (var i = 0; i < btns.length; i++) {
+      var inIt = basket.indexOf(btns[i].getAttribute('data-item')) >= 0;
+      btns[i].classList.toggle('on', inIt);
+      btns[i].title = inIt ? 'Take this edition out of the basket' : 'Put this edition in the basket';
+      btns[i].querySelector('.pdf-btn-k').textContent = inIt ? '\u2713' : 'PDF';
+    }
+    var bar = document.getElementById('tz-bar');
+    if (!basket.length) { if (bar) bar.remove(); return; }
+    if (!bar) {
+      bar = el('div', { id: 'tz-bar', 'class': 'tz-bar' });
+      document.body.appendChild(bar);
+    }
+    bar.innerHTML = '';
+    bar.appendChild(el('span', { 'class': 'tz-bar-n' },
+      [el('b', { text: String(basket.length) }), ' edition' + (basket.length === 1 ? '' : 's') + ' · ',
+       el('b', { text: money(total()) })]));
+    var go = el('button', { type: 'button', 'class': 'btn gold tz-bar-go', text: 'Download them' });
+    go.addEventListener('click', function () { openCheckout(basket.join(',')); });
+    var empty = el('button', { type: 'button', 'class': 'tz-bar-clear', text: 'Empty' });
+    empty.addEventListener('click', clear);
+    bar.appendChild(go); bar.appendChild(empty);
+  }
+
+  /** What the reader is about to buy, read off the editions in the page itself. */
   function describe(item) {
-    var ed = document.getElementById('e-' + item) || { getAttribute: function () { return null; } };
-    return { title: 'The edition of ' + niceDate(item) + ' as a PDF',
-             sub: ed.getAttribute('data-pdf-sub') || '',
-             amount: +ed.getAttribute('data-pdf') || 0 };
+    var dates = item.split(',');
+    if (dates.length === 1) {
+      var ed = document.getElementById('e-' + item);
+      return { title: 'The edition of ' + niceDate(item) + ' as a PDF',
+               sub: (ed && ed.getAttribute('data-pdf-sub')) || '',
+               amount: price(item) };
+    }
+    var sum = dates.reduce(function (a, d) { return a + price(d); }, 0);
+    var order = dates.slice().sort();
+    return { title: dates.length + ' editions as PDFs',
+             sub: niceDate(order[0]) + ' — ' + niceDate(order[order.length - 1]),
+             amount: sum };
   }
 
   // ---- iFields (Sola): the card number and CVV live in Sola's iframes --------------------
@@ -116,6 +177,7 @@
           .then(function (r) { return r.json(); })
           .then(function (res) {
             if (!res.ok) { err.textContent = res.error || 'The payment did not go through.'; pay.disabled = false; pay.textContent = 'Pay ' + money(d.amount); return; }
+            clear();          // paid for: the basket is empty again
             showReceipt(res);
           })
           .catch(function () { err.textContent = 'No answer from the server. If your card was charged, call the office with the time of the payment.'; pay.disabled = false; pay.textContent = 'Pay ' + money(d.amount); });

@@ -44,22 +44,34 @@ function tierPrice(c, hy, tiers) {
   return tiers[tiers.length - 1].price;
 }
 
-/** What `item` buys: {kind, dates, amount, description, label}. Throws on an unknown item. */
+const MAX_BASKET = 60;
+
+/** What `item` buys: {kind, dates, amount, description, label}. One edition is its date; a basket
+ * is the dates run together with commas, and costs what its editions cost one by one. */
 async function resolve(item) {
   const { catalog: c, pdfs } = await catalog();
-  if (/^\d{4}-\d{2}-\d{2}$/.test(item)) {
-    if (!pdfs[item] || !c.editions[item]) throw new Error("That edition is not available as a PDF.");
-    const ed = c.editions[item];
-    return { kind: "issue", dates: [item], amount: tierPrice(c, ed.hy),
-             description: `The Tzeitung PDF ${item}`, label: editionLabel(item, ed) };
+  const dates = String(item || "").split(",").map(s => s.trim()).filter(Boolean);
+  if (dates.length && dates.every(d => /^\d{4}-\d{2}-\d{2}$/.test(d))) {
+    const seen = [...new Set(dates)];
+    if (seen.length > MAX_BASKET) throw new Error(`That is more than ${MAX_BASKET} editions at once — please call the office, 718-851-6607.`);
+    for (const d of seen) if (!pdfs[d] || !c.editions[d]) throw new Error(`The edition of ${d} is not available as a PDF.`);
+    const amount = seen.reduce((sum, d) => sum + tierPrice(c, c.editions[d].hy), 0);
+    if (seen.length === 1) {
+      return { kind: "issue", dates: seen, amount,
+               description: `The Tzeitung PDF ${seen[0]}`, label: editionLabel(seen[0], c.editions[seen[0]]) };
+    }
+    const order = [...seen].sort();
+    return { kind: "basket", dates: order, amount,
+             description: `The Tzeitung PDFs — ${order.length} editions`,
+             label: `${order.length} editions` };
   }
   const m = /^year:(\d{4})$/.exec(item);
   if (m && c.year_tiers) {
     const y = m[1]; const yr = c.years[y];
-    const dates = Object.keys(pdfs).filter(d => c.editions[d] && String(c.editions[d].hy) === y).sort();
-    if (!yr || dates.length < (c.year_min_issues || 1)) throw new Error("That year is not available as a bundle.");
-    return { kind: "year", dates, amount: tierPrice(c, y, c.year_tiers), year: y,
-             description: `The Tzeitung PDFs ${yr.label} (${dates.length} editions)`, label: `${yr.label} — ${dates.length} editions` };
+    const all = Object.keys(pdfs).filter(d => c.editions[d] && String(c.editions[d].hy) === y).sort();
+    if (!yr || all.length < (c.year_min_issues || 1)) throw new Error("That year is not available as a bundle.");
+    return { kind: "year", dates: all, amount: tierPrice(c, y, c.year_tiers), year: y,
+             description: `The Tzeitung PDFs ${yr.label} (${all.length} editions)`, label: `${yr.label} — ${all.length} editions` };
   }
   throw new Error("Unknown item.");
 }

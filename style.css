@@ -560,3 +560,24 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
   .se-list li { grid-template-columns: 1fr auto; } .se-date { font-size: 18px; }
   .se-form { flex-direction: column; } .se-form .btn { width: 100%; }
 }
+
+/* ---- the basket: several editions, one payment ---- */
+.pdf-btn.on { background: var(--forest); color: var(--ivory); border-color: var(--forest); }
+.pdf-btn .pdf-btn-k { font-variant-numeric: tabular-nums; }
+.tz-bar {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 60;
+  display: flex; align-items: center; gap: 14px; padding: 11px 14px 11px 20px;
+  background: var(--green); color: #fff; border-radius: 999px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.28); font-size: .95rem; max-width: calc(100vw - 32px);
+}
+.tz-bar-n { white-space: nowrap; }
+.tz-bar .btn.gold { padding: 9px 20px; font-size: .85rem; }
+.tz-bar-clear {
+  background: none; border: 0; color: rgba(255,255,255,.75); font: inherit; font-size: .85rem;
+  text-decoration: underline; cursor: pointer; padding: 4px 6px;
+}
+.tz-bar-clear:hover { color: #fff; }
+@media (max-width: 640px) {
+  .tz-bar { left: 16px; right: 16px; transform: none; justify-content: space-between; gap: 8px; padding-left: 16px; }
+  .tz-bar-n { font-size: .85rem; }
+}

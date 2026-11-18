@@ -12,7 +12,7 @@ exports.handler = async (event) => {
   if (!shop.ready()) return shop.json(503, { ok: false, error: "The PDF shop is not switched on yet." });
   let b; try { b = JSON.parse(event.body || "{}"); } catch (e) { return shop.json(400, { ok: false, error: "Bad request" }); }
 
-  const item = clean(b.item, 20), cardToken = clean(b.cardToken, 300), cvvToken = clean(b.cvvToken, 300);
+  const item = clean(b.item, 800), cardToken = clean(b.cardToken, 300), cvvToken = clean(b.cvvToken, 300);
   const exp = clean(b.exp, 4), name = clean(b.name, 60), email = clean(b.email, 100), zip = clean(b.zip, 12), street = clean(b.street, 80);
   if (!cardToken) return shop.json(400, { ok: false, error: "The card number is missing." });
   if (!/^(0[1-9]|1[0-2])\d{2}$/.test(exp)) return shop.json(400, { ok: false, error: "The expiry date should be MM/YY." });
