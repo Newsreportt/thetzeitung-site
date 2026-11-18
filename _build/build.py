@@ -698,7 +698,19 @@ def tier_price(hy):
         if age <= t["max_age"]: return t["price"]
     return SHOP["issue_tiers"][-1]["price"]
 TIERS = SHOP["issue_tiers"]
-PRICE_RANGE = f'${TIERS[0]["price"]:g}–${TIERS[-1]["price"]:g}'
+PRICE_RANGE = f'${min(t["price"] for t in TIERS):g}–${max(t["price"] for t in TIERS):g}'
+
+def tier_bands():
+    """Each price tier as (price, how far back it reaches), for the cards on the PDFs page."""
+    out, lo = [], 0
+    for t in TIERS:
+        hi = t["max_age"]
+        if hi >= 99: band = f"older than {lo - 1} years"
+        elif lo == 0 and hi == 1: band = "this year and last"
+        elif lo == hi: band = f"{lo} years back"
+        else: band = f"{lo} to {hi} years back"
+        out.append((t["price"], band)); lo = hi + 1
+    return out
 open(os.path.join(ROOT, "shop-catalog.json"), "w", encoding="utf-8").write(json.dumps(_catalog, ensure_ascii=False, separators=(",", ":")))
 SHOP_V = _fp("shop.js")
 SHOP_SCRIPT = f'\n<script src="shop.js?v={SHOP_V}" defer></script>'
@@ -737,10 +749,7 @@ pdfs_page = band("Back issues as PDF", "Every edition of The Tzeitung, the whole
   <div class="prose">
     <p class="lead">Every edition of The Tzeitung since {heb_year_label(FIRST_KEY)} can be bought as a PDF of the whole paper — the main section, the Yiddishe Tzeit and the Chassidishe Tzeit, every page as it was printed.</p>
     <div class="price-cards tiers">
-      <div class="price-card"><b>${TIERS[0]["price"]:g}</b><span>up to {TIERS[0]["max_age"]} years back</span><p>The full PDF of an edition from the last {TIERS[0]["max_age"]} years.</p></div>
-      <div class="price-card"><b>${TIERS[1]["price"]:g}</b><span>{TIERS[0]["max_age"]} to {TIERS[1]["max_age"]} years back</span><p>An edition from {TIERS[0]["max_age"]} to {TIERS[1]["max_age"]} years ago.</p></div>
-      <div class="price-card"><b>${TIERS[2]["price"]:g}</b><span>{TIERS[1]["max_age"]} to {TIERS[2]["max_age"]} years back</span><p>An edition from {TIERS[1]["max_age"]} to {TIERS[2]["max_age"]} years ago.</p></div>
-      <div class="price-card"><b>${TIERS[3]["price"]:g}</b><span>older than {TIERS[2]["max_age"]} years</span><p>An edition from the earliest years of the archive.</p></div>
+      {"".join(f'<div class="price-card"><b>${p:g}</b><span>{band}</span></div>' for p, band in tier_bands())}
     </div>
     <p>The years count from the Hebrew year of the newest edition.</p>
     <h2>How it works</h2>

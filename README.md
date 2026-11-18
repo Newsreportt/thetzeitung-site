@@ -45,7 +45,7 @@ earlier, and honours `raw/out/manual.json` (kept as `_build/drive-manual.json`: 
 
 ## The PDF shop (back issues as PDF)
 Any edition can be bought as a PDF of the whole paper (`pdfs.html`; the buttons appear in the
-Archives). Prices are in `_build/shop.json` (`issue_tiers`: per edition, by how many years back its Hebrew year lies; a year bundle appears only if `year_tiers` is set and a year has at least
+Archives). Prices are in `_build/shop.json` (`issue_tiers`: per edition, by how many years back its Hebrew year lies — the first tier that reaches the edition’s age wins; a year bundle appears only if `year_tiers` is set and a year has at least
 `year_min_issues` PDFs). The pieces:
 - `pdfs.json` (site root) says which editions exist as PDFs; the PDFs themselves sit in a
   Cloudflare R2 bucket as `pdf/<date>.pdf`. `.github/workflows/pdf-archive.yml` keeps both up:

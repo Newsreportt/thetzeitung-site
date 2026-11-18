@@ -35,6 +35,7 @@ from google.oauth2 import service_account
 from google.auth.transport.requests import Request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MIN_PAGES = 28          # below this it is not the paper: an issue folder holding only advertising
 JOB = json.load(open(os.path.join(ROOT, "_pdf", "job.json"), encoding="utf-8"))
 PUBLIC = os.path.join(ROOT, "pdfs.json")              # what the site and the shop read
 MANIFEST = os.path.join(ROOT, "_pdf", "manifest.json")  # the same, with the files each PDF was made of
@@ -177,7 +178,15 @@ def main():
     s3 = boto3.client("s3", endpoint_url=f"https://{os.environ['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com", region_name="auto",
                       aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"], aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"])
     bucket = os.environ["R2_BUCKET"]
-    done = 0; left = 0; failed = 0
+    done = 0; left = 0; failed = 0; thin = 0
+    def withdraw(date, why):
+        public.pop(date, None); manifest.pop(date, None)
+        try: s3.delete_object(Bucket=bucket, Key=f"pdf/{date}.pdf")
+        except Exception as ex: print(f"   {date} could not be taken out of the bucket: {ex}")
+        print(f"{date}: {why} — taken out of the archive", flush=True)
+    for date in sorted(public):
+        pg = public[date].get("pages", 0)
+        if pg < MIN_PAGES: withdraw(date, f"only {pg} pages, that is not a whole paper"); thin += 1
     def save():
         json.dump(dict(sorted(public.items())), open(PUBLIC, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
         json.dump(dict(sorted(manifest.items())), open(MANIFEST, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
@@ -250,13 +259,16 @@ def main():
             failed += 1
             print(f"Vol {vol}/{no:02d} -> {date}: left for later, it did not come together — {ex}", flush=True)
             traceback.print_exc(); continue
+        if pages < MIN_PAGES:
+            print(f"Vol {vol}/{no:02d} -> {date}: only {pages} pages from {len(parts)} file(s) — the folder holds no paper, left out", flush=True)
+            withdraw(date, "not a whole paper"); thin += 1; continue
         public[date] = {"bytes": size, "pages": pages}
         manifest[date] = {"vol": vol, "no": no, "folder": folder["name"], "bytes": size, "pages": pages, "files": parts}
         done += 1
         print(f"Vol {vol}/{no:02d} -> {date}: {len(parts)} files, {pages} pages, {size / 1e6:.0f} MB" + ("   (few pages?)" if pages < 40 else ""), flush=True)
         if done % 20 == 0: save()
     save()
-    print(f"{done} issues done this run, {failed} did not come together, {left} left for the next; {len(public)} PDFs in the archive")
+    print(f"{done} issues done this run, {failed} did not come together, {thin} were not a whole paper, {left} left for the next; {len(public)} PDFs in the archive")
     open(os.path.join(ROOT, "_pdf", "again"), "w").write(f"{left}\n")
 
 if __name__ == "__main__":

@@ -515,8 +515,9 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
 .co-mini { display: inline-block; margin-top: 8px; margin-right: 10px; font: 500 12px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--forest); background: transparent; border: 1px solid var(--gold); border-radius: 3px; padding: 7px 10px; cursor: pointer; text-decoration: none; }
 .co-mini:hover { background: var(--gold); }
 .price-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 30px 0 36px; }
-.price-cards.tiers { grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 16px; }
-.price-cards.tiers .price-card { padding: 20px 18px; } .price-cards.tiers .price-card b { font-size: 38px; }
+.price-cards.tiers { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 16px; }
+.price-cards.tiers .price-card { padding: 18px 16px; } .price-cards.tiers .price-card b { font-size: 34px; }
+.price-cards.tiers .price-card span { margin-bottom: 0; }
 @media (max-width: 900px) { .price-cards.tiers { grid-template-columns: 1fr 1fr; } }
 .price-card { border: 1px solid var(--gold); background: var(--ivory); padding: 24px 26px; }
 .price-card b { display: block; font-family: var(--display); font-size: 44px; line-height: 1; color: var(--forest); }
