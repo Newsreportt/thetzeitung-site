@@ -28,10 +28,14 @@ COMMON = re.compile(r"(?<![א-ת])(און|אין|פון|מיט|אויף|נאך|�
 
 FINAL_END = re.compile(r"(?<![א-ת])[א-ת]+[ךםןףץ](?![א-ת])")
 
+LEFTOVER = re.compile(r"[ -ÿ]")
+
 def score(text):
-    """How much this reads like Yiddish: everyday words count most, and a word ending in a
-    final letter is the next best sign that the letters are the right way round."""
-    return len(COMMON.findall(text)) * 3 + len(FINAL_END.findall(text))
+    """How much this reads like Yiddish: everyday words count most, a word ending in a final
+    letter is the next sign that the letters are the right way round, and every character still
+    sitting outside the alphabet counts against it — a font read with the wrong shift leaves
+    those behind."""
+    return len(COMMON.findall(text)) * 6 + len(FINAL_END.findall(text)) * 2 - len(LEFTOVER.findall(text))
 
 def orient(text):
     """A page can hold both kinds of line: a headline set in a coded font, stored the way the
@@ -46,13 +50,52 @@ def orient(text):
         out.append(l[::-1] if (b > a or (a == b and turn_page)) else l)
     return "\n".join(out)
 
+# The paper's own fonts carry the alphabet as a plain run of codes — the letter's place in this
+# order plus a number that differs from font to font. Finals come before the letter they close.
+ALEFBEIS = "אבגדהוזחטיךכלםמןנסעףפץצקרשת"
+OFFSETS = range(0x90, 0xE2)
+
+def shift(text, off):
+    """Read a coded font: every character that lands inside the alphabet becomes its letter."""
+    return "".join(ALEFBEIS[o] if 0 <= (o := ord(c) - off) < len(ALEFBEIS) else c for c in text)
+
+def font_offsets(text, keep=4):
+    """Which shifts this page's fonts use. A page can hold several — a headline font beside the
+    body font — so the shifts that bring the most characters inside the alphabet are shortlisted
+    first (that is only arithmetic), and the few that then read most like Yiddish are kept."""
+    hist = [0] * 0x100
+    for ch in text:
+        if 0x80 <= (o := ord(ch)) < 0x100: hist[o] += 1
+    run = [0] * (0x101)
+    for i, v in enumerate(hist): run[i + 1] = run[i] + v
+    cover = sorted(((run[min(off + len(ALEFBEIS), 0x100)] - run[off], off) for off in OFFSETS), reverse=True)
+    if not cover or cover[0][0] < 20: return []
+    sample = text[:4000]
+    ranked = sorted(((max(score(s := shift(sample, o)), score(mirror(s))), o) for _, o in cover[:8]), reverse=True)
+    return [o for _, o in ranked[:keep]]
+
+def mirror(text):
+    return "\n".join(line[::-1] for line in text.splitlines())
+
+def read_lines(text, offs):
+    """Line by line: as it comes or through one of the page's fonts, whichever reads best."""
+    out = []
+    for line in text.splitlines():
+        best, s = line, score(line) if HEB.search(line) else 0
+        for cand in [line] + [shift(line, o) for o in offs]:
+            for t in (cand, cand[::-1]):
+                if (v := score(t)) > s: best, s = t, v
+        out.append(best)
+    return "\n".join(out)
+
 def best_reading(text):
-    """Which way of reading this page's text layer gives real Yiddish: as it comes, with the
-    glyphs of a coded font decoded, or off a Hebrew keyboard — each then turned the right way
-    round line by line. The reading that comes out most like Yiddish is kept."""
+    """Which way of reading this page's text layer gives real Yiddish: as it comes, through the
+    coded fonts the page uses, or off a Hebrew keyboard — each then turned the right way round
+    line by line. The reading that comes out most like Yiddish is kept."""
     text = BIDI.sub("", text)
     best, best_score, letters = text, -1, -1
-    for read in (lambda t: t, ic.decode_glyphs, ic.decode_keyboard):
+    offs = font_offsets(text)
+    for read in (lambda t: t, ic.decode_glyphs, ic.decode_keyboard, lambda t: read_lines(t, offs)):
         try: cand = orient(read(text))
         except Exception: continue
         s, h = score(cand), len(HEB.findall(cand))
