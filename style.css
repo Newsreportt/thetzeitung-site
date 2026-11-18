@@ -487,17 +487,19 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
 /* ---- the PDF shop: buttons in the archive, the checkout, the downloads ---- */
 .pdf-note {
   display: flex; align-items: center; gap: 22px; margin: 4px 0 34px; padding: 20px 26px;
-  background: linear-gradient(100deg, var(--forest) 0%, var(--forest-2) 100%); color: var(--parchment);
-  border-radius: 4px; border-left: 4px solid var(--gold); box-shadow: 0 10px 26px rgba(10,46,30,.16);
+  background: linear-gradient(100deg, #FFFDF7 0%, #F0F5EE 100%); color: var(--ink);
+  border: 1px solid rgba(14,124,63,.22); border-left: 4px solid var(--gold);
+  border-radius: 4px; box-shadow: 0 8px 22px rgba(10,46,30,.09);
 }
 .pdf-note-mark {
-  flex: 0 0 auto; align-self: flex-start; padding: 7px 12px; border: 1px solid var(--gold);
-  border-radius: 3px; color: var(--gold); font-size: 12.5px; letter-spacing: .16em; font-weight: 600;
+  flex: 0 0 auto; align-self: flex-start; padding: 7px 12px; background: #fff;
+  border: 1px solid rgba(14,124,63,.45); border-radius: 3px; color: var(--green);
+  font-size: 12.5px; letter-spacing: .16em; font-weight: 600;
 }
 .pdf-note-text { flex: 1 1 auto; display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-.pdf-note-text > b { font-family: var(--display); font-size: 1.35rem; font-weight: 600; color: #fff; line-height: 1.2; }
-.pdf-note-text > span { font-size: 15px; line-height: 1.55; color: rgba(247,243,234,.82); }
-.pdf-note-text > span b { color: #fff; font-weight: 600; }
+.pdf-note-text > b { font-family: var(--display); font-size: 1.35rem; font-weight: 600; color: var(--forest); line-height: 1.2; }
+.pdf-note-text > span { font-size: 15px; line-height: 1.55; color: var(--ink-2); }
+.pdf-note-text > span b { color: var(--forest); font-weight: 600; }
 .pdf-note-go { flex: 0 0 auto; white-space: nowrap; }
 @media (max-width: 760px) {
   .pdf-note { flex-wrap: wrap; gap: 14px; padding: 18px 20px; }
@@ -640,4 +642,30 @@ body.tz-open .tz-veil { opacity: 1; pointer-events: auto; }
 @media (max-width: 640px) {
   .tz-cart { right: 16px; top: auto; bottom: 20px; transform: none; }
   .tz-cart:hover { transform: scale(1.05); }
+}
+
+/* ---- the home page's notice that the archive is now for sale ---- */
+.flash-band { background: var(--parchment); padding: 46px 0; }
+.flash {
+  display: flex; align-items: center; gap: 26px; padding: 26px 30px;
+  background: linear-gradient(100deg, #FFFDF7 0%, #F0F5EE 100%);
+  border: 1px solid rgba(14,124,63,.22); border-left: 4px solid var(--gold);
+  border-radius: 4px; box-shadow: 0 10px 28px rgba(10,46,30,.10);
+}
+.flash-tag {
+  flex: 0 0 auto; align-self: flex-start; padding: 6px 14px; border-radius: 999px;
+  background: var(--gold); color: var(--forest);
+  font-size: 12px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700;
+}
+.flash-text { flex: 1 1 auto; min-width: 0; }
+.flash-text h2 { font-size: 1.75rem; margin-bottom: 7px; }
+.flash-text p { font-size: 15.5px; line-height: 1.6; color: var(--ink-2); }
+.flash-text p b { color: var(--forest); }
+.flash-go { flex: 0 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.flash-go .btn { text-align: center; white-space: nowrap; }
+@media (max-width: 860px) {
+  .flash { flex-wrap: wrap; gap: 16px; padding: 22px; }
+  .flash-text h2 { font-size: 1.4rem; }
+  .flash-go { flex-direction: row; width: 100%; }
+  .flash-go .btn { flex: 1 1 0; }
 }

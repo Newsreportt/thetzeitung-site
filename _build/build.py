@@ -54,6 +54,13 @@ import json, re
 from datetime import date, timedelta
 EDITIONS = json.load(open(os.path.join(ROOT, "_build", "editions.json"), encoding="utf-8"))
 EDITION_KEYS = sorted(EDITIONS, reverse=True)          # newest first
+# what the PDF shop sells, and for how much: wanted early, the home page says so too
+SHOP = json.load(open(os.path.join(ROOT, "_build", "shop.json"), encoding="utf-8"))
+try:
+    PDFS = json.load(open(os.path.join(ROOT, "pdfs.json"), encoding="utf-8"))
+except FileNotFoundError:
+    PDFS = {}
+PDF_FROM = min(t["price"] for t in SHOP["issue_tiers"])
 LATEST = EDITIONS[EDITION_KEYS[0]]
 
 def stores_poster():
@@ -373,6 +380,22 @@ home = f'''
   </div></div>
 </section>
 
+<section class="section flash-band">
+  <div class="wrap">
+    <div class="flash">
+      <span class="flash-tag">New</span>
+      <div class="flash-text">
+        <h2>Every edition, right back to {EDITION_KEYS[-1][:4]}, as a PDF</h2>
+        <p>{len(PDFS):,} editions of the whole paper — the main section, the Yiddishe Tzeit and the Chassidishe Tzeit, every page as it was printed — to buy and download at once. From <b>${PDF_FROM:g}</b>.</p>
+      </div>
+      <div class="flash-go">
+        <a class="btn gold" href="archive.html">Find an edition</a>
+        <a class="btn ghost-dark" href="pdfs.html">How it works</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="section surface parchment">
   <div class="wrap">
     <div class="sec-head">
@@ -643,11 +666,6 @@ def heb_month_of(key):
 # Baked into the archive page itself, beside each edition. The browser is then told nothing it
 # cannot see anyway, and the page needs no second file to put a price on a button — a file some
 # readers' filters do not let through, which would leave them with no PDF buttons at all.
-SHOP = json.load(open(os.path.join(ROOT, "_build", "shop.json"), encoding="utf-8"))
-try:
-    PDFS = json.load(open(os.path.join(ROOT, "pdfs.json"), encoding="utf-8"))
-except FileNotFoundError:
-    PDFS = {}
 CURRENT_HY = heb_year_of(EDITION_KEYS[0])
 
 def tier_price(hy):
