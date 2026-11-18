@@ -1,23 +1,17 @@
-// The PDF shop: a "PDF · $5" button on every edition of the archive that exists as a PDF, a
-// "whole year" button on every such year, a checkout that takes the card through Sola's iFields
-// (the card number never touches this site), and the "your downloads" list on pdfs.html.
+// The PDF shop: a "PDF · $45" button on every edition of the archive that exists as a PDF, a
+// checkout that takes the card through Sola's iFields (the card number never touches this site),
+// and the "your downloads" list on pdfs.html. The price of each edition is written into the
+// archive page itself, so nothing but the switch has to be fetched.
 // Nothing shows until /.netlify/functions/shop-config says the shop is switched on.
 (function () {
   'use strict';
   var FN = '/.netlify/functions/';
-  var cfg = null, catalog = null, pdfs = null, ifieldsReady = null;
+  var cfg = null, ifieldsReady = null;
 
   function money(n) { return '$' + (Math.round(n * 100) / 100).toFixed(2).replace(/\.00$/, ''); }
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   function niceDate(iso) { var p = iso.split('-'); return MONTHS[+p[1] - 1] + ' ' + (+p[2]) + ', ' + p[0]; }
   function bdi(text) { return el('bdi', { text: text }); }
-  function tierPrice(hy, tiers) {
-    var age = (catalog.current_hy || 0) - Number(hy);
-    tiers = tiers || catalog.issue_tiers || [{ max_age: 999, price: catalog.issue }];
-    for (var i = 0; i < tiers.length; i++) if (age <= tiers[i].max_age) return tiers[i].price;
-    return tiers[tiers.length - 1].price;
-  }
-  function issuePrice(date) { var ed = catalog.editions[date] || {}; return tierPrice(ed.hy); }
   function el(tag, attrs, children) {
     var e = document.createElement(tag);
     Object.keys(attrs || {}).forEach(function (k) {
@@ -30,23 +24,14 @@
 
   // ---- buttons in the archive -------------------------------------------------------------
   function decorateArchive() {
-    var years = {};
-    Object.keys(pdfs).forEach(function (date) {
-      var ed = document.getElementById('e-' + date); if (!ed) return;
-      var head = ed.querySelector('.ed-head'); if (!head) return;
-      var b = el('button', { type: 'button', 'class': 'pdf-btn', 'data-item': date, title: 'Buy this edition as a PDF' },
-                 [el('span', { text: 'PDF' }), ' ', el('b', { text: money(issuePrice(date)) })]);
+    var eds = document.querySelectorAll('.edition[data-pdf]');
+    for (var i = 0; i < eds.length; i++) {
+      var ed = eds[i], head = ed.querySelector('.ed-head'); if (!head) continue;
+      var b = el('button', { type: 'button', 'class': 'pdf-btn', 'data-item': ed.id.slice(2), title: 'Buy this edition as a PDF' },
+                 [el('span', { text: 'PDF' }), ' ', el('b', { text: money(+ed.getAttribute('data-pdf')) })]);
       head.appendChild(b);
-      var y = ed.closest('.year'); if (y) (years[y.id] = years[y.id] || []).push(date);
-    });
-    if (catalog.year_tiers) Object.keys(years).forEach(function (yid) {
-      var meta = catalog.editions[years[yid][0]]; if (!meta) return;
-      if (years[yid].length < (catalog.year_min_issues || 1)) return;
-      var y = document.getElementById(yid), head = y && y.querySelector('.year-head'); if (!head) return;
-      var b = el('button', { type: 'button', 'class': 'pdf-btn year', 'data-item': 'year:' + meta.hy, title: 'Buy every edition of this year as PDFs' },
-                 [el('span', { text: 'All ' + years[yid].length + ' PDFs of this year' }), ' ', el('b', { text: money(tierPrice(meta.hy, catalog.year_tiers)) })]);
-      head.appendChild(b);
-    });
+    }
+    if (!eds.length) return;
     var note = document.querySelector('.pdf-note'); if (note) note.hidden = false;
     document.addEventListener('click', function (e) {
       var b = e.target.closest && e.target.closest('.pdf-btn'); if (!b) return;
@@ -54,13 +39,12 @@
     });
   }
 
+  /** What the reader is about to buy, read off the edition in the page itself. */
   function describe(item) {
-    if (/^year:/.test(item)) {
-      var hy = item.slice(5), yr = catalog.years[hy], n = Object.keys(pdfs).filter(function (d) { return catalog.editions[d] && String(catalog.editions[d].hy) === hy; }).length;
-      return { title: 'Every edition of ' + (yr ? yr.label : hy) + ' as PDFs', sub: n + ' editions, each a full PDF of the paper', amount: tierPrice(hy, catalog.year_tiers) };
-    }
-    var ed = catalog.editions[item] || {};
-    return { title: 'The edition of ' + niceDate(item) + ' as a PDF', sub: [ed.parsha, ed.hdate, ed.no ? 'No. ' + ed.no : ''].filter(Boolean).join(' · '), amount: issuePrice(item) };
+    var ed = document.getElementById('e-' + item) || { getAttribute: function () { return null; } };
+    return { title: 'The edition of ' + niceDate(item) + ' as a PDF',
+             sub: ed.getAttribute('data-pdf-sub') || '',
+             amount: +ed.getAttribute('data-pdf') || 0 };
   }
 
   // ---- iFields (Sola): the card number and CVV live in Sola's iframes --------------------
@@ -184,13 +168,11 @@
   }
 
   // ---- start ---------------------------------------------------------------------------------
+  // The prices are in the page already, so the only thing to ask for is whether the shop is on.
   getJSON(FN + 'shop-config').then(function (c) {
     cfg = c;
     if (!c.enabled) return;
-    return Promise.all([getJSON('pdf-catalog.json'), getJSON('pdfs.json')]).then(function (r) {
-      catalog = r[0]; pdfs = r[1];
-      if (document.querySelector('.archive')) decorateArchive();
-      showDownloads();
-    });
-  }).catch(function () {});
+    if (document.querySelector('.archive')) decorateArchive();
+    showDownloads();
+  }).catch(function (e) { if (window.console) console.warn('shop off:', e && e.message); });
 })();

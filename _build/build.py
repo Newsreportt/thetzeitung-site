@@ -1,5 +1,5 @@
 # Generates every page of the site. Run: python3 _build/build.py
-import os
+import os, html
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 NAV = [("index.html", "Home"), ("archive.html", "Archives"), ("search.html", "Search"),
@@ -638,6 +638,31 @@ def heb_month_of(key):
     y, m, d = map(int, key.split("-"))
     hd = hdates.HebrewDate.from_pydate(date(y, m, d))
     return hd.month_name(hebrew=True)
+
+# ---- what an edition's PDF costs ------------------------------------------------------------
+# Baked into the archive page itself, beside each edition. The browser is then told nothing it
+# cannot see anyway, and the page needs no second file to put a price on a button — a file some
+# readers' filters do not let through, which would leave them with no PDF buttons at all.
+SHOP = json.load(open(os.path.join(ROOT, "_build", "shop.json"), encoding="utf-8"))
+try:
+    PDFS = json.load(open(os.path.join(ROOT, "pdfs.json"), encoding="utf-8"))
+except FileNotFoundError:
+    PDFS = {}
+CURRENT_HY = heb_year_of(EDITION_KEYS[0])
+
+def tier_price(hy):
+    """The price of an edition: by how many years back its Hebrew year lies from the newest edition's."""
+    age = CURRENT_HY - int(hy)
+    for t in SHOP["issue_tiers"]:
+        if age <= t["max_age"]: return t["price"]
+    return SHOP["issue_tiers"][-1]["price"]
+
+def pdf_attrs(ed):
+    """The price and the edition's own words, for the PDF button, when its PDF exists."""
+    if ed["date"] not in PDFS: return ""
+    sub = " · ".join(x for x in [ed.get("parsha") or "", ed.get("hdate") or "",
+                                 f'No. {ed["no"]}' if ed.get("no") else ""] if x)
+    return f' data-pdf="{tier_price(heb_year_of(ed["date"])):.2f}" data-pdf-sub="{html.escape(sub, quote=True)}"'
 YOMIM_TOVIM = [(7, 1, "ראש השנה"), (7, 10, "יום כיפור"), (7, 15, "סוכות"), (1, 15, "פסח"), (3, 6, "שבועות")]
 def yomtov_of(key):
     """The yom tov this edition comes out for: one falling between the Wednesday the paper
@@ -680,7 +705,7 @@ def edition_block(ed):
         heading = f'<span class="heb">{hdate}</span>' if hdate else nice_date(ed["date"])
         meta = [parsha_html(ed), nice_date(ed["date"])]
     return f"""
-  <section class="edition" id="e-{ed["date"]}" data-has="{"".join(sorted(ed["covers"]))}">
+  <section class="edition" id="e-{ed["date"]}" data-has="{"".join(sorted(ed["covers"]))}"{pdf_attrs(ed)}>
     <div class="ed-head"><h3>{heading}</h3><p>{", ".join(x for x in meta if x)}{number}</p></div>
     <div class="ed-covers" data-n="{len(ed["covers"])}">{figs}
     </div>
@@ -748,19 +773,14 @@ FIRST_KEY, LAST_KEY = EDITION_KEYS[-1], EDITION_KEYS[0]
 # ======================= THE PDF SHOP =======================
 # Prices in _build/shop.json; which editions exist as PDFs in pdfs.json (kept up by the pdf-archive
 # workflow, which puts pdf/<date>.pdf into the R2 bucket); the checkout is shop.js + netlify/functions.
-SHOP = json.load(open(os.path.join(ROOT, "_build", "shop.json"), encoding="utf-8"))
+# The price of each edition is baked into the archive page (pdf_attrs above); pdf-catalog.json is
+# written for the functions to read, server side, and the browser never asks for it.
 _catalog = dict(SHOP)
 _catalog["editions"] = {k: {kk: vv for kk, vv in (("vol", e.get("vol")), ("no", e.get("no")), ("parsha", e.get("parsha")),
                                                    ("hdate", e.get("hdate")), ("hy", heb_year_of(k))) if vv}
                         for k, e in EDITIONS.items()}
 _catalog["years"] = {str(hy): {"label": label, "editions": len(keys)} for hy, label, keys in YEARS}
-_catalog["current_hy"] = heb_year_of(LAST_KEY)
-def tier_price(hy):
-    """The price of an edition: by how many years back its Hebrew year lies from the newest edition's."""
-    age = _catalog["current_hy"] - int(hy)
-    for t in SHOP["issue_tiers"]:
-        if age <= t["max_age"]: return t["price"]
-    return SHOP["issue_tiers"][-1]["price"]
+_catalog["current_hy"] = CURRENT_HY
 TIERS = SHOP["issue_tiers"]
 PRICE_RANGE = f'${min(t["price"] for t in TIERS):g}–${max(t["price"] for t in TIERS):g}'
 
