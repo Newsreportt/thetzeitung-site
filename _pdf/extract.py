@@ -16,6 +16,7 @@ from botocore.exceptions import ClientError
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "_build"))
+import import_covers as ic
 from import_covers import normalize_text
 
 HEB = re.compile(r"[א-ת]")
@@ -24,7 +25,7 @@ WORD = re.compile(r"[א-ת]{2,}")
 args = sys.argv[1:]
 def opt(flag, default=None):
     return args[args.index(flag) + 1] if flag in args else default
-PROBE = int(opt("--probe", 0)); ONLY = opt("--only"); REDO = "--redo" in args
+PROBE = int(opt("--probe", 0)); ONLY = opt("--only"); REDO = "--redo" in args; DUMP = opt("--dump")
 LIMIT = int(opt("--limit", 0)); HOURS = float(opt("--hours", 5.0))
 T0 = time.time()
 
@@ -55,6 +56,27 @@ def store(date, pages):
     s3.put_object(Bucket=BUCKET, Key=f"text/{date}.json.gz", Body=body,
                   ContentType="application/json", ContentEncoding="gzip")
     return len(body)
+
+COMMON = re.compile(r"(?<![\u05d0-\u05ea])(און|אין|פון|מיט|אויף|נאך|דער|די|דאס|זיך|האט|וועט|איז|זענען)(?![\u05d0-\u05ea])")
+
+def dump(date):
+    """One issue, a page at a time: what pdftotext hands over and what each reading makes of it."""
+    with tempfile.TemporaryDirectory() as td:
+        pdf = os.path.join(td, "x.pdf"); s3.download_file(BUCKET, f"pdf/{date}.pdf", pdf)
+        raw = subprocess.run(["pdftotext", "-enc", "UTF-8", "-q", pdf, "-"],
+                             capture_output=True, text=True, timeout=1200).stdout
+    pages = raw.split("\f")[:-1]
+    print(f"{date}: {len(pages)} pages")
+    for i, pg in enumerate(pages):
+        if len(HEB.findall(pg)) < 200: continue
+        print(f"\n--- page {i + 1} ---")
+        for name, t in [("as it comes", pg), ("glyphs decoded", ic.decode_glyphs(pg)),
+                        ("keyboard decoded", ic.decode_keyboard(pg)), ("normalized", normalize_text(pg))]:
+            flat = re.sub(r"\s+", " ", t).strip()
+            print(f"  {name:17s} heb {len(HEB.findall(t)):5d}  everyday {len(COMMON.findall(t)):4d}  "
+                  f"mirrored {len(COMMON.findall(chr(10).join(l[::-1] for l in t.splitlines()))):4d}")
+            print(f"      {flat[:150]}")
+        break
 
 def probe(n):
     """A sample spread over the years: how many pages carry words, and do they read right."""
@@ -103,4 +125,4 @@ def main():
     open(os.path.join(ROOT, "_pdf", "again"), "w").write(f"{left}\n")
 
 if __name__ == "__main__":
-    probe(PROBE) if PROBE else main()
+    dump(DUMP) if DUMP else (probe(PROBE) if PROBE else main())
