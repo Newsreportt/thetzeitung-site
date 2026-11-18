@@ -68,11 +68,11 @@ p { max-width: 62ch; }
 .top nav { flex: 0 0 auto; }
 .top nav ul { list-style: none; display: flex; align-items: center; gap: 2px; }
 .top nav a {
-  display: block; padding: 10px 11px; font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; white-space: nowrap;
+  display: block; padding: 10px 9px; font-size: 12.5px; letter-spacing: .11em; text-transform: uppercase; font-weight: 500; white-space: nowrap;
   border-bottom: 1px solid transparent; transition: border-color .2s, color .2s;
 }
 .top nav a:hover, .top nav a.active { border-bottom-color: var(--gold); }
-.top nav a.cta { border: 1px solid rgba(255,255,255,.7); padding: 10px 18px; margin-left: 10px; }
+.top nav a.cta { border: 1px solid rgba(255,255,255,.7); padding: 10px 16px; margin-left: 8px; }
 .top nav a.cta:hover { background: #fff; color: var(--green); border-color: #fff; }
 .top .menu-btn { display: none; }
 .top .bsd { position: absolute; top: 4px; right: 12px; font-family: var(--hebrew); font-size: 11px; opacity: .65; }
