@@ -75,7 +75,9 @@ exports.handler = async (event) => {
     const sent = await shop.links(what.dates, emailHours);
     const body = mail.receipt({ label: what.label, amount: shop.money(what.amount), refnum: String(res.xRefNum || ""),
                                 card: res.xMaskedCardNumber || "", links: sent, hours: emailHours });
-    await mail.send({ to: email, subject: `${mail.SITE_NAME} — your PDF (${what.label})`, html: body.html, text: body.text });
+    // an answer to the buyer's own letter should reach the office, not a mailbox nobody reads
+    await mail.send({ to: email, subject: `${mail.SITE_NAME} — your PDF (${what.label})`,
+                      html: body.html, text: body.text, replyTo: mail.OFFICE });
     emailed = true;
   } catch (ex) { console.error("letter not sent", invoice, email, ex.message); }
 
