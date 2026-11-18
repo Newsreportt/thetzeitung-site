@@ -1,7 +1,8 @@
 // The PDF shop: a "PDF · $45" button on every edition of the archive that exists as a PDF, a
 // checkout that takes the card through Sola's iFields (the card number never touches this site),
-// and the "your downloads" list on pdfs.html. The price of each edition is written into the
-// archive page itself, so nothing but the switch has to be fetched.
+// The price of each edition is written into the archive page itself, so nothing but the switch
+// has to be fetched. The download links live in the open page and in the buyer's email; there is
+// no lasting address that hands the PDF to whoever holds it.
 // Nothing shows until /.netlify/functions/shop-config says the shop is switched on.
 (function () {
   'use strict';
@@ -141,32 +142,11 @@
     box.appendChild(el('h3', { text: 'Thank you — your PDF' + (res.links.length > 1 ? 's are' : ' is') + ' ready' }));
     box.appendChild(el('p', { 'class': 'co-sub' }, [bdi(res.label), ' · ' + money(+res.amount) + ' charged to the card ending ' + res.card.slice(-4) + ' · ref. ' + res.refnum]));
     box.appendChild(linkList(res.links));
-    // The address carries the buyer's own token, so it is kept behind a link and a copy button
-    // rather than printed out: a line of that length reads like a mistake on the page.
-    var keep = el('p', { 'class': 'co-fine' }, ['Each link above is good for a few hours. To download again within ' + res.days + ' days, keep your downloads page: ',
-      el('a', { href: res.downloads, text: 'open it' }), ' — and ']);
-    var copy = el('button', { type: 'button', 'class': 'co-mini', text: 'Copy the link' });
-    copy.addEventListener('click', function () {
-      (navigator.clipboard ? navigator.clipboard.writeText(res.downloads) : Promise.reject()).then(function () { copy.textContent = 'Copied'; }, function () { prompt('Copy this address:', res.downloads); });
-    });
-    var mail = el('a', { 'class': 'co-mini', text: 'Email it to myself', href: 'mailto:' + encodeURIComponent(res.email || '') + '?subject=' + encodeURIComponent('The Tzeitung — your PDF downloads') + '&body=' + encodeURIComponent('Your downloads (' + res.label + '): ' + res.downloads + '\n\nRef. ' + res.refnum) });
-    keep.appendChild(copy); keep.appendChild(document.createTextNode(' ')); keep.appendChild(mail);
-    box.appendChild(keep);
-  }
-
-  // ---- pdfs.html?t=... : the buyer's downloads ---------------------------------------------
-  function showDownloads() {
-    var out = document.getElementById('your-downloads'); if (!out) return;
-    var t = new URLSearchParams(location.search).get('t'); if (!t) return;
-    out.hidden = false; out.innerHTML = '<p>Fetching your downloads…</p>';
-    getJSON(FN + 'downloads?t=' + encodeURIComponent(t)).then(function (res) {
-      out.innerHTML = '';
-      if (!res.ok) { out.appendChild(el('p', { 'class': 'co-err', text: res.error })); return; }
-      out.appendChild(el('h2', { text: 'Your downloads' }));
-      out.appendChild(el('p', {}, [bdi(res.label), ' · ref. ' + res.refnum + ' · this page works until ' + new Date(res.until * 1000).toLocaleDateString()
-        + (res.hours ? ' · each link below is good for ' + res.hours + ' hours' : '')]));
-      out.appendChild(linkList(res.links));
-    }).catch(function () { out.innerHTML = '<p class="co-err">The downloads could not be fetched. Please try again.</p>'; });
+    var hrs = res.email_hours || 48;
+    box.appendChild(el('p', { 'class': 'co-sent' }, res.emailed
+      ? ['The PDF has been emailed to ', el('b', { text: res.email }), '. That link works for ' + hrs + ' hours only.']
+      : ['The PDF could not be emailed to ' + (res.email || 'your address') + ' — please download it here, now. If anything goes wrong, call the office, 718-851-6607.']));
+    box.appendChild(el('p', { 'class': 'co-fine', text: 'The links above work while this page is open. The PDF is for your own use; it may not be reprinted or posted.' }));
   }
 
   // ---- start ---------------------------------------------------------------------------------
@@ -175,6 +155,5 @@
     cfg = c;
     if (!c.enabled) return;
     if (document.querySelector('.archive')) decorateArchive();
-    showDownloads();
   }).catch(function (e) { if (window.console) console.warn('shop off:', e && e.message); });
 })();

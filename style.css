@@ -505,12 +505,13 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
 .co-pay[disabled] { opacity: .6; cursor: wait; }
 .co-fine { font-size: 13px; color: var(--ink-2); margin: 16px 0 0; line-height: 1.5; }
 .co-fine a { color: var(--gold-deep); word-break: break-all; }
+.co-sent { margin: 16px 0 0; padding: 12px 14px; border-radius: 4px; background: rgba(20, 68, 42, .07);
+  font-size: .95rem; line-height: 1.55; color: var(--ink); }
+.co-sent b { word-break: break-all; }
 .dl-list { list-style: none; padding: 0; margin: 18px 0; }
 .dl-list li { display: flex; align-items: center; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--parchment-2); }
 .dl-list .btn { padding: 9px 16px; font-size: 12px; }
 .dl-label { font-size: 15px; }
-.your-downloads { margin: 0 auto 50px; max-width: 760px; padding: 26px 30px; border: 1px solid var(--gold); background: var(--ivory); }
-.your-downloads h2 { margin-top: 0; }
 .pdfs .prose ol { max-width: 66ch; color: var(--ink-2); padding-left: 22px; } .pdfs .prose ol li { margin-bottom: 10px; }
 .co-mini { display: inline-block; margin-top: 8px; margin-right: 10px; font: 500 12px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--forest); background: transparent; border: 1px solid var(--gold); border-radius: 3px; padding: 7px 10px; cursor: pointer; text-decoration: none; }
 .co-mini:hover { background: var(--gold); }

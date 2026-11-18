@@ -5,7 +5,7 @@
 //   SOLA_IFIELDS_KEY     the public iFields key the browser tokenises card numbers with
 //   SOLA_GATEWAY_URL     optional, default https://x1.cardknox.com/gatewayjson
 //   R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET   the bucket with pdf/<date>.pdf
-//   SHOP_SECRET          any long random string: signs the download tokens
+//   RESEND_API_KEY, MAIL_FROM   the buyer's letter (lib/mail.js); without them the sale still stands
 const crypto = require("crypto");
 const zlib = require("zlib");
 
@@ -14,7 +14,7 @@ const SOFTWARE = "thetzeitung.com";
 const SOFTWARE_VERSION = "1.0";
 
 const BUCKET_NEEDED = ["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"];
-const NEEDED = ["SOLA_XKEY", "SOLA_IFIELDS_KEY", ...BUCKET_NEEDED, "SHOP_SECRET"];
+const NEEDED = ["SOLA_XKEY", "SOLA_IFIELDS_KEY", ...BUCKET_NEEDED];
 function missing() { return NEEDED.filter(k => !process.env[k]); }
 function ready() { return missing().length === 0; }
 // Reading the bucket — the archive's search index — asks nothing of the payment keys, so the
@@ -90,23 +90,6 @@ async function charge({ amount, description, invoice, item, cardToken, cvvToken,
   return res;   // xResult: A approved, D declined, E error; xError, xRefNum, xAuthAmount, xMaskedCardNumber
 }
 
-// ---- the "your downloads" token: item + reference number, signed, good for token_days ------------
-function b64url(buf) { return Buffer.from(buf).toString("base64").replace(/=+$/, "").replace(/\+/g, "-").replace(/\//g, "_"); }
-function sign(payload) {
-  const data = b64url(JSON.stringify(payload));
-  const mac = crypto.createHmac("sha256", process.env.SHOP_SECRET).update(data).digest();
-  return `${data}.${b64url(mac)}`;
-}
-function verify(token) {
-  const m = /^([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)$/.exec(token || "");
-  if (!m) return null;
-  const mac = b64url(crypto.createHmac("sha256", process.env.SHOP_SECRET).update(m[1]).digest());
-  if (mac.length !== m[2].length || !crypto.timingSafeEqual(Buffer.from(mac), Buffer.from(m[2]))) return null;
-  const payload = JSON.parse(Buffer.from(m[1].replace(/-/g, "+").replace(/_/g, "/"), "base64").toString());
-  if (!payload.exp || payload.exp * 1000 < Date.now()) return null;
-  return payload;
-}
-
 // ---- time-limited links to the PDFs (S3 SigV4 query signing against Cloudflare R2) ---------------
 function rfc3986(s) { return encodeURIComponent(s).replace(/[!'()*]/g, c => "%" + c.charCodeAt(0).toString(16).toUpperCase()); }
 function hmac(key, s) { return crypto.createHmac("sha256", key).update(s).digest(); }
@@ -164,9 +147,9 @@ async function putJson(key, value) {
 }
 
 /** Download links for a list of edition dates. */
-async function links(dates) {
+async function links(dates, hoursOverride) {
   const { catalog: c, pdfs } = await catalog();
-  const hours = c.link_hours || 24;
+  const hours = hoursOverride || c.link_hours || 24;
   return dates.filter(d => pdfs[d]).map(d => ({
     date: d,
     label: editionLabel(d, c.editions[d] || {}),
@@ -180,4 +163,4 @@ function json(status, body) {
   return { statusCode: status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }, body: JSON.stringify(body) };
 }
 
-module.exports = { ready, bucketReady, missing, catalog, resolve, charge, sign, verify, presign, presignUrl, links, json, money, tierPrice, getJson, putJson, SITE };
+module.exports = { ready, bucketReady, missing, catalog, resolve, charge, presign, presignUrl, links, json, money, tierPrice, getJson, putJson, SITE };

@@ -1,7 +1,9 @@
 // POST /.netlify/functions/buy — charge the card (tokenised in the browser by Sola's iFields) for
-// one edition's PDF or a whole year, and answer with the download links and a signed token that
-// brings the buyer back to them (pdfs.html?t=...) for the next weeks.
+// one edition's PDF, answer with links the open page can download from, and send the buyer a
+// letter with a link of its own. There is no lasting downloads page: once the page is closed, the
+// letter is the way back, and that link too runs out after its hours.
 const shop = require("./lib/shop.js");
+const mail = require("./lib/mail.js");
 
 const clean = (v, max) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 
@@ -36,21 +38,30 @@ exports.handler = async (event) => {
   }
 
   const { catalog: c } = await shop.catalog();
-  const days = c.token_days || 30;
-  const token = shop.sign({ i: item, r: String(res.xRefNum || ""), n: invoice, exp: Math.floor(Date.now() / 1000) + days * 86400 });
+  const emailHours = c.email_hours || 48;
   const links = await shop.links(what.dates);
   // the purchase is written down, so the downloads page can count what it hands out
   try {
     await shop.putJson(`receipts/${invoice}.json`, {
       invoice, item, kind: what.kind, dates: what.dates, amount: shop.money(what.amount),
       refnum: String(res.xRefNum || ""), card: res.xMaskedCardNumber || "", name, email,
-      bought_at: new Date().toISOString(), bought_ip: ip, handed_out: 1, last_at: new Date().toISOString(),
+      bought_at: new Date().toISOString(), bought_ip: ip,
     });
   } catch (ex) { console.error("receipt not written", invoice, ex.message); }
-  console.log("sold", invoice, item, shop.money(what.amount), res.xRefNum, res.xMaskedCardNumber);
+  // the letter: its own links, good for longer than the ones in the page
+  let emailed = false;
+  try {
+    const sent = await shop.links(what.dates, emailHours);
+    const body = mail.receipt({ label: what.label, amount: shop.money(what.amount), refnum: String(res.xRefNum || ""),
+                                card: res.xMaskedCardNumber || "", links: sent, hours: emailHours });
+    await mail.send({ to: email, subject: `${mail.SITE_NAME} — your PDF (${what.label})`, html: body.html, text: body.text });
+    emailed = true;
+  } catch (ex) { console.error("letter not sent", invoice, email, ex.message); }
+
+  console.log("sold", invoice, item, shop.money(what.amount), res.xRefNum, res.xMaskedCardNumber, emailed ? "emailed" : "NOT emailed");
   return shop.json(200, {
     ok: true, item, kind: what.kind, label: what.label, amount: shop.money(what.amount),
-    refnum: String(res.xRefNum || ""), invoice, card: res.xMaskedCardNumber || "", email, token, days, links,
-    downloads: `${shop.SITE}/pdfs.html?t=${encodeURIComponent(token)}`,
+    refnum: String(res.xRefNum || ""), invoice, card: res.xMaskedCardNumber || "", email, links,
+    emailed, email_hours: emailHours,
   });
 };

@@ -270,7 +270,7 @@ def write_headers():
   Cross-Origin-Opener-Policy: same-origin
   X-Permitted-Cross-Domain-Policies: none
 
-# The downloads page carries a buyer's token in its address: it is never passed on to another site.
+# A download link is not passed on to another site.
 /pdfs.html
   Referrer-Policy: no-referrer
 
@@ -830,7 +830,6 @@ write("archive.html", shell("Archives — The Tzeitung", f"The covers of every e
 # ======================= BACK ISSUES AS PDF =======================
 pdfs_page = band("Back issues as PDF", "Every edition of The Tzeitung, the whole paper, as a PDF to keep.") + f"""
 <section class="page-body surface parchment pdfs"><div class="wrap">
-  <div id="your-downloads" class="your-downloads" hidden></div>
   <div class="prose">
     <p class="lead">Every edition of The Tzeitung since {heb_year_label(FIRST_KEY)} can be bought as a PDF of the whole paper — the main section, the Yiddishe Tzeit and the Chassidishe Tzeit, every page as it was printed.</p>
     <div class="price-cards tiers">
@@ -841,7 +840,7 @@ pdfs_page = band("Back issues as PDF", "Every edition of The Tzeitung, the whole
     <ol>
       <li>Find the edition in the <a href="archive.html">Archives</a> — by date, parsha, yom tov or a word from a headline — and press the <b>PDF</b> button beside it.</li>
       <li>Pay with a card. The payment is handled by Sola; the card number never reaches our site.</li>
-      <li>The download links appear at once. Keep the address of your downloads page, shown with them: it works for {SHOP["token_days"]} days, and you can also email it to yourself from there.</li>
+      <li>The download comes up at once, and the PDF is emailed to the address you gave. That emailed link is good for {SHOP["email_hours"]} hours; the one in the page lasts as long as the page stays open.</li>
     </ol>
     <p>The PDFs are for your own reading. They may not be reprinted, resold or posted. For a back issue in print, a special edition, or a copy of a particular article, call {PHONE} or write to <a href="mailto:mk@thetzeitung.com"><b>mk@thetzeitung.com</b></a>.</p>
     <p class="btn-row"><a class="btn" href="archive.html">Go to the Archives</a></p>

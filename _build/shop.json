@@ -23,8 +23,7 @@
     }
   ],
   "issue_tiers_note": "one edition, by how many years back its Hebrew year lies from the newest edition's year: this year and last $18, then $45 up to 5 years back, $55 up to 10, $65 up to 15, $75 for the oldest",
-  "token_days": 30,
-  "link_hours": 6,
-  "max_downloads": 40,
-  "max_downloads_note": "how many times one purchase may be handed fresh download links before the office is asked"
+  "link_hours": 2,
+  "email_hours": 48,
+  "hours_note": "the links in the page are good for a couple of hours; the one in the buyer's letter for 48"
 }

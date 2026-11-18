@@ -11,7 +11,7 @@
   Cross-Origin-Opener-Policy: same-origin
   X-Permitted-Cross-Domain-Policies: none
 
-# The downloads page carries a buyer's token in its address: it is never passed on to another site.
+# A download link is not passed on to another site.
 /pdfs.html
   Referrer-Policy: no-referrer
 
