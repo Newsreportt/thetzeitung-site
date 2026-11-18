@@ -775,7 +775,7 @@ def tier_bands():
         else: band = f"{lo} to {hi} years back"
         out.append((t["price"], band)); lo = hi + 1
     return out
-open(os.path.join(ROOT, "shop-catalog.json"), "w", encoding="utf-8").write(json.dumps(_catalog, ensure_ascii=False, separators=(",", ":")))
+open(os.path.join(ROOT, "pdf-catalog.json"), "w", encoding="utf-8").write(json.dumps(_catalog, ensure_ascii=False, separators=(",", ":")))
 SHOP_V = _fp("shop.js")
 SHOP_SCRIPT = f'\n<script src="shop.js?v={SHOP_V}" defer></script>'
 SEARCH_SCRIPT = f'\n<script src="search.js?v={_fp("search.js")}" defer></script>'

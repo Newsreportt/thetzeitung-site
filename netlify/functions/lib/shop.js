@@ -21,12 +21,12 @@ function ready() { return missing().length === 0; }
 // search works whether or not the shop is switched on.
 function bucketReady() { return BUCKET_NEEDED.every(k => process.env[k]); }
 
-// ---- the catalogue: shop-catalog.json (prices, editions) and pdfs.json (which PDFs exist) --------
+// ---- the catalogue: pdf-catalog.json (prices, editions) and pdfs.json (which PDFs exist) --------
 let cache = { at: 0, catalog: null, pdfs: null };
 async function catalog() {
   if (Date.now() - cache.at < 5 * 60 * 1000 && cache.catalog) return cache;
   const [c, p] = await Promise.all([
-    fetch(`${SITE}/shop-catalog.json`).then(r => r.json()),
+    fetch(`${SITE}/pdf-catalog.json`).then(r => r.json()),
     fetch(`${SITE}/pdfs.json`).then(r => r.json()),
   ]);
   cache = { at: Date.now(), catalog: c, pdfs: p };

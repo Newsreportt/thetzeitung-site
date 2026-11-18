@@ -187,7 +187,7 @@
   getJSON(FN + 'shop-config').then(function (c) {
     cfg = c;
     if (!c.enabled) return;
-    return Promise.all([getJSON('shop-catalog.json'), getJSON('pdfs.json')]).then(function (r) {
+    return Promise.all([getJSON('pdf-catalog.json'), getJSON('pdfs.json')]).then(function (r) {
       catalog = r[0]; pdfs = r[1];
       if (document.querySelector('.archive')) decorateArchive();
       showDownloads();
