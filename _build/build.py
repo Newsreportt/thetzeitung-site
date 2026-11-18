@@ -815,7 +815,14 @@ archive = band("Archives", "You may request back issues or a copy of a past arti
       </div>
     </div>
   </div>
-  <p class="pdf-note" hidden>Any edition is available as a full PDF of the whole paper, <b>{PRICE_RANGE}</b> by how far back it lies. Press the PDF button beside an edition — press as many as you like and pay for them all at once. <a href="pdfs.html">How it works</a></p>
+  <div class="pdf-note" hidden>
+    <span class="pdf-note-mark">PDF</span>
+    <span class="pdf-note-text">
+      <b>Every edition, the whole paper, as a PDF to keep — {PRICE_RANGE}</b>
+      <span>Press the <b>PDF</b> button beside an edition. Press as many as you like: they gather in the basket at the side of the page and are paid for together, once.</span>
+    </span>
+    <a class="btn gold pdf-note-go" href="pdfs.html">How it works</a>
+  </div>
   <p class="none">No cover matches that. Try a parsha, a yom tov, a month or a year, or a word from a headline.</p>
   {archive_body}
   <button class="to-top" type="button" aria-label="Back to the top">&uarr;</button>
