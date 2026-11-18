@@ -61,10 +61,11 @@ p { max-width: 62ch; }
 
 /* ---- top band ---- */
 .top { background: var(--green); color: #fff; position: relative; z-index: 20; }
-.top .wrap { display: flex; align-items: center; justify-content: space-between; min-height: 78px; gap: 24px; }
-.top .brand { display: flex; align-items: center; gap: 16px; }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; min-height: 78px; gap: 28px; }
+.top .brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
 .top .brand img { height: 38px; width: auto; }
-.top .brand span { font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; opacity: .85; border-left: 1px solid rgba(255,255,255,.4); padding-left: 16px; line-height: 1.3; white-space: nowrap; }
+.top .brand span { font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; opacity: .85; border-left: 1px solid rgba(255,255,255,.4); padding-left: 16px; line-height: 1.3; white-space: nowrap; overflow: hidden; }
+.top nav { flex: 0 0 auto; }
 .top nav ul { list-style: none; display: flex; align-items: center; gap: 2px; }
 .top nav a {
   display: block; padding: 10px 11px; font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; white-space: nowrap;
@@ -394,7 +395,10 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
 .lightbox .lb-close { top: 16px; right: 16px; width: 44px; height: 44px; font-size: 28px; }
 
 /* ---- responsive ---- */
-@media (max-width: 1420px) {
+/* The line beside the masthead steps aside while the nav still has room to spare, and even
+   before the web font has arrived — with the fallback font the words are wider — it is clipped
+   rather than allowed to run into the nav. */
+@media (max-width: 1540px) {
   .top .brand span { display: none; }
 }
 @media (max-width: 1000px) {
