@@ -1,14 +1,14 @@
 /* ===================================================================
    The Tzeitung — News Report
-   Palette: masthead green, deep forest, parchment, antique gold.
+   Palette: masthead green, deep forest, ivory laid paper, antique gold.
    Type:    Cormorant Garamond (display) + Jost (text).
    =================================================================== */
 :root {
   --green: #0E7C3F;
   --forest: #0A2E1E;
   --forest-2: #113F2B;
-  --parchment: #F1EADA;
-  --parchment-2: #E8DFC9;
+  --parchment: #F7F3EA;
+  --parchment-2: #EDE7D8;
   --ivory: #FBF8F1;
   --gold: #C9A85C;
   --gold-deep: #9A7B36;
