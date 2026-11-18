@@ -17,14 +17,16 @@ exports.handler = async (event) => {
     console.error("index", key, ex.message);
     return shop.json(502, { ok: false, error: "The index could not be read." });
   }
-  if (body === null) return { statusCode: 200, headers: head(), body: "{}" };
-  return { statusCode: 200, headers: head(), body: JSON.stringify(body) };
+  // nothing to cache about an index that is not there yet: the day it arrives, the old answer
+  // must not still be standing in front of it
+  if (body === null) return { statusCode: 200, headers: head(false), body: "{}" };
+  return { statusCode: 200, headers: head(true), body: JSON.stringify(body) };
 };
 
-function head() {
+function head(found) {
   return {
     "Content-Type": "application/json; charset=utf-8",
-    "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800",
+    "Cache-Control": found ? "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800" : "no-store",
     "X-Robots-Tag": "noindex",
   };
 }

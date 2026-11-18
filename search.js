@@ -30,7 +30,9 @@
   function get(s) {
     if (shards[s]) return Promise.resolve(shards[s]);
     if (pending[s]) return pending[s];
-    pending[s] = fetch(FN + encodeURIComponent(s)).then(function (r) { return r.json(); }).then(function (j) {
+    // the stamp of the index this page was told about: a rebuilt index is fetched afresh
+    var v = meta && meta.built ? '&v=' + encodeURIComponent(meta.built) : '';
+    pending[s] = fetch(FN + encodeURIComponent(s) + v).then(function (r) { return r.json(); }).then(function (j) {
       shards[s] = j; delete pending[s]; return j;
     }, function () { delete pending[s]; return {}; });
     return pending[s];
