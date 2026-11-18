@@ -26,22 +26,37 @@ COMMON = re.compile(r"(?<![א-ת])(און|אין|פון|מיט|אויף|נאך|�
                     r"וועט|וועלן|איז|זענען|נישט|ווי|אז|אויך|ווערט|געווען|אלע|ביי|וואס|וועלכע|"
                     r"יאר|טאג|גאר|שוין|נאר|מען|זיי|ער|עס|אים|איר|דארט|דא|גאנץ|גרויס)(?![א-ת])")
 
-def mirror(text):
-    """A text layer stored the way the page looks, every line back to front, read the right way."""
-    return "\n".join(line[::-1] for line in text.splitlines())
+FINAL_END = re.compile(r"(?<![א-ת])[א-ת]+[ךםןףץ](?![א-ת])")
+
+def score(text):
+    """How much this reads like Yiddish: everyday words count most, and a word ending in a
+    final letter is the next best sign that the letters are the right way round."""
+    return len(COMMON.findall(text)) * 3 + len(FINAL_END.findall(text))
+
+def orient(text):
+    """A page can hold both kinds of line: a headline set in a coded font, stored the way the
+    page looks, beside a line of ordinary Hebrew already in reading order. Each line is turned
+    round on its own, and a line that gives no sign either way follows the rest of the page."""
+    lines = text.splitlines()
+    turn_page = sum(score(l[::-1]) for l in lines) > sum(score(l) for l in lines)
+    out = []
+    for l in lines:
+        if not HEB.search(l): out.append(l); continue
+        a, b = score(l), score(l[::-1])
+        out.append(l[::-1] if (b > a or (a == b and turn_page)) else l)
+    return "\n".join(out)
 
 def best_reading(text):
     """Which way of reading this page's text layer gives real Yiddish: as it comes, with the
-    glyphs of a coded font decoded, or off a Hebrew keyboard — each of those as it stands or
-    turned round. Everyday words decide; where none are found the most Hebrew letters win."""
+    glyphs of a coded font decoded, or off a Hebrew keyboard — each then turned the right way
+    round line by line. The reading that comes out most like Yiddish is kept."""
     text = BIDI.sub("", text)
-    best, score, letters = text, -1, -1
+    best, best_score, letters = text, -1, -1
     for read in (lambda t: t, ic.decode_glyphs, ic.decode_keyboard):
-        try: cand = read(text)
+        try: cand = orient(read(text))
         except Exception: continue
-        for t in (cand, mirror(cand)):
-            s, h = len(COMMON.findall(t)), len(HEB.findall(t))
-            if s > score or (s == score == 0 and h > letters): best, score, letters = t, s, h
+        s, h = score(cand), len(HEB.findall(cand))
+        if s > best_score or (s == best_score == 0 and h > letters): best, best_score, letters = cand, s, h
     return best
 
 args = sys.argv[1:]
@@ -87,18 +102,19 @@ def dump(date):
                              capture_output=True, text=True, timeout=1200).stdout
     pages = raw.split("\f")[:-1]
     print(f"{date}: {len(pages)} pages")
+    shown = 0
     for i, pg in enumerate(pages):
         if len(HEB.findall(pg)) < 200: continue
         print(f"\n--- page {i + 1} ---")
         clean = BIDI.sub("", pg)
         for name, t in [("as it comes", clean), ("glyphs", ic.decode_glyphs(clean)),
-                        ("glyphs turned", mirror(ic.decode_glyphs(clean))),
-                        ("keyboard", ic.decode_keyboard(clean)), ("turned", mirror(clean)),
-                        ("CHOSEN", best_reading(pg))]:
+                        ("glyphs oriented", orient(ic.decode_glyphs(clean))),
+                        ("keyboard", ic.decode_keyboard(clean)), ("CHOSEN", best_reading(pg))]:
             flat = re.sub(r"\s+", " ", t).strip()
-            print(f"  {name:15s} heb {len(HEB.findall(t)):5d}  everyday {len(COMMON.findall(t)):4d}")
-            print(f"      {flat[:160]}")
-        break
+            print(f"  {name:16s} heb {len(HEB.findall(t)):5d}  everyday {len(COMMON.findall(t)):4d}  score {score(t):5d}")
+            print(f"      {flat[:170]}")
+        if shown >= 2: break
+        shown += 1
 
 def probe(n):
     """A sample spread over the years: how many pages carry words, and do they read right."""
