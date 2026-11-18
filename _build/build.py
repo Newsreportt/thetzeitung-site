@@ -390,7 +390,6 @@ home = f'''
       </div>
       <div class="flash-go">
         <a class="btn gold" href="archive.html">Find an edition</a>
-        <a class="btn ghost-dark" href="pdfs.html">How it works</a>
       </div>
     </div>
   </div>
