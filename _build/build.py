@@ -385,7 +385,7 @@ home = f'''
     <div class="flash">
       <span class="flash-tag">New</span>
       <div class="flash-text">
-        <h2>Every edition, right back to {EDITION_KEYS[-1][:4]}, as a PDF</h2>
+        <h2>Buy any edition as a PDF, right back to {EDITION_KEYS[-1][:4]}</h2>
         <p>{len(PDFS):,} editions of the whole paper — the main section, the Yiddishe Tzeit and the Chassidishe Tzeit, every page as it was printed — to buy and download at once. From <b>${PDF_FROM:g}</b>.</p>
       </div>
       <div class="flash-go">
