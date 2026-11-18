@@ -1,0 +1,106 @@
+"""Read the words out of the PDFs in the bucket, page by page, for the archive's search.
+
+Every issue PDF (pdf/<date>.pdf in R2) is fetched, pdftotext reads each page, the Yiddish is
+straightened out the same way the covers are (import_covers.normalize_text: a coded font, a
+layer stored in visual order), and the result goes back into the bucket as text/<date>.json.gz
+— {"date", "pages": [{"n": 1, "t": "…"}, …]}. _pdf/index.py builds the search index from those.
+Fetching and reading is the slow part, so it is done once and kept.
+
+  python3 _pdf/extract.py --probe 24       # a sample: how much of the archive has readable text
+  python3 _pdf/extract.py [--hours 5] [--limit N] [--redo] [--only 2015]
+"""
+import gzip, json, os, re, subprocess, sys, tempfile, time, random, statistics
+
+import boto3
+from botocore.exceptions import ClientError
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(ROOT, "_build"))
+from import_covers import normalize_text
+
+HEB = re.compile(r"[א-ת]")
+WORD = re.compile(r"[א-ת]{2,}")
+
+args = sys.argv[1:]
+def opt(flag, default=None):
+    return args[args.index(flag) + 1] if flag in args else default
+PROBE = int(opt("--probe", 0)); ONLY = opt("--only"); REDO = "--redo" in args
+LIMIT = int(opt("--limit", 0)); HOURS = float(opt("--hours", 5.0))
+T0 = time.time()
+
+s3 = boto3.client("s3", endpoint_url=f"https://{os.environ['R2_ACCOUNT_ID']}.r2.cloudflarestorage.com",
+                  region_name="auto", aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"],
+                  aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"])
+BUCKET = os.environ["R2_BUCKET"]
+
+def have(key):
+    try:
+        s3.head_object(Bucket=BUCKET, Key=key); return True
+    except ClientError:
+        return False
+
+def read_pages(pdf):
+    """The text of each page, straightened out. Pages pdftotext cannot read come back empty."""
+    out = subprocess.run(["pdftotext", "-enc", "UTF-8", "-q", pdf, "-"],
+                         capture_output=True, text=True, timeout=1200).stdout
+    return [normalize_text(p) for p in out.split("\f")[:-1] or [out]]
+
+def pdf_pages(date, dest):
+    s3.download_file(BUCKET, f"pdf/{date}.pdf", dest)
+    return read_pages(dest)
+
+def store(date, pages):
+    body = gzip.compress(json.dumps({"date": date, "pages": pages}, ensure_ascii=False,
+                                    separators=(",", ":")).encode("utf-8"), 6)
+    s3.put_object(Bucket=BUCKET, Key=f"text/{date}.json.gz", Body=body,
+                  ContentType="application/json", ContentEncoding="gzip")
+    return len(body)
+
+def probe(n):
+    """A sample spread over the years: how many pages carry words, and do they read right."""
+    dates = sorted(json.load(open(os.path.join(ROOT, "pdfs.json"), encoding="utf-8")))
+    step = max(1, len(dates) // n)
+    sample = dates[::step][:n]
+    rows = []
+    for date in sample:
+        with tempfile.TemporaryDirectory() as td:
+            try:
+                pages = pdf_pages(date, os.path.join(td, "x.pdf"))
+            except Exception as ex:
+                print(f"{date}: could not be read — {ex}", flush=True); continue
+        words = [len(WORD.findall(p)) for p in pages]
+        withtext = sum(1 for w in words if w >= 20)
+        allw = " ".join(pages)
+        common = len(re.findall(r"(?<![א-ת])(און|אין|פון|מיט|אויף|נאך|דער|די|דאס)(?![א-ת])", allw))
+        rows.append((date, len(pages), withtext, sum(words), common))
+        print(f"{date}: {len(pages):3d} pages, {withtext:3d} with words, {sum(words):6d} words, "
+              f"{common:5d} everyday words{'   ← no text layer' if withtext == 0 else ''}", flush=True)
+    if not rows: return
+    pages = sum(r[1] for r in rows); good = sum(r[2] for r in rows)
+    print(f"\n{len(rows)} issues, {pages} pages: {good} ({100 * good / pages:.0f}%) carry words.")
+    print(f"median words a page: {statistics.median([r[3] / max(1, r[1]) for r in rows]):.0f}")
+    dead = [r[0] for r in rows if r[2] == 0]
+    if dead: print(f"{len(dead)} issues with no text layer at all, e.g. {dead[:6]}")
+
+def main():
+    public = json.load(open(os.path.join(ROOT, "pdfs.json"), encoding="utf-8"))
+    dates = sorted(d for d in public if not ONLY or d.startswith(ONLY))
+    done = skipped = failed = 0; left = 0
+    for date in dates:
+        if not REDO and have(f"text/{date}.json.gz"): skipped += 1; continue
+        if time.time() - T0 > HOURS * 3600 or (LIMIT and done >= LIMIT): left += 1; continue
+        try:
+            with tempfile.TemporaryDirectory() as td:
+                pages = pdf_pages(date, os.path.join(td, "x.pdf"))
+            keep = [{"n": i + 1, "t": t} for i, t in enumerate(pages) if len(WORD.findall(t)) >= 5]
+            size = store(date, keep)
+            words = sum(len(WORD.findall(p["t"])) for p in keep)
+            done += 1
+            print(f"{date}: {len(pages):3d} pages, {len(keep):3d} with words, {words:6d} words, {size // 1024} KB", flush=True)
+        except Exception as ex:
+            failed += 1; print(f"{date}: FAILED — {ex}", flush=True)
+    print(f"{done} read, {skipped} already done, {failed} failed, {left} left for the next run")
+    open(os.path.join(ROOT, "_pdf", "again"), "w").write(f"{left}\n")
+
+if __name__ == "__main__":
+    probe(PROBE) if PROBE else main()

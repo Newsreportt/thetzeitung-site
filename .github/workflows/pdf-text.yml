@@ -1,0 +1,58 @@
+name: PDF text
+# Reads the words out of the issue PDFs in the bucket for the archive's search (_pdf/extract.py),
+# then builds the search index from them (_pdf/index.py). A run that cannot finish starts another.
+on:
+  workflow_dispatch:
+    inputs:
+      probe:
+        description: "Only sample this many issues and report what they carry (leave empty for the real run)"
+        default: ""
+      only:
+        description: "Only the dates starting with this (e.g. 2015)"
+        default: ""
+      redo:
+        description: "Read the text again even where it exists (true/false)"
+        default: "false"
+      index:
+        description: "Build the search index afterwards (true/false)"
+        default: "true"
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: pdf-text
+  cancel-in-progress: false
+jobs:
+  text:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils > /dev/null
+      - run: pip install -q boto3
+      - name: Read the text
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: |
+          PROBE="${{ github.event.inputs.probe }}"; ONLY="${{ github.event.inputs.only }}"; REDO="${{ github.event.inputs.redo }}"
+          python3 _pdf/extract.py ${PROBE:+--probe "$PROBE"} ${ONLY:+--only "$ONLY"} $([ "$REDO" = "true" ] && echo --redo) --hours 5.0
+      - name: Another run if issues are left
+        if: always()
+        run: |
+          LEFT=$(cat _pdf/again 2>/dev/null || echo 0)
+          if [ -n "${{ github.event.inputs.probe }}" ]; then
+            echo "a probe does not start another run"
+          elif [ "${LEFT:-0}" -gt 0 ]; then
+            echo "$LEFT issues left: starting another run"
+            gh workflow run pdf-text.yml --ref main -f only="${{ github.event.inputs.only }}" -f redo=false
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
