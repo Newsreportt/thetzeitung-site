@@ -13,9 +13,13 @@ const SITE = (process.env.URL || "https://thetzeitung.com").replace(/\/$/, "");
 const SOFTWARE = "thetzeitung.com";
 const SOFTWARE_VERSION = "1.0";
 
-const NEEDED = ["SOLA_XKEY", "SOLA_IFIELDS_KEY", "R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET", "SHOP_SECRET"];
+const BUCKET_NEEDED = ["R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET"];
+const NEEDED = ["SOLA_XKEY", "SOLA_IFIELDS_KEY", ...BUCKET_NEEDED, "SHOP_SECRET"];
 function missing() { return NEEDED.filter(k => !process.env[k]); }
 function ready() { return missing().length === 0; }
+// Reading the bucket — the archive's search index — asks nothing of the payment keys, so the
+// search works whether or not the shop is switched on.
+function bucketReady() { return BUCKET_NEEDED.every(k => process.env[k]); }
 
 // ---- the catalogue: shop-catalog.json (prices, editions) and pdfs.json (which PDFs exist) --------
 let cache = { at: 0, catalog: null, pdfs: null };
@@ -176,4 +180,4 @@ function json(status, body) {
   return { statusCode: status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }, body: JSON.stringify(body) };
 }
 
-module.exports = { ready, missing, catalog, resolve, charge, sign, verify, presign, presignUrl, links, json, money, tierPrice, getJson, putJson, SITE };
+module.exports = { ready, bucketReady, missing, catalog, resolve, charge, sign, verify, presign, presignUrl, links, json, money, tierPrice, getJson, putJson, SITE };

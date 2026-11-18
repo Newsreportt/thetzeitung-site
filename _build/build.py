@@ -2,8 +2,9 @@
 import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-NAV = [("index.html", "Home"), ("archive.html", "Archives"), ("about.html", "About"),
-       ("advertise.html", "Advertise"), ("index.html#email", "Email list"), ("contact.html", "Contact")]
+NAV = [("index.html", "Home"), ("archive.html", "Archives"), ("search.html", "Search"),
+       ("about.html", "About"), ("advertise.html", "Advertise"), ("index.html#email", "Email list"),
+       ("contact.html", "Contact")]
 
 # The cover wall (the covers drifting behind the hero and the page bands) is laid out here, not in the
 # browser: every cover comes with its size and a tiny blurred preview baked into the page, so the rows

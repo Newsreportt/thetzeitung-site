@@ -6,7 +6,7 @@ const shop = require("./lib/shop.js");
 const HEB = /^[א-ת]{1,2}$/;
 
 exports.handler = async (event) => {
-  if (!shop.ready()) return shop.json(503, { ok: false, error: "The archive search is not switched on yet." });
+  if (!shop.bucketReady()) return shop.json(503, { ok: false, error: "The archive search is not switched on yet." });
   const s = ((event.queryStringParameters || {}).s || "").trim();
   const key = s === "meta" ? "idx/meta.json" : HEB.test(s) ? `idx/w/${s}.json` : null;
   if (!key) return shop.json(400, { ok: false, error: "Ask for 'meta' or for one or two Hebrew letters." });
