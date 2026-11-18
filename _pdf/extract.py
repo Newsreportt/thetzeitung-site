@@ -122,8 +122,10 @@ def have(key):
 
 def read_pages(pdf):
     """The text of each page, straightened out. Pages pdftotext cannot read come back empty."""
-    out = subprocess.run(["pdftotext", "-enc", "UTF-8", "-q", pdf, "-"],
-                         capture_output=True, text=True, timeout=1200).stdout
+    # one issue in 2010 carries a byte that is no part of its own declared encoding; a page is
+    # worth having with one character lost, so what cannot be decoded is let through as it is
+    out = subprocess.run(["pdftotext", "-enc", "UTF-8", "-q", pdf, "-"], capture_output=True,
+                         text=True, errors="replace", timeout=1200).stdout
     return [best_reading(p) for p in out.split("\f")[:-1] or [out]]
 
 def pdf_pages(date, dest):
@@ -141,8 +143,8 @@ def dump(date):
     """One issue, a page at a time: what pdftotext hands over and what each reading makes of it."""
     with tempfile.TemporaryDirectory() as td:
         pdf = os.path.join(td, "x.pdf"); s3.download_file(BUCKET, f"pdf/{date}.pdf", pdf)
-        raw = subprocess.run(["pdftotext", "-enc", "UTF-8", "-q", pdf, "-"],
-                             capture_output=True, text=True, timeout=1200).stdout
+        raw = subprocess.run(["pdftotext", "-enc", "UTF-8", "-q", pdf, "-"], capture_output=True,
+                             text=True, errors="replace", timeout=1200).stdout
     pages = raw.split("\f")[:-1]
     print(f"{date}: {len(pages)} pages")
     shown = 0
