@@ -67,30 +67,77 @@
   }
   function clear() { basket = []; save(); draw(); }
 
-  /** The buttons and the bar at the foot of the page say what is in the basket. */
+  var CART_ICON = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<path d="M3 4h2.2l2.2 11.2a1.8 1.8 0 0 0 1.8 1.4h8.4a1.8 1.8 0 0 0 1.8-1.4L21 7H6"/>'
+    + '<circle cx="10" cy="20" r="1.3"/><circle cx="17.5" cy="20" r="1.3"/></svg>';
+
+  /** The cart lives at the side of the page: a button with the count, and a drawer that opens
+   *  on it holding the editions, each with the way to take it out again. */
+  function cartParts() {
+    var cart = document.getElementById('tz-cart');
+    if (cart) return { cart: cart, panel: document.getElementById('tz-panel'), veil: document.getElementById('tz-veil') };
+    var veil = el('div', { id: 'tz-veil', 'class': 'tz-veil' });
+    veil.addEventListener('click', function () { openPanel(false); });
+    cart = el('button', { type: 'button', id: 'tz-cart', 'class': 'tz-cart', 'aria-label': 'Your basket' });
+    cart.innerHTML = CART_ICON + '<span class="tz-cart-n"></span>';
+    cart.addEventListener('click', function () { openPanel(!document.body.classList.contains('tz-open')); });
+    var panel = el('aside', { id: 'tz-panel', 'class': 'tz-panel', role: 'dialog', 'aria-label': 'Your basket' });
+    document.body.appendChild(veil); document.body.appendChild(cart); document.body.appendChild(panel);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') openPanel(false); });
+    return { cart: cart, panel: panel, veil: veil };
+  }
+
+  function openPanel(on) {
+    if (on && !basket.length) return;
+    document.body.classList.toggle('tz-open', !!on);
+  }
+
   function draw() {
     var btns = document.querySelectorAll('.pdf-btn');
     for (var i = 0; i < btns.length; i++) {
       var inIt = basket.indexOf(btns[i].getAttribute('data-item')) >= 0;
       btns[i].classList.toggle('on', inIt);
       btns[i].title = inIt ? 'Take this edition out of the basket' : 'Put this edition in the basket';
-      btns[i].querySelector('.pdf-btn-k').textContent = inIt ? '\u2713' : 'PDF';
+      btns[i].querySelector('.pdf-btn-k').textContent = inIt ? '✓' : 'PDF';
     }
-    var bar = document.getElementById('tz-bar');
-    if (!basket.length) { if (bar) bar.remove(); return; }
-    if (!bar) {
-      bar = el('div', { id: 'tz-bar', 'class': 'tz-bar' });
-      document.body.appendChild(bar);
-    }
-    bar.innerHTML = '';
-    bar.appendChild(el('span', { 'class': 'tz-bar-n' },
-      [el('b', { text: String(basket.length) }), ' edition' + (basket.length === 1 ? '' : 's') + ' · ',
-       el('b', { text: money(total()) })]));
-    var go = el('button', { type: 'button', 'class': 'btn gold tz-bar-go', text: 'Download them' });
+    var parts = cartParts();
+    parts.cart.querySelector('.tz-cart-n').textContent = basket.length ? String(basket.length) : '';
+    parts.cart.classList.toggle('full', basket.length > 0);
+    if (!basket.length) { openPanel(false); parts.panel.innerHTML = ''; return; }
+
+    var panel = parts.panel; panel.innerHTML = '';
+    var head = el('div', { 'class': 'tz-panel-head' }, [el('h3', { text: 'Your basket' })]);
+    var x = el('button', { type: 'button', 'class': 'tz-x', 'aria-label': 'Close', html: '&times;' });
+    x.addEventListener('click', function () { openPanel(false); });
+    head.appendChild(x); panel.appendChild(head);
+
+    var list = el('ul', { 'class': 'tz-list' });
+    basket.slice().sort().reverse().forEach(function (d) {
+      var ed = document.getElementById('e-' + d);
+      var sub = (ed && ed.getAttribute('data-pdf-sub')) || '';
+      var li = el('li', {}, [
+        el('span', { 'class': 'tz-li-main' }, [
+          el('b', { text: niceDate(d) }),
+          el('span', { 'class': 'tz-li-sub' }, [el('bdi', { text: sub })]),
+        ]),
+        el('span', { 'class': 'tz-li-price', text: money(price(d)) }),
+      ]);
+      var out = el('button', { type: 'button', 'class': 'tz-li-x', 'aria-label': 'Take out', html: '&times;' });
+      out.addEventListener('click', function () { toggle(d); });
+      li.appendChild(out); list.appendChild(li);
+    });
+    panel.appendChild(list);
+
+    var foot = el('div', { 'class': 'tz-panel-foot' });
+    foot.appendChild(el('p', { 'class': 'tz-sum' }, [
+      el('span', { text: basket.length + ' edition' + (basket.length === 1 ? '' : 's') }),
+      el('b', { text: money(total()) })]));
+    var go = el('button', { type: 'button', 'class': 'btn gold tz-go', text: 'Download them' });
     go.addEventListener('click', function () { openCheckout(basket.join(',')); });
-    var empty = el('button', { type: 'button', 'class': 'tz-bar-clear', text: 'Empty' });
+    var empty = el('button', { type: 'button', 'class': 'tz-empty', text: 'Empty the basket' });
     empty.addEventListener('click', clear);
-    bar.appendChild(go); bar.appendChild(empty);
+    foot.appendChild(go); foot.appendChild(empty);
+    panel.appendChild(foot);
   }
 
   /** What the reader is about to buy, read off the editions in the page itself. */
@@ -177,7 +224,7 @@
           .then(function (r) { return r.json(); })
           .then(function (res) {
             if (!res.ok) { err.textContent = res.error || 'The payment did not go through.'; pay.disabled = false; pay.textContent = 'Pay ' + money(d.amount); return; }
-            clear();          // paid for: the basket is empty again
+            clear(); openPanel(false);   // paid for: the basket is empty again
             showReceipt(res);
           })
           .catch(function () { err.textContent = 'No answer from the server. If your card was charged, call the office with the time of the payment.'; pay.disabled = false; pay.textContent = 'Pay ' + money(d.amount); });

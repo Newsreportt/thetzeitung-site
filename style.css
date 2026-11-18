@@ -563,21 +563,64 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
 
 /* ---- the basket: several editions, one payment ---- */
 .pdf-btn.on { background: var(--forest); color: var(--ivory); border-color: var(--forest); }
-.pdf-btn .pdf-btn-k { font-variant-numeric: tabular-nums; }
-.tz-bar {
-  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 60;
-  display: flex; align-items: center; gap: 14px; padding: 11px 14px 11px 20px;
-  background: var(--green); color: #fff; border-radius: 999px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.28); font-size: .95rem; max-width: calc(100vw - 32px);
+
+/* the cart sits at the side of the page, out of the way of the reading */
+.tz-cart {
+  position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 61;
+  width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35);
+  background: var(--green); color: #fff; display: none; align-items: center; justify-content: center;
+  cursor: pointer; box-shadow: 0 8px 24px rgba(10,46,30,.3); transition: transform .18s, box-shadow .18s;
 }
-.tz-bar-n { white-space: nowrap; }
-.tz-bar .btn.gold { padding: 9px 20px; font-size: .85rem; }
-.tz-bar-clear {
-  background: none; border: 0; color: rgba(255,255,255,.75); font: inherit; font-size: .85rem;
-  text-decoration: underline; cursor: pointer; padding: 4px 6px;
+.tz-cart.full { display: flex; }
+.tz-cart:hover { box-shadow: 0 10px 30px rgba(10,46,30,.42); transform: translateY(-50%) scale(1.05); }
+.tz-cart-n {
+  position: absolute; top: -5px; right: -5px; min-width: 23px; height: 23px; padding: 0 5px;
+  border-radius: 999px; background: var(--gold); color: var(--forest);
+  font: 700 12.5px/23px var(--sans); text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,.22);
 }
-.tz-bar-clear:hover { color: #fff; }
+.tz-veil {
+  position: fixed; inset: 0; z-index: 62; background: rgba(10,46,30,.42);
+  opacity: 0; pointer-events: none; transition: opacity .22s;
+}
+.tz-panel {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 63; width: min(380px, 92vw);
+  background: var(--ivory); border-left: 1px solid var(--parchment-2);
+  box-shadow: -14px 0 40px rgba(10,46,30,.22); display: flex; flex-direction: column;
+  transform: translateX(102%); transition: transform .26s ease; overscroll-behavior: contain;
+}
+body.tz-open .tz-panel { transform: none; }
+body.tz-open .tz-veil { opacity: 1; pointer-events: auto; }
+.tz-panel-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 20px 22px; background: var(--green); color: #fff;
+}
+.tz-panel-head h3 { color: #fff; font-size: 1.35rem; }
+.tz-x { background: none; border: 0; color: #fff; font-size: 30px; line-height: 1; cursor: pointer; padding: 0 4px; opacity: .85; }
+.tz-x:hover { opacity: 1; }
+.tz-list { list-style: none; margin: 0; padding: 6px 0; overflow-y: auto; flex: 1 1 auto; }
+.tz-list li {
+  display: flex; align-items: center; gap: 10px; padding: 13px 22px;
+  border-bottom: 1px solid var(--parchment-2);
+}
+.tz-li-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.tz-li-main b { font-family: var(--display); font-size: 1.12rem; font-weight: 600; color: var(--forest); }
+.tz-li-sub { font-size: .8rem; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tz-li-price { font-weight: 600; color: var(--gold-deep); white-space: nowrap; }
+.tz-li-x {
+  background: none; border: 0; color: var(--ink-2); font-size: 22px; line-height: 1;
+  cursor: pointer; padding: 2px 4px; opacity: .55;
+}
+.tz-li-x:hover { opacity: 1; color: #8c2f2f; }
+.tz-panel-foot { padding: 18px 22px 22px; border-top: 1px solid var(--parchment-2); background: var(--parchment); }
+.tz-sum { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; font-size: .95rem; }
+.tz-sum b { font-family: var(--display); font-size: 1.6rem; color: var(--forest); }
+.tz-go { width: 100%; text-align: center; }
+.tz-empty {
+  display: block; width: 100%; margin-top: 10px; background: none; border: 0; cursor: pointer;
+  font: inherit; font-size: .85rem; color: var(--ink-2); text-decoration: underline;
+}
+.tz-empty:hover { color: var(--ink); }
 @media (max-width: 640px) {
-  .tz-bar { left: 16px; right: 16px; transform: none; justify-content: space-between; gap: 8px; padding-left: 16px; }
-  .tz-bar-n { font-size: .85rem; }
+  .tz-cart { right: 16px; top: auto; bottom: 20px; transform: none; }
+  .tz-cart:hover { transform: scale(1.05); }
 }
