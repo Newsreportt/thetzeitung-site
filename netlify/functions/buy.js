@@ -4,6 +4,7 @@
 // letter is the way back, and that link too runs out after its hours.
 const shop = require("./lib/shop.js");
 const mail = require("./lib/mail.js");
+const guard = require("./lib/guard.js");
 
 const clean = (v, max) => (typeof v === "string" ? v.trim().slice(0, max) : "");
 
@@ -12,6 +13,11 @@ exports.handler = async (event) => {
   if (!shop.ready()) return shop.json(503, { ok: false, error: "The PDF shop is not switched on yet." });
   let b; try { b = JSON.parse(event.body || "{}"); } catch (e) { return shop.json(400, { ok: false, error: "Bad request" }); }
 
+  // a request that did not come from this site's own checkout is not served
+  const origin = String(event.headers.origin || event.headers.referer || "");
+  if (origin && !/^https:\/\/(www\.)?thetzeitung\.com(\/|$)/.test(origin) && !/^http:\/\/localhost/.test(origin))
+    return shop.json(403, { ok: false, error: "Not allowed from there." });
+
   const item = clean(b.item, 800), cardToken = clean(b.cardToken, 300), cvvToken = clean(b.cvvToken, 300);
   const exp = clean(b.exp, 4), name = clean(b.name, 60), email = clean(b.email, 100), zip = clean(b.zip, 12), street = clean(b.street, 80);
   if (!cardToken) return shop.json(400, { ok: false, error: "The card number is missing." });
@@ -19,24 +25,36 @@ exports.handler = async (event) => {
   if (!name) return shop.json(400, { ok: false, error: "Please give the name on the card." });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return shop.json(400, { ok: false, error: "Please give an email address for the receipt." });
 
+  const ip = (event.headers["x-nf-client-connection-ip"] || event.headers["client-ip"] || "").split(",")[0].trim();
+
+  // a machine working through a list of stolen cards is stopped before the gateway is troubled
+  if (guard.looksAutomated(b)) {
+    console.log("automated attempt", ip);
+    return shop.json(400, { ok: false, error: "Something went wrong with the form. Please reload the page and try again." });
+  }
+  const gate = await guard.check(ip);
+  if (!gate.ok) { console.log("held back", ip, gate.error); return shop.json(gate.status, { ok: false, error: gate.error }); }
+
   let what;
   try { what = await shop.resolve(item); } catch (e) { return shop.json(400, { ok: false, error: e.message }); }
 
   const invoice = "TZ" + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 5).toUpperCase();
-  const ip = (event.headers["x-nf-client-connection-ip"] || event.headers["client-ip"] || "").split(",")[0].trim();
   let res;
   try {
     res = await shop.charge({ amount: what.amount, description: what.description, invoice, item, cardToken, cvvToken, exp, name, email, zip, street, ip });
   } catch (e) {
+    await guard.note(ip, gate.rec, "error");
     console.error("gateway", e);
     return shop.json(502, { ok: false, error: "The payment service did not answer. Nothing was charged; please try again." });
   }
   if (res.xResult !== "A") {
+    await guard.note(ip, gate.rec, res.xResult === "D" ? "declined" : "error");
     console.log("not approved", invoice, res.xResult, res.xError, res.xErrorCode);
     const why = res.xResult === "D" ? "The card was declined." : (res.xError || res.xStatus || "The payment did not go through.");
     return shop.json(402, { ok: false, error: why, declined: res.xResult === "D" });
   }
 
+  await guard.note(ip, gate.rec, "approved");
   const { catalog: c } = await shop.catalog();
   const emailHours = c.email_hours || 48;
   const links = await shop.links(what.dates);

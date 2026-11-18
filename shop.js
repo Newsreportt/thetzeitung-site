@@ -192,11 +192,13 @@
       '<label>CVV<span class="co-frame"><iframe data-ifields-id="cvv" data-ifields-placeholder="CVV" src="' + src + '" title="CVV"></iframe></span></label>' +
       '<label>Billing ZIP<input name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="10"></label></div>' +
       '<input data-ifields-id="card-number-token" name="xCardNum" type="hidden"><input data-ifields-id="cvv-token" name="xCVV" type="hidden">' +
+      '<div class="co-trap" aria-hidden="true"><label>Company<input name="company" tabindex="-1" autocomplete="off"></label></div>' +
       '<p class="co-err" data-ifields-id="card-data-error" aria-live="polite"></p>' +
       '<button type="submit" class="btn gold co-pay">Pay ' + money(d.amount) + '</button>' +
       '<p class="co-fine">Secure card payment by Sola. The PDF is for your own use; it may not be reprinted or posted. Questions: call the office, 718-851-6607.</p>' +
       '</form>';
     dlg.classList.add('on'); document.body.classList.add('co-open');
+    var openedAt = Date.now();   // a form sent back the same instant was not filled in by a reader
     var form = dlg.querySelector('form'), err = dlg.querySelector('.co-err'), pay = dlg.querySelector('.co-pay');
     dlg.querySelector('.co-close').addEventListener('click', closeCheckout);
     form.exp.addEventListener('input', function () {
@@ -219,7 +221,8 @@
       window.getTokens(function () {
         pay.textContent = 'Charging…';
         var body = { item: item, cardToken: form.xCardNum.value, cvvToken: form.xCVV.value, exp: exp,
-                     name: form.name.value.trim(), email: form.email.value.trim(), zip: form.zip.value.trim() };
+                     name: form.name.value.trim(), email: form.email.value.trim(), zip: form.zip.value.trim(),
+                     company: form.company ? form.company.value : '', opened: openedAt };
         fetch(FN + 'buy', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
           .then(function (r) { return r.json(); })
           .then(function (res) {
