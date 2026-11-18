@@ -528,6 +528,7 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
 .co-pay[disabled] { opacity: .6; cursor: wait; }
 .co-fine { font-size: 13px; color: var(--ink-2); margin: 16px 0 0; line-height: 1.5; }
 .co-fine a { color: var(--gold-deep); word-break: break-all; }
+.co-names { grid-template-columns: 1fr 1fr; }
 .co-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .co-sent { margin: 16px 0 0; padding: 12px 14px; border-radius: 4px; background: rgba(20, 68, 42, .07);
   font-size: .95rem; line-height: 1.55; color: var(--ink); }

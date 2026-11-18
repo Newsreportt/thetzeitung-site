@@ -19,10 +19,13 @@ exports.handler = async (event) => {
     return shop.json(403, { ok: false, error: "Not allowed from there." });
 
   const item = clean(b.item, 800), cardToken = clean(b.cardToken, 300), cvvToken = clean(b.cvvToken, 300);
-  const exp = clean(b.exp, 4), name = clean(b.name, 60), email = clean(b.email, 100), zip = clean(b.zip, 12), street = clean(b.street, 80);
+  const exp = clean(b.exp, 4), email = clean(b.email, 100), zip = clean(b.zip, 12), street = clean(b.street, 80);
+  const first = clean(b.first, 40), last = clean(b.last, 40);
+  const name = [first, last].filter(Boolean).join(" ");
   if (!cardToken) return shop.json(400, { ok: false, error: "The card number is missing." });
   if (!/^(0[1-9]|1[0-2])\d{2}$/.test(exp)) return shop.json(400, { ok: false, error: "The expiry date should be MM/YY." });
-  if (!name) return shop.json(400, { ok: false, error: "Please give the name on the card." });
+  if (first.length < 2 || last.length < 2)
+    return shop.json(400, { ok: false, error: "Please give the first name and the last name as they are on the card." });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return shop.json(400, { ok: false, error: "Please give an email address for the receipt." });
 
   const ip = (event.headers["x-nf-client-connection-ip"] || event.headers["client-ip"] || "").split(",")[0].trim();
@@ -41,7 +44,7 @@ exports.handler = async (event) => {
   const invoice = "TZ" + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 5).toUpperCase();
   let res;
   try {
-    res = await shop.charge({ amount: what.amount, description: what.description, invoice, item, cardToken, cvvToken, exp, name, email, zip, street, ip });
+    res = await shop.charge({ amount: what.amount, description: what.description, invoice, item, cardToken, cvvToken, exp, name, first, last, email, zip, street, ip });
   } catch (e) {
     await guard.note(ip, gate.rec, "error");
     console.error("gateway", e);

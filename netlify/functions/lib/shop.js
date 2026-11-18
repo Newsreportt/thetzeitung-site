@@ -85,7 +85,7 @@ function editionLabel(date, ed) {
 }
 
 // ---- Sola / Cardknox: one sale with the single-use tokens iFields made in the browser -------------
-async function charge({ amount, description, invoice, item, cardToken, cvvToken, exp, name, email, zip, street, ip }) {
+async function charge({ amount, description, invoice, item, cardToken, cvvToken, exp, name, first, last, email, zip, street, ip }) {
   const url = process.env.SOLA_GATEWAY_URL || "https://x1.cardknox.com/gatewayjson";
   const body = {
     xKey: process.env.SOLA_XKEY, xVersion: "5.0.0", xSoftwareName: SOFTWARE, xSoftwareVersion: SOFTWARE_VERSION,
@@ -93,6 +93,8 @@ async function charge({ amount, description, invoice, item, cardToken, cvvToken,
     xCardNum: cardToken, xExp: exp, xName: name, xEmail: email, xZip: zip,
     xInvoice: invoice, xDescription: description, xCustom01: item, xTimeoutSeconds: "60",
   };
+  if (first) body.xBillFirstName = first;
+  if (last) body.xBillLastName = last;
   if (cvvToken) body.xCVV = cvvToken;
   if (street) body.xStreet = street;
   if (ip) body.xIP = ip;

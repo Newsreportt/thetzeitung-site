@@ -185,7 +185,8 @@
       '<button type="button" class="co-close" aria-label="Close">&times;</button>' +
       '<h3 id="co-title">' + d.title + '</h3><p class="co-sub"><bdi>' + d.sub + '</bdi></p>' +
       '<div class="co-price"><span>Total</span><b>' + money(d.amount) + '</b></div>' +
-      '<label>Name on the card<input name="name" autocomplete="cc-name" required></label>' +
+      '<div class="co-row co-names"><label>First name on the card<input name="first" autocomplete="cc-given-name" required></label>' +
+      '<label>Last name<input name="last" autocomplete="cc-family-name" required></label></div>' +
       '<label>Email for the receipt and the download link<input name="email" type="email" autocomplete="email" required></label>' +
       '<label>Card number<span class="co-frame"><iframe data-ifields-id="card-number" data-ifields-placeholder="Card number" src="' + src + '" title="Card number"></iframe></span></label>' +
       '<div class="co-row"><label>Expiry (MM/YY)<input name="exp" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5" required></label>' +
@@ -208,20 +209,23 @@
     loadIfields().then(function () {
       var style = { border: '1px solid #c9bfa8', 'border-radius': '4px', padding: '10px 12px', width: '100%', 'box-sizing': 'border-box', 'font-size': '16px', 'font-family': 'Jost, Arial, sans-serif', background: '#fff' };
       try { window.setIfieldStyle('card-number', style); window.setIfieldStyle('cvv', style); window.enableAutoFormatting(' '); } catch (e) {}
-      setTimeout(function () { form.name.focus(); }, 50);
+      setTimeout(function () { form.first.focus(); }, 50);
     }).catch(function () { err.textContent = 'The card form could not be loaded. Please try again in a moment.'; });
 
     form.addEventListener('submit', function (e) {
       e.preventDefault(); err.textContent = '';
       var exp = form.exp.value.replace(/\D/g, '');
-      if (!form.name.value.trim()) { err.textContent = 'Please give the name on the card.'; return; }
+      if (form.first.value.trim().length < 2 || form.last.value.trim().length < 2) {
+        err.textContent = 'Please give the first name and the last name as they are on the card.'; return;
+      }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.value.trim())) { err.textContent = 'Please give an email address.'; return; }
       if (!/^(0[1-9]|1[0-2])\d{2}$/.test(exp)) { err.textContent = 'The expiry date should be MM/YY.'; return; }
       pay.disabled = true; pay.textContent = 'Checking the card…';
       window.getTokens(function () {
         pay.textContent = 'Charging…';
         var body = { item: item, cardToken: form.xCardNum.value, cvvToken: form.xCVV.value, exp: exp,
-                     name: form.name.value.trim(), email: form.email.value.trim(), zip: form.zip.value.trim(),
+                     first: form.first.value.trim(), last: form.last.value.trim(),
+                     email: form.email.value.trim(), zip: form.zip.value.trim(),
                      company: form.company ? form.company.value : '', opened: openedAt };
         fetch(FN + 'buy', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
           .then(function (r) { return r.json(); })
