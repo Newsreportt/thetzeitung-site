@@ -156,7 +156,10 @@
     var form = document.getElementById('se-form'); if (!form) return;
     var input = document.getElementById('se-q'), out = document.getElementById('se-out');
     var status = document.getElementById('se-status');
-    fetch(FN + 'meta').then(function (r) { return r.json(); }).then(function (j) {
+    // the stamp the page was built with: a fresh deploy asks for the index anew rather than
+    // being handed whatever answer the edge happens to be holding
+    var stamp = form.getAttribute('data-v') || '';
+    fetch(FN + 'meta' + (stamp ? '&b=' + encodeURIComponent(stamp) : '')).then(function (r) { return r.json(); }).then(function (j) {
       if (!j || !j.editions) throw new Error('no index');
       meta = j;
       status.textContent = j.editions.length + ' editions, ' + (j.terms ? j.terms.toLocaleString() + ' different words' : '') + ' — searching the pages themselves.';
