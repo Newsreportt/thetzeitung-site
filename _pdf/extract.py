@@ -44,7 +44,7 @@ def read_pages(pdf):
     """The text of each page, straightened out. Pages pdftotext cannot read come back empty."""
     out = subprocess.run(["pdftotext", "-enc", "UTF-8", "-q", pdf, "-"],
                          capture_output=True, text=True, timeout=1200).stdout
-    return [normalize_text(p) for p in out.split("\f")[:-1] or [out]]
+    return [best_reading(p) for p in out.split("\f")[:-1] or [out]]
 
 def pdf_pages(date, dest):
     s3.download_file(BUCKET, f"pdf/{date}.pdf", dest)
@@ -57,8 +57,6 @@ def store(date, pages):
                   ContentType="application/json", ContentEncoding="gzip")
     return len(body)
 
-COMMON = re.compile(r"(?<![\u05d0-\u05ea])(און|אין|פון|מיט|אויף|נאך|דער|די|דאס|זיך|האט|וועט|איז|זענען)(?![\u05d0-\u05ea])")
-
 def dump(date):
     """One issue, a page at a time: what pdftotext hands over and what each reading makes of it."""
     with tempfile.TemporaryDirectory() as td:
@@ -70,12 +68,14 @@ def dump(date):
     for i, pg in enumerate(pages):
         if len(HEB.findall(pg)) < 200: continue
         print(f"\n--- page {i + 1} ---")
-        for name, t in [("as it comes", pg), ("glyphs decoded", ic.decode_glyphs(pg)),
-                        ("keyboard decoded", ic.decode_keyboard(pg)), ("normalized", normalize_text(pg))]:
+        clean = BIDI.sub("", pg)
+        for name, t in [("as it comes", clean), ("glyphs", ic.decode_glyphs(clean)),
+                        ("glyphs turned", mirror(ic.decode_glyphs(clean))),
+                        ("keyboard", ic.decode_keyboard(clean)), ("turned", mirror(clean)),
+                        ("CHOSEN", best_reading(pg))]:
             flat = re.sub(r"\s+", " ", t).strip()
-            print(f"  {name:17s} heb {len(HEB.findall(t)):5d}  everyday {len(COMMON.findall(t)):4d}  "
-                  f"mirrored {len(COMMON.findall(chr(10).join(l[::-1] for l in t.splitlines()))):4d}")
-            print(f"      {flat[:150]}")
+            print(f"  {name:15s} heb {len(HEB.findall(t)):5d}  everyday {len(COMMON.findall(t)):4d}")
+            print(f"      {flat[:160]}")
         break
 
 def probe(n):
