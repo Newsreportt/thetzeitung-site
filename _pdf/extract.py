@@ -211,7 +211,14 @@ def glyph_table(raw_heads, vocab):
                 # one word, one vote: the right letter makes many different words, a wrong one
                 # makes a few — however often those few happen to stand in the paper
                 if len(core) >= 4 and core in vocab: votes[piece[i]][letter] += 1
-    return {ch: c.most_common(1)[0][0] for ch, c in votes.items() if c}
+    out = {}
+    for ch, c in votes.items():
+        top = c.most_common(2)
+        # only where one letter plainly wins: a wrong letter makes a word that is not the word,
+        # and that is worse than leaving the paper's own odd character standing
+        if top and (len(top) == 1 or top[0][1] >= top[1][1] * 2) and top[0][1] >= 2:
+            out[ch] = top[0][0]
+    return out
 
 def mend(text, table):
     """Put the learned letters in place of the font's stray glyphs, and take off the ones that
