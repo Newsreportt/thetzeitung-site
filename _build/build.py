@@ -883,7 +883,7 @@ search_page = band("Search the papers", "Every word of every page, back to the f
     <a href="pdfs.html">back issues</a> page.</p>
   <p id="se-status" class="se-status">Opening the index…</p>
   <form id="se-form" class="se-form" data-v="{__import__("time").strftime("%Y%m%d%H%M")}" hidden>
-    <input id="se-q" type="search" name="q" placeholder="קאשוי" autocomplete="off" spellcheck="false" dir="rtl" aria-label="A word to look for">
+    <input id="se-q" type="search" name="q" autocomplete="off" spellcheck="false" dir="rtl" aria-label="A word to look for">
     <button type="submit" class="btn gold">Search</button>
   </form>
   <div id="se-out" class="se-out"></div>
