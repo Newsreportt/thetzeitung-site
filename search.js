@@ -55,13 +55,20 @@
     return out;
   }
 
-  /** Every word in the shard that starts with, or contains, what was typed. */
+  /** Every word in the shard that is, starts with, or holds what was typed. A reader who types
+   *  קאשוי means קאשויער as well — an article about the place often never writes the bare name —
+   *  so the forms built on it are counted too, the word itself first. */
   function matches(shard, word, loose) {
-    if (shard[word]) return [word];
-    var out = [];
-    for (var k in shard) if (k.indexOf(word) === 0) out.push(k);
-    if (!out.length && loose) for (var k2 in shard) if (k2.indexOf(word) > 0) out.push(k2);
-    return out.sort(function (a, b) { return a.length - b.length; }).slice(0, 40);
+    var exact = shard[word] ? [word] : [], grown = [];
+    if (word.length >= 3) for (var k in shard) if (k !== word && k.indexOf(word) === 0) grown.push(k);
+    grown.sort(function (a, b) { return a.length - b.length; });
+    var out = exact.concat(grown.slice(0, 60));
+    if (!out.length && loose) {
+      for (var k2 in shard) if (k2.indexOf(word) > 0) out.push(k2);
+      out.sort(function (a, b) { return a.length - b.length; });
+      out = out.slice(0, 40);
+    }
+    return out;
   }
 
   function search(q) {
@@ -124,7 +131,7 @@
       el('b', { text: String(total) }), ' mention' + (total === 1 ? '' : 's') + ' in ',
       el('b', { text: String(res.rows.length) }), ' edition' + (res.rows.length === 1 ? '' : 's')]);
     if (res.per.length === 1 && res.per[0].terms.length > 1)
-      head.appendChild(el('span', { 'class': 'se-forms' }, [' — as ', el('bdi', { text: res.per[0].terms.slice(0, 8).join(', ') })]));
+      head.appendChild(el('span', { 'class': 'se-forms' }, [' — counting ', el('bdi', { text: res.per[0].terms.slice(0, 8).join(', ') })]));
     out.appendChild(head);
 
     var byYear = {}, years = [];
@@ -133,8 +140,17 @@
       if (!byYear[y]) { byYear[y] = []; years.push(y); }
       byYear[y].push(r);
     });
+    // a word can stand in four hundred weeks: the years are a way straight to the one wanted
+    if (years.length > 3) {
+      var jump = el('div', { 'class': 'se-jump' }, [el('span', { 'class': 'se-jump-k', text: 'Jump to' })]);
+      years.forEach(function (y) {
+        var a = el('a', { href: '#se-y-' + y, 'class': 'se-jump-y' }, [y, el('i', { text: String(byYear[y].length) })]);
+        jump.appendChild(a);
+      });
+      out.appendChild(jump);
+    }
     years.forEach(function (y) {
-      var sec = el('section', { 'class': 'se-year' }, [el('h3', { text: y + ' · ' + byYear[y].length + ' edition' + (byYear[y].length === 1 ? '' : 's') })]);
+      var sec = el('section', { 'class': 'se-year', id: 'se-y-' + y }, [el('h3', { text: y + ' · ' + byYear[y].length + ' edition' + (byYear[y].length === 1 ? '' : 's') })]);
       var ul = el('ul', { 'class': 'se-list' });
       byYear[y].forEach(function (r) {
         var e = meta.editions[r.ed], date = e[0];
