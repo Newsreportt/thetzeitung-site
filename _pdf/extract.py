@@ -199,19 +199,27 @@ def glyph_table(raw_heads, vocab):
     for line in raw_heads:
         for piece in line.split():
             bad = [i for i, c in enumerate(piece) if LEFTOVER.match(c) and not c.isspace()]
-            if len(bad) != 1: continue
+            # only a glyph standing inside a word says anything: at the edge it is as likely to
+            # be the font's colon or dash, and those are simply taken off below
+            if len(bad) != 1 or bad[0] in (0, len(piece) - 1): continue
             i = bad[0]
             for letter in ALEFBEIS:
                 core = HEB_ONLY.sub("", piece[:i] + letter + piece[i + 1:])
                 if core in vocab: votes[piece[i]][letter] += vocab[core]
-            core = HEB_ONLY.sub("", piece[:i] + piece[i + 1:])
-            if core in vocab: votes[piece[i]][""] += vocab[core]
     return {ch: c.most_common(1)[0][0] for ch, c in votes.items() if c}
 
 def mend(text, table):
-    """Put the learned letters in place of the font's stray glyphs."""
-    if not table: return text
-    return "".join(table.get(c, c) if (LEFTOVER.match(c) and not c.isspace()) else c for c in text)
+    """Put the learned letters in place of the font's stray glyphs, and take off the ones that
+    sit at the edge of a word — the font's own colon, dash or quote."""
+    if table:
+        text = "".join(table.get(c, c) if (LEFTOVER.match(c) and not c.isspace()) else c for c in text)
+    out = []
+    for piece in re.split(r"(\s+)", text):
+        if piece.strip() and HEB.search(piece):
+            # only the font's own oddities come off; a question mark or a comma is the paper's
+            piece = re.sub(r"^[A-Za-z\u00a0-\u00ff§¶]+|[A-Za-z\u00a0-\u00ff§¶]+$", "", piece) or piece
+        out.append(piece)
+    return "".join(out)
 
 def headlines_of(lines, vocab=frozenset(), offs=()):
     """The lines of a page that are set as headlines, read the right way round, before mending."""
