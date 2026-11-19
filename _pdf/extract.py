@@ -120,13 +120,31 @@ def have(key):
     except ClientError:
         return False
 
+# What the page says in plain letters and figures: a telephone number, an advertiser's name in
+# English, a year. These come from the layer as it stands — the fonts' own decoding shifts the
+# Latin alphabet by 29 and would turn 2026 into OMOS — so they are read off the raw page and set
+# down beside the straightened Yiddish.
+PLAIN = re.compile(r"[A-Za-z][A-Za-z'&.]+[A-Za-z]|\d{3,}(?:[-.\u2013/]\d{3,})*")
+
+def plain_of(raw):
+    seen, out = set(), []
+    for w in PLAIN.findall(raw):
+        k = w.lower()
+        if k not in seen: seen.add(k); out.append(w)
+    return " ".join(out)
+
 def read_pages(pdf):
     """The text of each page, straightened out. Pages pdftotext cannot read come back empty."""
     # one issue in 2010 carries a byte that is no part of its own declared encoding; a page is
     # worth having with one character lost, so what cannot be decoded is let through as it is
     out = subprocess.run(["pdftotext", "-enc", "UTF-8", "-q", pdf, "-"], capture_output=True,
                          text=True, errors="replace", timeout=1200).stdout
-    return [best_reading(p) for p in out.split("\f")[:-1] or [out]]
+    pages = out.split("\f")[:-1] or [out]
+    done = []
+    for p in pages:
+        plain = plain_of(BIDI.sub("", p))
+        done.append(best_reading(p) + ("\n" + plain if plain else ""))
+    return done
 
 def pdf_pages(date, dest):
     s3.download_file(BUCKET, f"pdf/{date}.pdf", dest)
