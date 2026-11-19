@@ -886,12 +886,12 @@ pdfs_page = band("Back issues as PDF", "Every edition of The Tzeitung, the whole
 write("pdfs.html", shell("Back issues as PDF — The Tzeitung", "Buy any edition of The Tzeitung as a PDF of the whole paper, or a whole year at once.", pdfs_page, page="pdfs.html", scripts=SHOP_SCRIPT))
 
 # ======================= SEARCH INSIDE THE PAPERS =======================
-search_page = band("Search the papers", "Every word of every page, back to the first edition — and exactly where it stands.") + f"""
+search_page = band("Search the papers", "The headline of every article, back to the first edition — and exactly where it stands.") + f"""
 <section class="page-body surface parchment search"><div class="wrap">
-  <p class="se-lead">Type a word — a town, a family name, a writer, anything — and the archive says which
-    editions it stands in, which section of the paper, and on which pages. The pages themselves are
-    not shown here: once you know the week, the edition's PDF can be bought on the
-    <a href="pdfs.html">back issues</a> page.</p>
+  <p class="se-lead">Type a word — a town, a family name, a writer, anything — and the archive answers
+    with the headlines it stands in: the week, the section of the paper and the page of each. The
+    articles themselves are not shown here; once you know the week, that edition's PDF can be bought
+    on the <a href="pdfs.html">back issues</a> page.</p>
   <p id="se-status" class="se-status">Opening the index…</p>
   <form id="se-form" class="se-form" data-v="{__import__("time").strftime("%Y%m%d%H%M")}" hidden>
     <input id="se-q" type="search" name="q" autocomplete="off" spellcheck="false" dir="rtl" aria-label="A word to look for">

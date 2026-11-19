@@ -693,6 +693,7 @@ body.tz-open .tz-veil { opacity: 1; pointer-events: auto; }
 }
 .se-heads .se-where { font-size: 12.5px; letter-spacing: .06em; color: var(--ink-2); }
 .se-more { margin: 24px auto 0; display: block; }
+.se-more[hidden] { display: none; }
 .se-deeper { margin: 22px 0 0; padding: 16px 18px; background: var(--ivory); border-left: 3px solid var(--gold); font-size: 15px; }
 .se-deeper-go { background: none; border: 0; padding: 0; font: inherit; color: var(--forest); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .se-deeper-go:hover { color: var(--gold-deep); }
