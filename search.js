@@ -258,6 +258,14 @@
       history.replaceState(null, '', 'search.html?q=' + encodeURIComponent(q));
       run(q);
     });
+    // emptying the box empties the page with it — and the address, so a reload starts clean
+    function cleared() {
+      if (input.value.trim()) return;
+      out.innerHTML = '';
+      history.replaceState(null, '', 'search.html');
+    }
+    input.addEventListener('search', cleared);     // the box's own cross
+    input.addEventListener('input', cleared);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();
