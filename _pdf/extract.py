@@ -10,7 +10,6 @@ Fetching and reading is the slow part, so it is done once and kept.
   python3 _pdf/extract.py [--hours 5] [--limit N] [--redo] [--only 2015]
 """
 import gzip, json, os, re, subprocess, sys, tempfile, time, random, statistics
-import xml.etree.ElementTree as ET
 
 import boto3
 from botocore.exceptions import ClientError
@@ -139,44 +138,44 @@ def plain_of(raw):
 # A reader looking for an article is looking for its headline, not for a word somewhere in the
 # ninth paragraph. pdftotext can hand over every line with the box it sits in, and a headline is
 # what it looks like: a line set far larger than the page's own body type.
-XH = "{http://www.w3.org/1999/xhtml}"
-HEAD_RATIO = 1.75      # how much larger than the body type a line must be set
+HEAD_RATIO = 1.7       # how much larger than the body type a line must be set
 HEAD_MIN_LETTERS = 7   # shorter than this is a page number, a date, a column rule
 
 def page_lines(pdf):
-    """Every line of every page, with the height of the type it is set in."""
-    out = subprocess.run(["pdftotext", "-bbox-layout", "-enc", "UTF-8", "-q", pdf, "-"],
-                         capture_output=True, text=True, errors="replace", timeout=1800).stdout
-    try:
-        root = ET.fromstring(out)
-    except ET.ParseError:
-        return []
+    """Every line of every page with the size of the type it is set in. pdftotext hands over the
+    words but not how large they stand; the page's own structure does, and a headline is a line
+    set far larger than the body type around it."""
+    try: import pymupdf
+    except ImportError: import fitz as pymupdf
+    doc = pymupdf.open(pdf)
     pages = []
-    for pg in root.iter(XH + "page"):
+    for page in doc:
         lines = []
-        for ln in pg.iter(XH + "line"):
-            words = [w.text or "" for w in ln.iter(XH + "word")]
-            text = " ".join(w for w in words if w)
-            if not text.strip(): continue
-            try: h = float(ln.get("yMax")) - float(ln.get("yMin"))
-            except (TypeError, ValueError): h = 0.0
-            lines.append((h, text))
+        try: d = page.get_text("dict")
+        except Exception: d = {"blocks": []}
+        for b in d.get("blocks", []):
+            for ln in b.get("lines", []):
+                text = "".join(sp.get("text", "") for sp in ln.get("spans", []))
+                if not text.strip(): continue
+                size = max((sp.get("size", 0) for sp in ln.get("spans", [])), default=0)
+                lines.append((float(size), text))
         pages.append(lines)
+    doc.close()
     return pages
 
 def headlines_of(lines):
     """The lines of a page that are set as headlines, read the right way round."""
-    if not lines: return []
-    body = statistics.median([h for h, _ in lines if h > 0] or [0])
+    sizes = [h for h, _ in lines if h > 0]
+    if len(sizes) < 4: return []
+    body = statistics.median(sizes)
     if not body: return []
     out, seen = [], set()
     for h, text in lines:
         if h < body * HEAD_RATIO: continue
-        read = best_reading(text).strip()
+        read = re.sub(r"\s+", " ", best_reading(text)).strip()
         if len(HEB.findall(read)) + len(re.findall(r"[A-Za-z]", read)) < HEAD_MIN_LETTERS: continue
-        key = re.sub(r"\s+", " ", read)
-        if key in seen: continue
-        seen.add(key); out.append(key)
+        if read in seen: continue
+        seen.add(read); out.append(read)
     return out
 
 def heads(date):
@@ -184,8 +183,8 @@ def heads(date):
     with tempfile.TemporaryDirectory() as td:
         pdf = os.path.join(td, "x.pdf"); s3.download_file(BUCKET, f"pdf/{date}.pdf", pdf)
         pages = page_lines(pdf)
-    print(f"{date}: {len(pages)} pages", flush=True)
-    for i, lines in enumerate(pages[:14]):
+    print(f"{date}: {len(pages)} pages, {sum(len(l) for l in pages)} lines", flush=True)
+    for i, lines in enumerate(pages[:16]):
         hs = headlines_of(lines)
         if not hs: continue
         print(f"\n--- page {i + 1} ---", flush=True)
