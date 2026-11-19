@@ -204,7 +204,11 @@ def headlines_of(lines, vocab=frozenset(), offs=()):
         if len(HEB.findall(read)) < HEAD_MIN_LETTERS: continue          # not Yiddish enough
         if len(LEFTOVER.findall(read)) > len(read) / 8: continue        # still gibberish
         # and a headline whose words are strangers to the whole issue was not read right
-        if vocab and words and sum(1 for w in words if w in vocab) * 2 < len(words): continue
+        if vocab and words:
+            known = sum(1 for w in words if w in vocab)
+            if len(words) >= 3:
+                if known < 2 or known * 2 < len(words): continue
+            elif known < len(words): continue
         if read in seen: continue
         seen.add(read); out.append(read)
     return out
@@ -218,7 +222,8 @@ def vocabulary(texts):
     """Every word the issue's own body text is made of — what a rightly read headline looks like."""
     seen = collections.Counter()
     for t in texts: seen.update(WORD.findall(t))
-    return frozenset(w for w, n in seen.items() if len(w) >= 3)
+    # a word the issue uses only once may itself be a misreading; twice is a word
+    return frozenset(w for w, n in seen.items() if len(w) >= 3 and n >= 2)
 
 def issue_headlines(pages, body=()):
     """Every page's headlines, with what repeats through the issue thrown out."""
