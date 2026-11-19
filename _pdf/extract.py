@@ -170,12 +170,13 @@ def head_score(t):
     return (len(HEB.findall(t)) + len(COMMON.findall(t)) * 6 + len(FINAL_END.findall(t)) * 2
             - len(LEFTOVER.findall(t)) * 3)
 
-def best_line(text, offs):
-    """One line, read every way the paper sets its type — as it stands, through the coded fonts
-    of this page and of this issue, off a Hebrew keyboard — and whichever comes out most like
-    Yiddish is the one kept."""
+def best_line(text, offs=()):
+    """One line, read every way the paper sets its type. A headline is set in a display font of
+    its own, which the issue's body type says nothing about, so rather than guess the font every
+    shift is tried: there are eighty-two of them and a headline is a handful of words."""
     text = BIDI.sub("", text)
     cands = [text, ic.decode_glyphs(text), ic.decode_keyboard(text)]
+    cands += [shift(text, o) for o in OFFSETS]
     for o in offs: cands.append(shift(text, o))
     best, score_best = text, -1e9
     for c in cands:
