@@ -96,7 +96,7 @@
         rows.push({ ed: +e, n: n, nums: nums.map(Number).sort(function (a, b) { return a - b; }) });
       });
       rows.sort(function (a, b) { return b.ed - a.ed; });
-      return { per: per, rows: rows };
+      return { per: per, rows: rows, kind: kind };
     });
   }
 
@@ -129,10 +129,12 @@
       if (res.deeper) out.appendChild(res.deeper);
       return;
     }
+    var inHeads = res.kind === 'h';
     var heads = res.rows.reduce(function (a, r) { return a + r.nums.length; }, 0);
-    var head = el('p', { 'class': 'se-count' }, [
-      el('b', { text: String(heads) }), ' article' + (heads === 1 ? '' : 's') + ' in ',
-      el('b', { text: String(res.rows.length) }), ' edition' + (res.rows.length === 1 ? '' : 's')]);
+    var head = el('p', { 'class': 'se-count' }, inHeads
+      ? [el('b', { text: String(heads) }), ' article' + (heads === 1 ? '' : 's') + ' in ',
+         el('b', { text: String(res.rows.length) }), ' edition' + (res.rows.length === 1 ? '' : 's')]
+      : [el('b', { text: String(res.rows.length) }), ' edition' + (res.rows.length === 1 ? '' : 's') + ' carry it']);
     if (res.per.length === 1 && res.per[0].terms.length > 1)
       head.appendChild(el('span', { 'class': 'se-forms' }, [' — counting ', el('bdi', { text: res.per[0].terms.slice(0, 8).join(', ') })]));
     out.appendChild(head);
@@ -145,7 +147,8 @@
     function draw() {
       var slice = res.rows.slice(shown, shown + PER_PAGE);
       if (!slice.length) { more.hidden = true; return; }
-      var need = {}; slice.forEach(function (r) { need[yearOf(r.ed)] = true; });
+      var need = {};
+      if (inHeads) slice.forEach(function (r) { need[yearOf(r.ed)] = true; });
       Promise.all(Object.keys(need).map(yearHeads)).then(function () {
         slice.forEach(function (r) { list.appendChild(row(r)); });
         shown += slice.length;
@@ -161,15 +164,30 @@
         el('a', { 'class': 'se-date', href: 'archive.html#e-' + date, text: niceDate(date) }),
         el('span', { 'class': 'se-ed' }, [el('bdi', { text: [e[3], e[4]].filter(Boolean).join(' · ') })]),
       ]);
-      var ul = el('ul', { 'class': 'se-heads' });
-      r.nums.forEach(function (id) {
-        var h = hs[id]; if (!h) return;
-        ul.appendChild(el('li', {}, [
-          el('bdi', { 'class': 'se-head', text: h[1] }),
-          el('span', { 'class': 'se-where', text: sectionName(e, h[0]) + ' · p. ' + h[0] }),
-        ]));
-      });
-      li.appendChild(ul);
+      if (inHeads) {
+        var ul = el('ul', { 'class': 'se-heads' });
+        r.nums.forEach(function (id) {
+          var h = hs[id]; if (!h) return;
+          ul.appendChild(el('li', {}, [
+            el('bdi', { 'class': 'se-head', text: h[1] }),
+            el('span', { 'class': 'se-where', text: sectionName(e, h[0]) + ' · p. ' + h[0] }),
+          ]));
+        });
+        li.appendChild(ul);
+      } else {
+        // no headlines in the index yet: where on the page the word stands
+        var w = el('div', { 'class': 'se-wheres' });
+        var bySec = {}, order = [];
+        r.nums.forEach(function (pg) {
+          var name = sectionName(e, pg);
+          if (!bySec[name]) { bySec[name] = []; order.push(name); }
+          bySec[name].push(pg);
+        });
+        order.forEach(function (name) {
+          w.appendChild(el('span', { 'class': 'se-where' }, [el('b', { text: name }), ' p. ' + bySec[name].join(', ')]));
+        });
+        li.appendChild(w);
+      }
       li.appendChild(el('a', { 'class': 'se-buy', href: 'archive.html#e-' + date, text: 'See this edition' }));
       return li;
     }
