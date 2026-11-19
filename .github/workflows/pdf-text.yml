@@ -51,15 +51,15 @@ jobs:
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
         run: |
-          PROBE="${{ github.event.inputs.probe }}"; ONLY="${{ github.event.inputs.only }}"; REDO="${{ github.event.inputs.redo }}"; DUMP="${{ github.event.inputs.dump }}"
-          python3 _pdf/extract.py ${DUMP:+--dump "$DUMP"} ${PROBE:+--probe "$PROBE"} ${ONLY:+--only "$ONLY"} $([ "$REDO" = "true" ] && echo --redo) --hours 5.0
+          HEADS="${{ github.event.inputs.heads }}"; PROBE="${{ github.event.inputs.probe }}"; ONLY="${{ github.event.inputs.only }}"; REDO="${{ github.event.inputs.redo }}"; DUMP="${{ github.event.inputs.dump }}"
+          python3 _pdf/extract.py ${HEADS:+--heads "$HEADS"} ${DUMP:+--dump "$DUMP"} ${PROBE:+--probe "$PROBE"} ${ONLY:+--only "$ONLY"} $([ "$REDO" = "true" ] && echo --redo) --hours 5.0
       - name: Another run if issues are left
         id: again
         if: always()
         run: |
           LEFT=$(cat _pdf/again 2>/dev/null || echo 0)
           echo "left=${LEFT:-0}" >> "$GITHUB_OUTPUT"
-          if [ -n "${{ github.event.inputs.probe }}${{ github.event.inputs.dump }}" ]; then
+          if [ -n "${{ github.event.inputs.probe }}${{ github.event.inputs.dump }}${{ github.event.inputs.heads }}" ]; then
             echo "a probe does not start another run"
           elif [ "${LEFT:-0}" -gt 0 ]; then
             echo "$LEFT issues left: starting another run"
@@ -74,7 +74,7 @@ jobs:
     if: >-
       needs.text.outputs.left == '0'
       && github.event.inputs.index != 'false'
-      && github.event.inputs.probe == '' && github.event.inputs.dump == ''
+      && github.event.inputs.probe == '' && github.event.inputs.dump == '' && github.event.inputs.heads == ''
     runs-on: ubuntu-latest
     timeout-minutes: 350
     steps:
