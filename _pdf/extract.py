@@ -163,14 +163,17 @@ def page_lines(pdf):
     doc.close()
     return pages
 
-def head_score(t):
-    """How much a headline reads like one. A headline is a handful of words — too few for the
-    everyday ones to carry the judgement — so the letters themselves count: Hebrew is worth
-    having, and a character still sitting outside any alphabet is worth losing."""
-    return (len(HEB.findall(t)) + len(COMMON.findall(t)) * 6 + len(FINAL_END.findall(t)) * 2
-            - len(LEFTOVER.findall(t)) * 3)
+def head_score(t, vocab):
+    """How much a headline reads like one. Counting Hebrew letters is no help — a wrong shift
+    turns one coded font into Hebrew letters just as readily as the right one — so the words
+    are weighed against the issue's own body text, which is read well. A headline shares its
+    words with the article underneath it."""
+    words = WORD.findall(t)
+    known = sum(1 for w in words if w in vocab)
+    return (known * 12 + len(COMMON.findall(t)) * 6 + len(FINAL_END.findall(t)) * 2
+            + len(HEB.findall(t)) * 0.1 - len(LEFTOVER.findall(t)) * 3)
 
-def best_line(text, offs=()):
+def best_line(text, vocab=frozenset(), offs=()):
     """One line, read every way the paper sets its type. A headline is set in a display font of
     its own, which the issue's body type says nothing about, so rather than guess the font every
     shift is tried: there are eighty-two of them and a headline is a handful of words."""
@@ -181,11 +184,11 @@ def best_line(text, offs=()):
     best, score_best = text, -1e9
     for c in cands:
         for t in (c, c[::-1]):
-            v = head_score(t)
+            v = head_score(t, vocab)
             if v > score_best: best, score_best = t, v
     return best
 
-def headlines_of(lines, offs=()):
+def headlines_of(lines, vocab=frozenset(), offs=()):
     """The lines of a page that are set as headlines, read the right way round. The page's own
     fonts are worked out from the whole issue — a headline is a few words, far too little to
     tell one coded font from another on its own."""
@@ -196,10 +199,12 @@ def headlines_of(lines, offs=()):
     out, seen = [], set()
     for h, text in lines:
         if h < body * HEAD_RATIO: continue
-        read = re.sub(r"\s+", " ", best_line(text, offs)).strip()
-        letters = len(HEB.findall(read))
-        if letters < HEAD_MIN_LETTERS: continue                        # not Yiddish enough
-        if len(LEFTOVER.findall(read)) > len(read) / 8: continue       # still gibberish
+        read = re.sub(r"\s+", " ", best_line(text, vocab, offs)).strip()
+        words = WORD.findall(read)
+        if len(HEB.findall(read)) < HEAD_MIN_LETTERS: continue          # not Yiddish enough
+        if len(LEFTOVER.findall(read)) > len(read) / 8: continue        # still gibberish
+        # and a headline whose words are strangers to the whole issue was not read right
+        if vocab and words and sum(1 for w in words if w in vocab) * 2 < len(words): continue
         if read in seen: continue
         seen.add(read); out.append(read)
     return out
@@ -209,10 +214,17 @@ def headlines_of(lines, offs=()):
 # again and again through one issue is furniture.
 FURNITURE_PAGES = 3
 
-def issue_headlines(pages):
+def vocabulary(texts):
+    """Every word the issue's own body text is made of — what a rightly read headline looks like."""
+    seen = collections.Counter()
+    for t in texts: seen.update(WORD.findall(t))
+    return frozenset(w for w, n in seen.items() if len(w) >= 3)
+
+def issue_headlines(pages, body=()):
     """Every page's headlines, with what repeats through the issue thrown out."""
+    vocab = vocabulary(body)
     offs_all = font_offsets("\n".join(t for lines in pages for _, t in lines)[:40000], keep=6)
-    per = [headlines_of(lines, offs_all) for lines in pages]
+    per = [headlines_of(lines, vocab, offs_all) for lines in pages]
     seen = collections.Counter(h for hs in per for h in set(hs))
     return [[h for h in hs if seen[h] < FURNITURE_PAGES] for hs in per]
 
@@ -221,7 +233,8 @@ def heads(date):
     with tempfile.TemporaryDirectory() as td:
         pdf = os.path.join(td, "x.pdf"); s3.download_file(BUCKET, f"pdf/{date}.pdf", pdf)
         pages = page_lines(pdf)
-    per = issue_headlines(pages)
+        body = read_pages(pdf)
+    per = issue_headlines(pages, body)
     print(f"{date}: {len(pages)} pages, {sum(len(l) for l in pages)} lines, "
           f"{sum(len(h) for h in per)} headlines", flush=True)
     for i, hs in enumerate(per[:20]):
