@@ -188,6 +188,27 @@ def best_line(text, vocab=frozenset(), offs=()):
             if v > score_best: best, score_best = t, v
     return best
 
+def mend(text, vocab):
+    """A coded font keeps a glyph or two outside the alphabet — a פ that comes out í, a colon
+    that comes out W. Where one such character sits in a word, the letter that makes the word
+    one the issue knows is put in its place, or the character is simply dropped."""
+    if not vocab: return text
+    out = []
+    for piece in re.split(r"(\s+)", text):
+        bad = [i for i, c in enumerate(piece) if LEFTOVER.match(c) and not c.isspace()]
+        core = re.sub(r"[^\u05d0-\u05ea]", "", piece)
+        if len(bad) != 1 or not core or piece in vocab: out.append(piece); continue
+        i = bad[0]
+        fixed = None
+        for letter in ALEFBEIS:
+            cand = piece[:i] + letter + piece[i + 1:]
+            if re.sub(r"[^\u05d0-\u05ea]", "", cand) in vocab: fixed = cand; break
+        if fixed is None:
+            cand = piece[:i] + piece[i + 1:]
+            if re.sub(r"[^\u05d0-\u05ea]", "", cand) in vocab: fixed = cand
+        out.append(fixed if fixed else piece)
+    return "".join(out)
+
 def headlines_of(lines, vocab=frozenset(), offs=()):
     """The lines of a page that are set as headlines, read the right way round. The page's own
     fonts are worked out from the whole issue — a headline is a few words, far too little to
@@ -199,7 +220,7 @@ def headlines_of(lines, vocab=frozenset(), offs=()):
     out, seen = [], set()
     for h, text in lines:
         if h < body * HEAD_RATIO: continue
-        read = re.sub(r"\s+", " ", best_line(text, vocab, offs)).strip()
+        read = re.sub(r"\s+", " ", mend(best_line(text, vocab, offs), vocab)).strip()
         words = WORD.findall(read)
         if len(HEB.findall(read)) < HEAD_MIN_LETTERS: continue          # not Yiddish enough
         if len(LEFTOVER.findall(read)) > len(read) / 8: continue        # still gibberish
@@ -328,12 +349,25 @@ def main():
         if time.time() - T0 > HOURS * 3600 or (LIMIT and done >= LIMIT): left += 1; continue
         try:
             with tempfile.TemporaryDirectory() as td:
-                pages = pdf_pages(date, os.path.join(td, "x.pdf"))
-            keep = [{"n": i + 1, "t": t} for i, t in enumerate(pages) if len(WORD.findall(t)) >= 5]
+                path = os.path.join(td, "x.pdf")
+                s3.download_file(BUCKET, f"pdf/{date}.pdf", path)
+                pages = read_pages(path)
+                try: heads_per_page = issue_headlines(page_lines(path), pages)
+                except Exception as ex:
+                    heads_per_page = []; print(f"{date}: no headlines — {ex}", flush=True)
+            keep = []
+            for i, t in enumerate(pages):
+                hs = heads_per_page[i] if i < len(heads_per_page) else []
+                if len(WORD.findall(t)) < 5 and not hs: continue
+                row = {"n": i + 1, "t": t}
+                if hs: row["h"] = hs
+                keep.append(row)
             size = store(date, keep)
             words = sum(len(WORD.findall(p["t"])) for p in keep)
+            heads_n = sum(len(p.get("h", ())) for p in keep)
             done += 1
-            print(f"{date}: {len(pages):3d} pages, {len(keep):3d} with words, {words:6d} words, {size // 1024} KB", flush=True)
+            print(f"{date}: {len(pages):3d} pages, {len(keep):3d} with words, {words:6d} words, "
+                  f"{heads_n:3d} headlines, {size // 1024} KB", flush=True)
         except Exception as ex:
             failed += 1; print(f"{date}: FAILED — {ex}", flush=True)
     print(f"{done} read, {skipped} already done, {failed} failed, {left} left for the next run")
