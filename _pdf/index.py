@@ -27,7 +27,7 @@ WORD = re.compile(f"[{HEB}]+(?:['׳\"״][{HEB}]+)*"          # קאשוי, ד'ק
                   r"|[A-Za-z][A-Za-z'&.]{1,}[A-Za-z]"       # Lipa, B&H, U.S.A
                   r"|\d{3,}(?:[-.\u2013/]\d{3,})*")         # 2026, 718-851-6607
 FINALS = str.maketrans("ךםןףץ", "כמנפצ")
-MAX_PAGES = 8          # how many page numbers are kept for one word in one issue
+MAX_PAGES = 30         # how many page numbers are kept for one word in one issue
 MIN_LEN = 2
 
 args = sys.argv[1:]
@@ -45,13 +45,22 @@ def key_of(word):
     w = re.sub(r"['׳\"״&.\-\u2013/]", "", word).translate(FINALS)
     return w.lower() if w.isascii() else w
 
+# Yiddish and loshn koydesh hang their little words on the front of the next one: דקאשוי,
+# בקאשוי, ובקאשויער. A reader types the name itself, so the name is filed as well.
+HANGERS = "בדהוכלמש"
+
 def keys_of(word):
-    """A word is filed under itself, and — where a letter is tied on with an apostrophe, as in
-    ד'קאשוי or ר'ישראל — under the word that follows it as well."""
-    out = {key_of(word)}
+    """A word is filed under itself; under what follows a letter tied on with an apostrophe, as
+    in ד'קאשוי or ר'ישראל; and under what is left when the one or two little letters hung on its
+    front are taken off, so that דקאשוי and ובקאשוי answer to קאשוי."""
+    k = key_of(word)
+    out = {k}
     m = re.match(f"^[{HEB}]['׳]([{HEB}].*)$", word)
     if m: out.add(key_of(m.group(1)))
-    return {k for k in out if len(k) >= MIN_LEN}
+    for n in (1, 2):
+        if len(k) >= n + 4 and all(c in HANGERS for c in k[:n]):
+            out.add(k[n:])
+    return {k2 for k2 in out if len(k2) >= MIN_LEN}
 
 def shard_of(key):
     return key[:2]

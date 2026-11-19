@@ -61,12 +61,12 @@
   function matches(shard, word, loose) {
     var exact = shard[word] ? [word] : [], grown = [];
     if (word.length >= 3) for (var k in shard) if (k !== word && k.indexOf(word) === 0) grown.push(k);
-    grown.sort(function (a, b) { return a.length - b.length; });
-    var out = exact.concat(grown.slice(0, 60));
+    var byLen = function (a, b) { return a.length - b.length; };
+    grown.sort(byLen);
+    var out = exact.concat(grown.slice(0, 80));
     if (!out.length && loose) {
       for (var k2 in shard) if (k2.indexOf(word) > 0) out.push(k2);
-      out.sort(function (a, b) { return a.length - b.length; });
-      out = out.slice(0, 40);
+      out.sort(byLen); out = out.slice(0, 40);
     }
     return out;
   }
