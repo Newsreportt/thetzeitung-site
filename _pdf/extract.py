@@ -188,51 +188,53 @@ def best_line(text, vocab=frozenset(), offs=()):
             if v > score_best: best, score_best = t, v
     return best
 
-def mend(text, vocab):
-    """A coded font keeps a glyph or two outside the alphabet — a פ that comes out í, a colon
-    that comes out W. Where one such character sits in a word, the letter that makes the word
-    one the issue knows is put in its place, or the character is simply dropped."""
-    if not vocab: return text
-    out = []
-    for piece in re.split(r"(\s+)", text):
-        bad = [i for i, c in enumerate(piece) if LEFTOVER.match(c) and not c.isspace()]
-        core = re.sub(r"[^\u05d0-\u05ea]", "", piece)
-        if len(bad) != 1 or not core or piece in vocab: out.append(piece); continue
-        i = bad[0]
-        fixed = None
-        for letter in ALEFBEIS:
-            cand = piece[:i] + letter + piece[i + 1:]
-            if re.sub(r"[^\u05d0-\u05ea]", "", cand) in vocab: fixed = cand; break
-        if fixed is None:
-            cand = piece[:i] + piece[i + 1:]
-            if re.sub(r"[^\u05d0-\u05ea]", "", cand) in vocab: fixed = cand
-        out.append(fixed if fixed else piece)
-    return "".join(out)
+HEB_ONLY = re.compile(r"[^\u05d0-\u05ea]")
+
+def glyph_table(raw_heads, vocab):
+    """What a coded font's stray glyphs stand for. A display font keeps a letter or two outside
+    the alphabet — a פ that comes out í, a colon that comes out W — and it does so the same way
+    all through the issue. Every word with one such character votes for the letter that would
+    make it a word the issue knows, and the letter with the most behind it wins."""
+    votes = collections.defaultdict(collections.Counter)
+    for line in raw_heads:
+        for piece in line.split():
+            bad = [i for i, c in enumerate(piece) if LEFTOVER.match(c) and not c.isspace()]
+            if len(bad) != 1: continue
+            i = bad[0]
+            for letter in ALEFBEIS:
+                core = HEB_ONLY.sub("", piece[:i] + letter + piece[i + 1:])
+                if core in vocab: votes[piece[i]][letter] += vocab[core]
+            core = HEB_ONLY.sub("", piece[:i] + piece[i + 1:])
+            if core in vocab: votes[piece[i]][""] += vocab[core]
+    return {ch: c.most_common(1)[0][0] for ch, c in votes.items() if c}
+
+def mend(text, table):
+    """Put the learned letters in place of the font's stray glyphs."""
+    if not table: return text
+    return "".join(table.get(c, c) if (LEFTOVER.match(c) and not c.isspace()) else c for c in text)
 
 def headlines_of(lines, vocab=frozenset(), offs=()):
-    """The lines of a page that are set as headlines, read the right way round. The page's own
-    fonts are worked out from the whole issue — a headline is a few words, far too little to
-    tell one coded font from another on its own."""
+    """The lines of a page that are set as headlines, read the right way round, before mending."""
     sizes = [h for h, _ in lines if h > 0]
     if len(sizes) < 4: return []
     body = statistics.median(sizes)
     if not body: return []
-    out, seen = [], set()
+    out = []
     for h, text in lines:
         if h < body * HEAD_RATIO: continue
-        read = re.sub(r"\s+", " ", mend(best_line(text, vocab, offs), vocab)).strip()
-        words = WORD.findall(read)
-        if len(HEB.findall(read)) < HEAD_MIN_LETTERS: continue          # not Yiddish enough
-        if len(LEFTOVER.findall(read)) > len(read) / 8: continue        # still gibberish
-        # and a headline whose words are strangers to the whole issue was not read right
-        if vocab and words:
-            known = sum(1 for w in words if w in vocab)
-            if len(words) >= 3:
-                if known < 2 or known * 2 < len(words): continue
-            elif known < len(words): continue
-        if read in seen: continue
-        seen.add(read); out.append(read)
+        out.append(re.sub(r"\s+", " ", best_line(text, vocab, offs)).strip())
     return out
+
+def keep_headline(read, vocab):
+    """Whether what came out is a headline, and was read right."""
+    words = WORD.findall(read)
+    if len(HEB.findall(read)) < HEAD_MIN_LETTERS: return False          # not Yiddish enough
+    if len(LEFTOVER.findall(read)) > len(read) / 8: return False        # still gibberish
+    if vocab and words:
+        known = sum(1 for w in words if w in vocab)
+        if len(words) >= 3: return known >= 2 and known * 2 >= len(words)
+        return known == len(words)
+    return True
 
 # The paper's own furniture — the masthead over each page, the section's name, "continued on" —
 # stands in the same large type as a headline and says nothing about any article. What comes up
@@ -240,19 +242,28 @@ def headlines_of(lines, vocab=frozenset(), offs=()):
 FURNITURE_PAGES = 3
 
 def vocabulary(texts):
-    """Every word the issue's own body text is made of — what a rightly read headline looks like."""
+    """Every word the issue's body text is made of, and how often — what a rightly read headline
+    looks like. A word the issue uses only once may itself be a misreading; twice is a word."""
     seen = collections.Counter()
     for t in texts: seen.update(WORD.findall(t))
-    # a word the issue uses only once may itself be a misreading; twice is a word
-    return frozenset(w for w, n in seen.items() if len(w) >= 3 and n >= 2)
+    return collections.Counter({w: n for w, n in seen.items() if len(w) >= 3 and n >= 2})
 
 def issue_headlines(pages, body=()):
-    """Every page's headlines, with what repeats through the issue thrown out."""
+    """Every page's headlines: read, mended with the issue's own font, and with what repeats
+    through the issue thrown out."""
     vocab = vocabulary(body)
     offs_all = font_offsets("\n".join(t for lines in pages for _, t in lines)[:40000], keep=6)
-    per = [headlines_of(lines, vocab, offs_all) for lines in pages]
-    seen = collections.Counter(h for hs in per for h in set(hs))
-    return [[h for h in hs if seen[h] < FURNITURE_PAGES] for hs in per]
+    raw = [headlines_of(lines, vocab, offs_all) for lines in pages]
+    table = glyph_table([h for page in raw for h in page], vocab)
+    per, seen = [], collections.Counter()
+    for page in raw:
+        kept, here = [], set()
+        for h in page:
+            h = re.sub(r"\s+", " ", mend(h, table)).strip()
+            if h in here or not keep_headline(h, vocab): continue
+            here.add(h); kept.append(h)
+        per.append(kept); seen.update(here)
+    return [[h for h in page if seen[h] < FURNITURE_PAGES] for page in per]
 
 def heads(date):
     """What this issue's headlines come out as — for seeing whether the catch is right."""
