@@ -1,13 +1,13 @@
-// The archive search: a word, and every issue it stands in — which week, which section, which
-// page, how many times. The index holds words and page numbers only; no article text is served,
-// here or anywhere. From a result the reader goes to that edition, and can buy its PDF.
+// The archive search: a word, and the headlines it stands in — which week, which section of the
+// paper, which page. The index holds the headlines and the words of every page; nothing else of
+// an article is served, here or anywhere. From a result the reader goes to that edition and can
+// buy its PDF.
 (function () {
   'use strict';
   var FN = '/.netlify/functions/search-index?s=';
-  var meta = null, shards = {}, pending = {};
+  var meta = null, slices = {}, pending = {}, years = {}, PER_PAGE = 25;
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   var SECTION = { a: 'The main section', b: 'Yiddishe Tzeit', c: 'Chassidishe Tzeit', d: 'Yom Tov Tzeit', e: 'Section E', f: 'Section F', g: 'Section G', t: 'Torah Tzeit', k: 'Kehila Tzeit', sup: 'The supplement' };
-  var SECTION_YI = { a: 'די צייטונג', b: 'אידישע צייט', c: 'חסידישע צייט', d: 'יום טוב צייט', t: 'תורה צייט', k: 'קהלה צייט', sup: 'ביילאגע' };
 
   function el(tag, attrs, kids) {
     var e = document.createElement(tag);
@@ -32,143 +32,178 @@
   }
 
   function get(s) {
-    if (shards[s]) return Promise.resolve(shards[s]);
+    if (slices[s]) return Promise.resolve(slices[s]);
     if (pending[s]) return pending[s];
-    // the stamp of the index this page was told about: a rebuilt index is fetched afresh
     var v = meta && meta.built ? '&v=' + encodeURIComponent(meta.built) : '';
     pending[s] = fetch(FN + encodeURIComponent(s) + v).then(function (r) { return r.json(); }).then(function (j) {
-      shards[s] = j; delete pending[s]; return j;
+      slices[s] = j; delete pending[s]; return j;
     }, function () { delete pending[s]; return {}; });
     return pending[s];
   }
 
-  /** The postings of one word, unpacked: [{ed, n, pages}] */
-  function postings(shard, word) {
-    var flat = shard[word]; if (!flat) return [];
+  /** The postings of one word: [{ed, n, nums}] — nums are headline ids, or pages in the body index. */
+  function postings(slice, word) {
+    var flat = slice[word]; if (!flat) return [];
     var out = [], i = 0, ed = 0;
     while (i < flat.length) {
       ed += flat[i++];
-      var n = flat[i++], count = flat[i++], pages = [];
-      for (var j = 0; j < count; j++) pages.push(flat[i++]);
-      out.push({ ed: ed, n: n, pages: pages });
+      var n = flat[i++], count = flat[i++], nums = [];
+      for (var j = 0; j < count; j++) nums.push(flat[i++]);
+      out.push({ ed: ed, n: n, nums: nums });
     }
     return out;
   }
 
-  /** Every word in the shard that is, starts with, or holds what was typed. A reader who types
-   *  קאשוי means קאשויער as well — an article about the place often never writes the bare name —
-   *  so the forms built on it are counted too, the word itself first. */
-  function matches(shard, word, loose) {
-    var exact = shard[word] ? [word] : [], grown = [];
-    if (word.length >= 3) for (var k in shard) if (k !== word && k.indexOf(word) === 0) grown.push(k);
+  /** Every word in the slice that is, or is built on, what was typed. */
+  function matches(slice, word, loose) {
+    var exact = slice[word] ? [word] : [], grown = [];
+    if (word.length >= 3) for (var k in slice) if (k !== word && k.indexOf(word) === 0) grown.push(k);
     var byLen = function (a, b) { return a.length - b.length; };
     grown.sort(byLen);
     var out = exact.concat(grown.slice(0, 80));
     if (!out.length && loose) {
-      for (var k2 in shard) if (k2.indexOf(word) > 0) out.push(k2);
+      for (var k2 in slice) if (k2.indexOf(word) > 0) out.push(k2);
       out.sort(byLen); out = out.slice(0, 40);
     }
     return out;
   }
 
-  function search(q) {
-    var ws = words(q);
-    if (!ws.length) return Promise.resolve({ error: 'Type a word of at least two Hebrew letters.' });
-    return Promise.all(ws.map(function (w) { return get(w.k.slice(0, 2)); })).then(function (sh) {
+  /** Where the words stand: in headlines (`h`) or anywhere on a page (`w`). */
+  function look(ws, kind) {
+    var pre = kind === 'h' ? 'h:' : '';
+    return Promise.all(ws.map(function (w) { return get(pre + w.k.slice(0, 2)); })).then(function (sl) {
       var per = ws.map(function (w, i) {
-        var hit = matches(sh[i], w.k, ws.length === 1);
-        var by = {};
+        var hit = matches(sl[i], w.k, ws.length === 1), by = {};
         hit.forEach(function (term) {
-          postings(sh[i], term).forEach(function (p) {
-            var cur = by[p.ed] || (by[p.ed] = { ed: p.ed, n: 0, pages: {} });
-            cur.n += p.n; p.pages.forEach(function (pg) { cur.pages[pg] = true; });
+          postings(sl[i], term).forEach(function (p) {
+            var cur = by[p.ed] || (by[p.ed] = { ed: p.ed, n: 0, nums: {} });
+            cur.n += p.n; p.nums.forEach(function (x) { cur.nums[x] = true; });
           });
         });
-        return { word: w.k, typed: w.typed, terms: hit, by: by };
+        return { typed: w.typed, terms: hit, by: by };
       });
-      if (per.some(function (p) { return !p.terms.length; }))
-        return { ws: ws, per: per, rows: [], missing: per.filter(function (p) { return !p.terms.length; }).map(function (p) { return p.typed; }) };
-      // every word must stand in the issue
+      var missing = per.filter(function (p) { return !p.terms.length; }).map(function (p) { return p.typed; });
+      if (missing.length) return { per: per, rows: [], missing: missing };
       var eds = Object.keys(per[0].by).filter(function (e) { return per.every(function (p) { return p.by[e]; }); });
-      var rows = eds.map(function (e) {
-        var pages = {}, n = 0;
-        per.forEach(function (p) { n += p.by[e].n; Object.keys(p.by[e].pages).forEach(function (pg) { pages[pg] = true; }); });
-        return { ed: +e, n: n, pages: Object.keys(pages).map(Number).sort(function (a, b) { return a - b; }) };
+      var rows = [];
+      eds.forEach(function (e) {
+        // with more than one word, they must stand in one and the same headline
+        var nums = Object.keys(per[0].by[e].nums);
+        if (kind === 'h' && per.length > 1)
+          nums = nums.filter(function (x) { return per.every(function (p) { return p.by[e].nums[x]; }); });
+        if (!nums.length) return;
+        var n = 0; per.forEach(function (p) { n += p.by[e].n; });
+        rows.push({ ed: +e, n: n, nums: nums.map(Number).sort(function (a, b) { return a - b; }) });
       });
       rows.sort(function (a, b) { return b.ed - a.ed; });
-      return { ws: ws, per: per, rows: rows };
+      return { per: per, rows: rows };
     });
   }
 
-  // ---- what a result looks like -------------------------------------------------------------
   function sectionAt(sections, page) {
     for (var i = 0; i < (sections || []).length; i++)
       if (page >= sections[i][0] && page <= sections[i][1]) return sections[i][2];
     return '';
   }
-  function pageList(e, pages) {
-    var secs = {}, order = [];
-    pages.forEach(function (p) {
-      var s = sectionAt(e[6], p) || '';
-      if (!secs[s]) { secs[s] = []; order.push(s); }
-      secs[s].push(p);
-    });
-    return order.map(function (s) {
-      return { section: s, name: SECTION[s] || 'The paper', yiddish: SECTION_YI[s] || '', pages: secs[s] };
-    });
+  function sectionName(e, page) { return SECTION[sectionAt(e[6], page)] || 'The paper'; }
+
+  // ---- what a result looks like -------------------------------------------------------------
+  function yearOf(ed) { return meta.editions[ed][0].slice(0, 4); }
+
+  /** The headlines of a year, fetched once and kept. */
+  function yearHeads(y) {
+    if (years[y]) return Promise.resolve(years[y]);
+    return get('y:' + y).then(function (j) { years[y] = j || {}; return years[y]; });
   }
 
   function render(res, out, q) {
     out.innerHTML = '';
     if (res.error) { out.appendChild(el('p', { 'class': 'se-none', text: res.error })); return; }
     if (res.missing && res.missing.length) {
-      out.appendChild(el('p', { 'class': 'se-none' }, ['Nothing in the archive for ', el('b', {}, [el('bdi', { text: res.missing.join(', ') })]), '.']));
+      out.appendChild(el('p', { 'class': 'se-none' }, ['No headline carries ', el('b', {}, [el('bdi', { text: res.missing.join(', ') })]), '.']));
+      if (res.deeper) out.appendChild(res.deeper);
       return;
     }
-    if (!res.rows.length) { out.appendChild(el('p', { 'class': 'se-none', text: 'Those words never stand in one and the same edition.' })); return; }
-    var total = res.rows.reduce(function (a, r) { return a + r.n; }, 0);
+    if (!res.rows.length) {
+      out.appendChild(el('p', { 'class': 'se-none', text: 'Those words never stand in one and the same headline.' }));
+      if (res.deeper) out.appendChild(res.deeper);
+      return;
+    }
+    var heads = res.rows.reduce(function (a, r) { return a + r.nums.length; }, 0);
     var head = el('p', { 'class': 'se-count' }, [
-      el('b', { text: String(total) }), ' mention' + (total === 1 ? '' : 's') + ' in ',
+      el('b', { text: String(heads) }), ' article' + (heads === 1 ? '' : 's') + ' in ',
       el('b', { text: String(res.rows.length) }), ' edition' + (res.rows.length === 1 ? '' : 's')]);
     if (res.per.length === 1 && res.per[0].terms.length > 1)
       head.appendChild(el('span', { 'class': 'se-forms' }, [' — counting ', el('bdi', { text: res.per[0].terms.slice(0, 8).join(', ') })]));
     out.appendChild(head);
 
-    var byYear = {}, years = [];
-    res.rows.forEach(function (r) {
-      var y = meta.editions[r.ed][0].slice(0, 4);
-      if (!byYear[y]) { byYear[y] = []; years.push(y); }
-      byYear[y].push(r);
-    });
-    // a word can stand in four hundred weeks: the years are a way straight to the one wanted
-    if (years.length > 3) {
-      var jump = el('div', { 'class': 'se-jump' }, [el('span', { 'class': 'se-jump-k', text: 'Jump to' })]);
-      years.forEach(function (y) {
-        var a = el('a', { href: '#se-y-' + y, 'class': 'se-jump-y' }, [y, el('i', { text: String(byYear[y].length) })]);
-        jump.appendChild(a);
+    var list = el('ul', { 'class': 'se-list' });
+    out.appendChild(list);
+    var shown = 0;
+    var more = el('button', { type: 'button', 'class': 'btn ghost se-more' });
+
+    function draw() {
+      var slice = res.rows.slice(shown, shown + PER_PAGE);
+      if (!slice.length) { more.hidden = true; return; }
+      var need = {}; slice.forEach(function (r) { need[yearOf(r.ed)] = true; });
+      Promise.all(Object.keys(need).map(yearHeads)).then(function () {
+        slice.forEach(function (r) { list.appendChild(row(r)); });
+        shown += slice.length;
+        more.hidden = shown >= res.rows.length;
+        more.textContent = 'Show more (' + (res.rows.length - shown) + ' more editions)';
       });
-      out.appendChild(jump);
     }
-    years.forEach(function (y) {
-      var sec = el('section', { 'class': 'se-year', id: 'se-y-' + y }, [el('h3', { text: y + ' · ' + byYear[y].length + ' edition' + (byYear[y].length === 1 ? '' : 's') })]);
-      var ul = el('ul', { 'class': 'se-list' });
-      byYear[y].forEach(function (r) {
-        var e = meta.editions[r.ed], date = e[0];
-        var where = pageList(e, r.pages).map(function (g) {
-          return el('span', { 'class': 'se-where' }, [el('b', { text: g.name }), ' p. ' + g.pages.join(', ')]);
-        });
-        var li = el('li', {}, [
-          el('a', { 'class': 'se-date', href: 'archive.html#e-' + date, text: niceDate(date) }),
-          el('span', { 'class': 'se-ed' }, [el('bdi', { text: [e[3], e[4]].filter(Boolean).join(' · ') })]),
-          el('span', { 'class': 'se-n', text: r.n + '×' }),
-        ]);
-        var w = el('div', { 'class': 'se-wheres' }); where.forEach(function (x) { w.appendChild(x); });
-        li.appendChild(w);
-        li.appendChild(el('a', { 'class': 'se-buy', href: 'archive.html#e-' + date, text: 'See this edition' }));
-        ul.appendChild(li);
+
+    function row(r) {
+      var e = meta.editions[r.ed], date = e[0];
+      var hs = (years[yearOf(r.ed)] || {})[date] || [];
+      var li = el('li', {}, [
+        el('a', { 'class': 'se-date', href: 'archive.html#e-' + date, text: niceDate(date) }),
+        el('span', { 'class': 'se-ed' }, [el('bdi', { text: [e[3], e[4]].filter(Boolean).join(' · ') })]),
+      ]);
+      var ul = el('ul', { 'class': 'se-heads' });
+      r.nums.forEach(function (id) {
+        var h = hs[id]; if (!h) return;
+        ul.appendChild(el('li', {}, [
+          el('bdi', { 'class': 'se-head', text: h[1] }),
+          el('span', { 'class': 'se-where', text: sectionName(e, h[0]) + ' · p. ' + h[0] }),
+        ]));
       });
-      sec.appendChild(ul); out.appendChild(sec);
+      li.appendChild(ul);
+      li.appendChild(el('a', { 'class': 'se-buy', href: 'archive.html#e-' + date, text: 'See this edition' }));
+      return li;
+    }
+
+    more.addEventListener('click', draw);
+    out.appendChild(more);
+    draw();
+  }
+
+  /** When no headline carries the word, the whole of the papers is still searched. */
+  function deeperOffer(q, ws) {
+    var p = el('p', { 'class': 'se-deeper' });
+    var a = el('button', { type: 'button', 'class': 'se-deeper-go', text: 'Look inside the articles as well' });
+    p.appendChild(a);
+    a.addEventListener('click', function () {
+      a.textContent = 'Looking…';
+      look(ws, 'w').then(function (res) {
+        p.innerHTML = '';
+        if (!res.rows.length) { p.appendChild(document.createTextNode('Nothing anywhere in the papers either.')); return; }
+        var n = res.rows.length;
+        p.appendChild(el('b', { text: String(n) }));
+        p.appendChild(document.createTextNode(' edition' + (n === 1 ? '' : 's') + ' carry it inside an article, where the headline does not say so:'));
+        var ul = el('ul', { 'class': 'se-plain' });
+        res.rows.slice(0, 60).forEach(function (r) {
+          var e = meta.editions[r.ed];
+          ul.appendChild(el('li', {}, [
+            el('a', { href: 'archive.html#e-' + e[0], text: niceDate(e[0]) }),
+            el('span', { 'class': 'se-where', text: r.nums.map(function (pg) { return sectionName(e, pg) + ' p. ' + pg; }).slice(0, 3).join(' · ') }),
+          ]));
+        });
+        p.appendChild(ul);
+      });
     });
+    return p;
   }
 
   // ---- the page ------------------------------------------------------------------------------
@@ -176,13 +211,10 @@
     var form = document.getElementById('se-form'); if (!form) return;
     var input = document.getElementById('se-q'), out = document.getElementById('se-out');
     var status = document.getElementById('se-status');
-    // the stamp the page was built with: a fresh deploy asks for the index anew rather than
-    // being handed whatever answer the edge happens to be holding
     var stamp = form.getAttribute('data-v') || '';
     fetch(FN + 'meta' + (stamp ? '&b=' + encodeURIComponent(stamp) : '')).then(function (r) { return r.json(); }).then(function (j) {
       if (!j || !j.editions) throw new Error('no index');
       meta = j;
-      // nothing to say once it works: the line is kept for the day it does not
       status.textContent = ''; status.hidden = true;
       form.hidden = false;
       var q = new URLSearchParams(location.search).get('q');
@@ -193,9 +225,14 @@
     });
 
     function run(q) {
+      var ws = words(q);
+      if (!ws.length) { render({ error: 'Type a word of at least two Hebrew letters.' }, out); return; }
       out.innerHTML = '<p class="se-none">Looking…</p>';
-      search(q).then(function (res) { render(res, out, q); },
-                     function () { out.innerHTML = '<p class="se-none">The search could not be run. Please try again.</p>'; });
+      var kind = meta.headlines ? 'h' : 'w';
+      look(ws, kind).then(function (res) {
+        if (kind === 'h' && (!res.rows.length || (res.missing || []).length)) res.deeper = deeperOffer(q, ws);
+        render(res, out, q);
+      }, function () { out.innerHTML = '<p class="se-none">The search could not be run. Please try again.</p>'; });
     }
     form.addEventListener('submit', function (e) {
       e.preventDefault();
