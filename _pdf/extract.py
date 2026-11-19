@@ -9,7 +9,7 @@ Fetching and reading is the slow part, so it is done once and kept.
   python3 _pdf/extract.py --probe 24       # a sample: how much of the archive has readable text
   python3 _pdf/extract.py [--hours 5] [--limit N] [--redo] [--only 2015]
 """
-import gzip, json, os, re, subprocess, sys, tempfile, time, random, statistics
+import gzip, json, os, re, subprocess, sys, tempfile, time, random, statistics, collections
 
 import boto3
 from botocore.exceptions import ClientError
@@ -163,29 +163,46 @@ def page_lines(pdf):
     doc.close()
     return pages
 
-def headlines_of(lines):
-    """The lines of a page that are set as headlines, read the right way round."""
+def headlines_of(lines, offs=None):
+    """The lines of a page that are set as headlines, read the right way round. The page's own
+    fonts are worked out from the whole page — a headline is a few words, far too little to tell
+    one coded font from another on its own."""
     sizes = [h for h, _ in lines if h > 0]
     if len(sizes) < 4: return []
     body = statistics.median(sizes)
     if not body: return []
+    if offs is None: offs = font_offsets("\n".join(t for _, t in lines))
     out, seen = [], set()
     for h, text in lines:
         if h < body * HEAD_RATIO: continue
-        read = re.sub(r"\s+", " ", best_reading(text)).strip()
+        read = re.sub(r"\s+", " ", orient(read_lines(BIDI.sub("", text), offs))).strip()
+        if len(LEFTOVER.findall(read)) > len(read) / 6: continue      # still gibberish
         if len(HEB.findall(read)) + len(re.findall(r"[A-Za-z]", read)) < HEAD_MIN_LETTERS: continue
         if read in seen: continue
         seen.add(read); out.append(read)
     return out
+
+# The paper's own furniture — the masthead over each page, the section's name, "continued on" —
+# stands in the same large type as a headline and says nothing about any article. What comes up
+# again and again through one issue is furniture.
+FURNITURE_PAGES = 3
+
+def issue_headlines(pages):
+    """Every page's headlines, with what repeats through the issue thrown out."""
+    offs_all = font_offsets("\n".join(t for lines in pages for _, t in lines)[:40000])
+    per = [headlines_of(lines, offs_all) for lines in pages]
+    seen = collections.Counter(h for hs in per for h in set(hs))
+    return [[h for h in hs if seen[h] < FURNITURE_PAGES] for hs in per]
 
 def heads(date):
     """What this issue's headlines come out as — for seeing whether the catch is right."""
     with tempfile.TemporaryDirectory() as td:
         pdf = os.path.join(td, "x.pdf"); s3.download_file(BUCKET, f"pdf/{date}.pdf", pdf)
         pages = page_lines(pdf)
-    print(f"{date}: {len(pages)} pages, {sum(len(l) for l in pages)} lines", flush=True)
-    for i, lines in enumerate(pages[:16]):
-        hs = headlines_of(lines)
+    per = issue_headlines(pages)
+    print(f"{date}: {len(pages)} pages, {sum(len(l) for l in pages)} lines, "
+          f"{sum(len(h) for h in per)} headlines", flush=True)
+    for i, hs in enumerate(per[:20]):
         if not hs: continue
         print(f"\n--- page {i + 1} ---", flush=True)
         for h in hs[:8]: print("   ", h[:150], flush=True)
