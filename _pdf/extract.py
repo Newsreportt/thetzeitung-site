@@ -163,21 +163,42 @@ def page_lines(pdf):
     doc.close()
     return pages
 
-def headlines_of(lines, offs=None):
+def head_score(t):
+    """How much a headline reads like one. A headline is a handful of words — too few for the
+    everyday ones to carry the judgement — so the letters themselves count: Hebrew is worth
+    having, and a character still sitting outside any alphabet is worth losing."""
+    return (len(HEB.findall(t)) + len(COMMON.findall(t)) * 6 + len(FINAL_END.findall(t)) * 2
+            - len(LEFTOVER.findall(t)) * 3)
+
+def best_line(text, offs):
+    """One line, read every way the paper sets its type — as it stands, through the coded fonts
+    of this page and of this issue, off a Hebrew keyboard — and whichever comes out most like
+    Yiddish is the one kept."""
+    text = BIDI.sub("", text)
+    cands = [text, ic.decode_glyphs(text), ic.decode_keyboard(text)]
+    for o in offs: cands.append(shift(text, o))
+    best, score_best = text, -1e9
+    for c in cands:
+        for t in (c, c[::-1]):
+            v = head_score(t)
+            if v > score_best: best, score_best = t, v
+    return best
+
+def headlines_of(lines, offs=()):
     """The lines of a page that are set as headlines, read the right way round. The page's own
-    fonts are worked out from the whole page — a headline is a few words, far too little to tell
-    one coded font from another on its own."""
+    fonts are worked out from the whole issue — a headline is a few words, far too little to
+    tell one coded font from another on its own."""
     sizes = [h for h, _ in lines if h > 0]
     if len(sizes) < 4: return []
     body = statistics.median(sizes)
     if not body: return []
-    if offs is None: offs = font_offsets("\n".join(t for _, t in lines))
     out, seen = [], set()
     for h, text in lines:
         if h < body * HEAD_RATIO: continue
-        read = re.sub(r"\s+", " ", orient(read_lines(BIDI.sub("", text), offs))).strip()
-        if len(LEFTOVER.findall(read)) > len(read) / 6: continue      # still gibberish
-        if len(HEB.findall(read)) + len(re.findall(r"[A-Za-z]", read)) < HEAD_MIN_LETTERS: continue
+        read = re.sub(r"\s+", " ", best_line(text, offs)).strip()
+        letters = len(HEB.findall(read))
+        if letters < HEAD_MIN_LETTERS: continue                        # not Yiddish enough
+        if len(LEFTOVER.findall(read)) > len(read) / 8: continue       # still gibberish
         if read in seen: continue
         seen.add(read); out.append(read)
     return out
@@ -189,7 +210,7 @@ FURNITURE_PAGES = 3
 
 def issue_headlines(pages):
     """Every page's headlines, with what repeats through the issue thrown out."""
-    offs_all = font_offsets("\n".join(t for lines in pages for _, t in lines)[:40000])
+    offs_all = font_offsets("\n".join(t for lines in pages for _, t in lines)[:40000], keep=6)
     per = [headlines_of(lines, offs_all) for lines in pages]
     seen = collections.Counter(h for hs in per for h in set(hs))
     return [[h for h in hs if seen[h] < FURNITURE_PAGES] for hs in per]
