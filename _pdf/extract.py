@@ -196,8 +196,11 @@ def glyph_table(raw_heads, vocab):
     all through the issue. Every word with one such character votes for the letter that would
     make it a word the issue knows, and the letter with the most behind it wins."""
     votes = collections.defaultdict(collections.Counter)
+    done = set()
     for line in raw_heads:
         for piece in line.split():
+            if piece in done: continue                 # a word votes once, however often it stands
+            done.add(piece)
             bad = [i for i, c in enumerate(piece) if LEFTOVER.match(c) and not c.isspace()]
             # only a glyph standing inside a word says anything: at the edge it is as likely to
             # be the font's colon or dash, and those are simply taken off below
@@ -205,7 +208,9 @@ def glyph_table(raw_heads, vocab):
             i = bad[0]
             for letter in ALEFBEIS:
                 core = HEB_ONLY.sub("", piece[:i] + letter + piece[i + 1:])
-                if core in vocab: votes[piece[i]][letter] += vocab[core]
+                # one word, one vote: the right letter makes many different words, a wrong one
+                # makes a few — however often those few happen to stand in the paper
+                if len(core) >= 4 and core in vocab: votes[piece[i]][letter] += 1
     return {ch: c.most_common(1)[0][0] for ch, c in votes.items() if c}
 
 def mend(text, table):
