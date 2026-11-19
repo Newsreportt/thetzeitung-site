@@ -182,11 +182,13 @@
     fetch(FN + 'meta' + (stamp ? '&b=' + encodeURIComponent(stamp) : '')).then(function (r) { return r.json(); }).then(function (j) {
       if (!j || !j.editions) throw new Error('no index');
       meta = j;
-      status.textContent = j.editions.length + ' editions, ' + (j.terms ? j.terms.toLocaleString() + ' different words' : '') + ' — searching the pages themselves.';
+      // nothing to say once it works: the line is kept for the day it does not
+      status.textContent = ''; status.hidden = true;
       form.hidden = false;
       var q = new URLSearchParams(location.search).get('q');
       if (q) { input.value = q; run(q); }
     }).catch(function () {
+      status.hidden = false;
       status.textContent = 'The archive search is still being built. Please try again later.';
     });
 
