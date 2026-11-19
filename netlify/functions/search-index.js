@@ -4,12 +4,18 @@
 const shop = require("./lib/shop.js");
 
 const SHARD = /^[א-תa-z0-9]{1,2}$/;
+const HEAD = /^h:([א-תa-z0-9]{1,2})$/;       // one slice of the headline index
+const YEAR = /^y:(\d{4})$/;                  // the headlines themselves, a year at a time
 
 exports.handler = async (event) => {
   if (!shop.bucketReady()) return shop.json(503, { ok: false, error: "The archive search is not switched on yet." });
   const s = ((event.queryStringParameters || {}).s || "").trim();
-  const key = s === "meta" ? "idx/meta.json" : SHARD.test(s) ? `idx/w/${s}.json` : null;
-  if (!key) return shop.json(400, { ok: false, error: "Ask for 'meta' or for one or two letters." });
+  const head = HEAD.exec(s), year = YEAR.exec(s);
+  const key = s === "meta" ? "idx/meta.json"
+            : head ? `idx/hw/${head[1]}.json`
+            : year ? `idx/h/${year[1]}.json`
+            : SHARD.test(s) ? `idx/w/${s}.json` : null;
+  if (!key) return shop.json(400, { ok: false, error: "Ask for 'meta', one or two letters, h:<letters> or y:<year>." });
   let body;
   try {
     body = await shop.getJson(key);

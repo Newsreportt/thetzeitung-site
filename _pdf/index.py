@@ -8,7 +8,9 @@ its word belongs to, so the whole archive is searchable without anything being d
 
   python3 _pdf/index.py [--limit N]
 
-idx/meta.json   {"built", "editions": [[date, vol, no, parsha, hdate, pages], …], "shards": […]}
+idx/meta.json   {"built", "editions": [[date, vol, no, parsha, hdate, pages, sections], …], …}
+idx/hw/<ab>.json the same, over the headlines alone: [edition, headlines, id, id, …]
+idx/h/<year>.json {"<date>": [[page, "the headline"], …]} — what the reader is shown
 idx/w/<ab>.json {"<word>": [edition, mentions, page, page, …,  edition, mentions, page, …], …}
                 (<ab> is the word's first two characters: Hebrew, Latin or digits)
                 (the edition is a place in the editions list, written as a step from the one before)
@@ -112,31 +114,80 @@ def main():
     if LIMIT: eds = eds[:LIMIT]
     print(f"{len(eds)} issues to index", flush=True)
     with tempfile.TemporaryDirectory() as td:
-        files, read, missing = {}, 0, 0
+        files, hfiles, read, missing = {}, {}, 0, 0
+        heads_by_year, heads_total = collections.defaultdict(dict), 0
         for i, ed in enumerate(eds):
             doc = text_of(ed["date"])
             if not doc: missing += 1; continue
             read += 1
             where = collections.defaultdict(lambda: collections.defaultdict(int))   # key -> page -> count
+            heads, hwhere = [], collections.defaultdict(set)                        # key -> headline ids
             for pg in doc["pages"]:
                 n = pg["n"]
                 for w in WORD.findall(pg["t"]):
                     if len(w) < MIN_LEN: continue
                     for k in keys_of(w): where[k][n] += 1
+                for h in pg.get("h", ()):
+                    hid = len(heads); heads.append([n, h])
+                    for w in WORD.findall(h):
+                        if len(w) < MIN_LEN: continue
+                        for k in keys_of(w): hwhere[k].add(hid)
             for k, pages in where.items():
                 sh = shard_of(k)
                 f = files.get(sh)
-                if f is None: f = files[sh] = open(os.path.join(td, sh + ".txt"), "w", encoding="utf-8")
+                if f is None: f = files[sh] = open(os.path.join(td, "w-" + sh + ".txt"), "w", encoding="utf-8")
                 top = sorted(pages, key=lambda p: (-pages[p], p))[:MAX_PAGES]
                 f.write(f"{k}\t{i}\t{sum(pages.values())}\t{','.join(map(str, sorted(top)))}\n")
-            if read % 50 == 0: print(f"  {read} issues read, {len(files)} shards so far", flush=True)
-        for f in files.values(): f.close()
+            for k, ids in hwhere.items():
+                sh = shard_of(k)
+                f = hfiles.get(sh)
+                if f is None: f = hfiles[sh] = open(os.path.join(td, "h-" + sh + ".txt"), "w", encoding="utf-8")
+                f.write(f"{k}\t{i}\t{len(ids)}\t{','.join(map(str, sorted(ids)))}\n")
+            if heads:
+                heads_by_year[ed["date"][:4]][ed["date"]] = heads
+                heads_total += len(heads)
+            if read % 50 == 0: print(f"  {read} issues read, {heads_total} headlines so far", flush=True)
+        for f in list(files.values()) + list(hfiles.values()): f.close()
+        print(f"{heads_total} headlines in {sum(len(v) for v in heads_by_year.values())} issues", flush=True)
+
+        # what the reader is shown: the headlines themselves, a year to a file
+        for year, issues in sorted(heads_by_year.items()):
+            body = gzip.compress(json.dumps(issues, ensure_ascii=False, separators=(",", ":")).encode("utf-8"), 6)
+            s3.put_object(Bucket=BUCKET, Key=f"idx/h/{year}.json", Body=body,
+                          ContentType="application/json", ContentEncoding="gzip")
         print(f"{read} issues read, {missing} without text, {len(files)} shards", flush=True)
+
+        def pack(which, prefix, key_prefix):
+            """One slice at a time: the postings of every word filed under those two letters."""
+            names, terms, size = [], 0, 0
+            for sh in sorted(which):
+                index = collections.defaultdict(list)
+                with open(os.path.join(td, prefix + sh + ".txt"), encoding="utf-8") as f:
+                    for line in f:
+                        k, i, n, rest = line.rstrip("\n").split("\t")
+                        index[k].append((int(i), int(n), [int(x) for x in rest.split(",") if x]))
+                out = {}
+                for k, rows in index.items():
+                    rows.sort()
+                    flat, prev = [], 0
+                    for i, n, nums in rows:
+                        flat.append(i - prev); prev = i
+                        flat.append(n); flat.append(len(nums)); flat.extend(nums)
+                    out[k] = flat
+                body = gzip.compress(json.dumps(out, ensure_ascii=False, separators=(",", ":")).encode("utf-8"), 6)
+                s3.put_object(Bucket=BUCKET, Key=f"idx/{key_prefix}/{sh}.json", Body=body,
+                              ContentType="application/json", ContentEncoding="gzip")
+                names.append(sh); terms += len(out); size += len(body)
+                if len(names) % 100 == 0: print(f"  {len(names)} {key_prefix} slices written", flush=True)
+            return names, terms, size
+
+        hshards, hterms, hbytes = pack(hfiles, "h-", "hw")
+        print(f"{hterms} headline words across {len(hshards)} slices, {hbytes / 1e6:.0f} MB", flush=True)
 
         shards, terms_total, bytes_total = [], 0, 0
         for sh in sorted(files):
             index = collections.defaultdict(list)
-            with open(os.path.join(td, sh + ".txt"), encoding="utf-8") as f:
+            with open(os.path.join(td, "w-" + sh + ".txt"), encoding="utf-8") as f:
                 for line in f:
                     k, i, n, pages = line.rstrip("\n").split("\t")
                     index[k].append((int(i), int(n), [int(p) for p in pages.split(",") if p]))
@@ -156,6 +207,8 @@ def main():
 
         meta = {"built": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "shards": shards,
                 "terms": terms_total, "min_len": MIN_LEN,
+                "head_shards": hshards, "head_terms": hterms, "headlines": heads_total,
+                "head_years": sorted(heads_by_year),
                 "editions": [[e["date"], e["vol"], e["no"], e["parsha"], e["hdate"], e["pages"], e["sections"]]
                              for e in eds]}
         s3.put_object(Bucket=BUCKET, Key="idx/meta.json",
