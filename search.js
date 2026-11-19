@@ -20,10 +20,14 @@
   function niceDate(iso) { var p = iso.split('-'); return MONTHS[+p[1] - 1] + ' ' + (+p[2]) + ', ' + p[0]; }
 
   // ---- the same filing the index was built with ------------------------------------------
-  function key(word) { return word.replace(/['’׳"״]/g, '').replace(/ך/g, 'כ').replace(/ם/g, 'מ').replace(/ן/g, 'נ').replace(/ף/g, 'פ').replace(/ץ/g, 'צ'); }
+  function key(word) {
+    var k = word.replace(/['’׳"״&.\-–\/]/g, '')
+      .replace(/ך/g, 'כ').replace(/ם/g, 'מ').replace(/ן/g, 'נ').replace(/ף/g, 'פ').replace(/ץ/g, 'צ');
+    return /^[\x00-\x7F]*$/.test(k) ? k.toLowerCase() : k;
+  }
   function words(q) {
-    return (q.match(/[א-ת]+(?:['’׳"״][א-ת]+)*/g) || [])
-      .map(function (w) { return { typed: w, k: key(w) }; })
+    var found = q.match(/[א-ת]+(?:['’׳"״][א-ת]+)*|[A-Za-z][A-Za-z'&.]+[A-Za-z]|\d{3,}(?:[-.–\/]\d{3,})*/g) || [];
+    return found.map(function (w) { return { typed: w, k: key(w) }; })
       .filter(function (w) { return w.k.length >= 2; });
   }
 

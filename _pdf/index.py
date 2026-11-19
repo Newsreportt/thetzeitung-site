@@ -10,6 +10,7 @@ its word belongs to, so the whole archive is searchable without anything being d
 
 idx/meta.json   {"built", "editions": [[date, vol, no, parsha, hdate, pages], …], "shards": […]}
 idx/w/<ab>.json {"<word>": [edition, mentions, page, page, …,  edition, mentions, page, …], …}
+                (<ab> is the word's first two characters: Hebrew, Latin or digits)
                 (the edition is a place in the editions list, written as a step from the one before)
 """
 import gzip, json, os, re, sys, time, collections, tempfile
@@ -20,7 +21,11 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "_pdf"))
 
 HEB = "א-ת"
-WORD = re.compile(f"[{HEB}]+(?:['׳\"״][{HEB}]+)*")
+# Not the Yiddish alone: an advertiser's name in English, a telephone number, a year — a reader
+# looking for any of those is looking for an article too.
+WORD = re.compile(f"[{HEB}]+(?:['׳\"״][{HEB}]+)*"          # קאשוי, ד'קאשוי
+                  r"|[A-Za-z][A-Za-z'&.]{1,}[A-Za-z]"       # Lipa, B&H, U.S.A
+                  r"|\d{3,}(?:[-.\u2013/]\d{3,})*")         # 2026, 718-851-6607
 FINALS = str.maketrans("ךםןףץ", "כמנפצ")
 MAX_PAGES = 8          # how many page numbers are kept for one word in one issue
 MIN_LEN = 2
@@ -34,8 +39,11 @@ s3 = boto3.client("s3", endpoint_url=f"https://{os.environ['R2_ACCOUNT_ID']}.r2.
 BUCKET = os.environ["R2_BUCKET"]
 
 def key_of(word):
-    """What a word is filed under: no apostrophes, final letters written plainly."""
-    return re.sub(r"['׳\"״]", "", word).translate(FINALS)
+    """What a word is filed under: no apostrophes or the marks that hold a number together,
+    final Hebrew letters written plainly, and the Latin alphabet in small letters — so that
+    Lipa, LIPA and lipa are one word, and 718-851-6607 is one number."""
+    w = re.sub(r"['׳\"״&.\-\u2013/]", "", word).translate(FINALS)
+    return w.lower() if w.isascii() else w
 
 def keys_of(word):
     """A word is filed under itself, and — where a letter is tied on with an apostrophe, as in

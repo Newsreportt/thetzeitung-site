@@ -3,13 +3,13 @@
 // of an article; it is cached hard, because it changes once a week at most.
 const shop = require("./lib/shop.js");
 
-const HEB = /^[א-ת]{1,2}$/;
+const SHARD = /^[א-תa-z0-9]{1,2}$/;
 
 exports.handler = async (event) => {
   if (!shop.bucketReady()) return shop.json(503, { ok: false, error: "The archive search is not switched on yet." });
   const s = ((event.queryStringParameters || {}).s || "").trim();
-  const key = s === "meta" ? "idx/meta.json" : HEB.test(s) ? `idx/w/${s}.json` : null;
-  if (!key) return shop.json(400, { ok: false, error: "Ask for 'meta' or for one or two Hebrew letters." });
+  const key = s === "meta" ? "idx/meta.json" : SHARD.test(s) ? `idx/w/${s}.json` : null;
+  if (!key) return shop.json(400, { ok: false, error: "Ask for 'meta' or for one or two letters." });
   let body;
   try {
     body = await shop.getJson(key);

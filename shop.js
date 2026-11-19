@@ -79,7 +79,7 @@
     var veil = el('div', { id: 'tz-veil', 'class': 'tz-veil' });
     veil.addEventListener('click', function () { openPanel(false); });
     cart = el('button', { type: 'button', id: 'tz-cart', 'class': 'tz-cart', 'aria-label': 'Your basket' });
-    cart.innerHTML = CART_ICON + '<span class="tz-cart-n"></span>';
+    cart.innerHTML = CART_ICON + '<span class="tz-cart-say"><b class="tz-cart-n">0</b><i class="tz-cart-sum"></i></span>';
     cart.addEventListener('click', function () { openPanel(!document.body.classList.contains('tz-open')); });
     var panel = el('aside', { id: 'tz-panel', 'class': 'tz-panel', role: 'dialog', 'aria-label': 'Your basket' });
     document.body.appendChild(veil); document.body.appendChild(cart); document.body.appendChild(panel);
@@ -101,8 +101,15 @@
       btns[i].querySelector('.pdf-btn-k').textContent = inIt ? '✓' : 'PDF';
     }
     var parts = cartParts();
-    parts.cart.querySelector('.tz-cart-n').textContent = basket.length ? String(basket.length) : '';
+    var n = parts.cart.querySelector('.tz-cart-n'), was = n.textContent;
+    n.textContent = String(basket.length);
+    parts.cart.querySelector('.tz-cart-sum').textContent = basket.length ? money(total()) : 'Basket';
     parts.cart.classList.toggle('full', basket.length > 0);
+    if (was !== n.textContent) {            // a nudge, so the basket is seen to have taken it
+      parts.cart.classList.remove('bump');
+      void parts.cart.offsetWidth;
+      parts.cart.classList.add('bump');
+    }
     if (!basket.length) { openPanel(false); parts.panel.innerHTML = ''; return; }
 
     var panel = parts.panel; panel.innerHTML = '';
