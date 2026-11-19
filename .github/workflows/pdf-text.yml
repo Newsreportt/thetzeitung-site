@@ -10,6 +10,9 @@ on:
       only:
         description: "Only the dates starting with this (e.g. 2015)"
         default: ""
+      heads:
+        description: "one date: print the headlines this issue gives up"
+        required: false
       dump:
         description: "Show what one issue's text layer looks like (a date, e.g. 2020-05-01)"
         default: ""

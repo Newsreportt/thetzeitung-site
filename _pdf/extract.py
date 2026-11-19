@@ -10,6 +10,7 @@ Fetching and reading is the slow part, so it is done once and kept.
   python3 _pdf/extract.py [--hours 5] [--limit N] [--redo] [--only 2015]
 """
 import gzip, json, os, re, subprocess, sys, tempfile, time, random, statistics
+import xml.etree.ElementTree as ET
 
 import boto3
 from botocore.exceptions import ClientError
@@ -106,6 +107,7 @@ args = sys.argv[1:]
 def opt(flag, default=None):
     return args[args.index(flag) + 1] if flag in args else default
 PROBE = int(opt("--probe", 0)); ONLY = opt("--only"); REDO = "--redo" in args; DUMP = opt("--dump")
+HEADS = opt("--heads")
 LIMIT = int(opt("--limit", 0)); HOURS = float(opt("--hours", 5.0))
 T0 = time.time()
 
@@ -132,6 +134,62 @@ def plain_of(raw):
         k = w.lower()
         if k not in seen: seen.add(k); out.append(w)
     return " ".join(out)
+
+# ---- the headlines -----------------------------------------------------------------------------
+# A reader looking for an article is looking for its headline, not for a word somewhere in the
+# ninth paragraph. pdftotext can hand over every line with the box it sits in, and a headline is
+# what it looks like: a line set far larger than the page's own body type.
+XH = "{http://www.w3.org/1999/xhtml}"
+HEAD_RATIO = 1.75      # how much larger than the body type a line must be set
+HEAD_MIN_LETTERS = 7   # shorter than this is a page number, a date, a column rule
+
+def page_lines(pdf):
+    """Every line of every page, with the height of the type it is set in."""
+    out = subprocess.run(["pdftotext", "-bbox-layout", "-enc", "UTF-8", "-q", pdf, "-"],
+                         capture_output=True, text=True, errors="replace", timeout=1800).stdout
+    try:
+        root = ET.fromstring(out)
+    except ET.ParseError:
+        return []
+    pages = []
+    for pg in root.iter(XH + "page"):
+        lines = []
+        for ln in pg.iter(XH + "line"):
+            words = [w.text or "" for w in ln.iter(XH + "word")]
+            text = " ".join(w for w in words if w)
+            if not text.strip(): continue
+            try: h = float(ln.get("yMax")) - float(ln.get("yMin"))
+            except (TypeError, ValueError): h = 0.0
+            lines.append((h, text))
+        pages.append(lines)
+    return pages
+
+def headlines_of(lines):
+    """The lines of a page that are set as headlines, read the right way round."""
+    if not lines: return []
+    body = statistics.median([h for h, _ in lines if h > 0] or [0])
+    if not body: return []
+    out, seen = [], set()
+    for h, text in lines:
+        if h < body * HEAD_RATIO: continue
+        read = best_reading(text).strip()
+        if len(HEB.findall(read)) + len(re.findall(r"[A-Za-z]", read)) < HEAD_MIN_LETTERS: continue
+        key = re.sub(r"\s+", " ", read)
+        if key in seen: continue
+        seen.add(key); out.append(key)
+    return out
+
+def heads(date):
+    """What this issue's headlines come out as — for seeing whether the catch is right."""
+    with tempfile.TemporaryDirectory() as td:
+        pdf = os.path.join(td, "x.pdf"); s3.download_file(BUCKET, f"pdf/{date}.pdf", pdf)
+        pages = page_lines(pdf)
+    print(f"{date}: {len(pages)} pages", flush=True)
+    for i, lines in enumerate(pages[:14]):
+        hs = headlines_of(lines)
+        if not hs: continue
+        print(f"\n--- page {i + 1} ---", flush=True)
+        for h in hs[:8]: print("   ", h[:150], flush=True)
 
 def read_pages(pdf):
     """The text of each page, straightened out. Pages pdftotext cannot read come back empty."""
@@ -226,4 +284,7 @@ def main():
     open(os.path.join(ROOT, "_pdf", "again"), "w").write(f"{left}\n")
 
 if __name__ == "__main__":
-    dump(DUMP) if DUMP else (probe(PROBE) if PROBE else main())
+    if HEADS: heads(HEADS)
+    elif DUMP: dump(DUMP)
+    elif PROBE: probe(PROBE)
+    else: main()
