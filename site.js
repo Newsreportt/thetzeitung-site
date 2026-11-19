@@ -144,32 +144,14 @@
         a.classList.toggle('dim', !!(y && y.classList.contains('hide')));
       });
       if (hits) hits.textContent = terms.length ? (shown ? shown + (shown === 1 ? ' cover' : ' covers') : 'No covers match') : '';
-      offerSearch(search ? search.value.trim() : '', shown);
+      offerSearch(search ? search.value.trim() : '');
       var page = document.querySelector('.archive'); if (page) page.classList.toggle('empty', shown === 0);
     }
-    // This box looks at the covers only. A reader hunting an article inside the papers is sent
-    // on to the search that reads every page — the likeliest thing he meant.
-    var offer = null;
-    function offerSearch(raw, shown) {
-      var band = document.querySelector('.pdf-note');
-      if (!offer) {
-        offer = document.createElement('p');
-        offer.className = 'se-offer';
-        offer.hidden = true;
-        if (band && band.parentNode) band.parentNode.insertBefore(offer, band.nextSibling);
-      }
-      if (!raw || raw.length < 2) { offer.hidden = true; return; }
-      offer.hidden = false;
-      offer.innerHTML = '';
-      offer.appendChild(document.createTextNode(shown
-        ? 'This box looks at the covers only. '
-        : 'Nothing on a cover. '));
-      var a = document.createElement('a');
-      a.href = 'search.html?q=' + encodeURIComponent(raw);
-      var b = document.createElement('bdi'); b.textContent = raw;
-      a.appendChild(document.createTextNode('Search every page of every paper for '));
-      a.appendChild(b);
-      offer.appendChild(a);
+    // What was typed into the cover finder is carried over to the search that reads every page,
+    // so a reader who meant an article has only to press the button.
+    function offerSearch(raw) {
+      var ask = document.getElementById('se-ask-q');
+      if (ask && document.activeElement !== ask) ask.value = raw || '';
     }
 
     if (filters) filters.addEventListener('click', function (e) {

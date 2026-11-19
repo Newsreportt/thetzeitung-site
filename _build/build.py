@@ -833,6 +833,17 @@ archive = band("Archives", "You may request back issues or a copy of a past arti
       </div>
     </div>
   </div>
+  <form class="se-ask" action="search.html" method="get">
+    <div class="se-ask-say">
+      <b>Looking for an article?</b>
+      <span>This finder looks at the covers. To look <i>inside</i> the papers — every word of every page of all {len(PDFS):,} editions — search the archive: it says which weeks it stands in, which section of the paper, and on which pages.</span>
+    </div>
+    <div class="se-ask-go">
+      <input type="search" name="q" id="se-ask-q" dir="rtl" autocomplete="off" spellcheck="false" aria-label="A word to look for in the papers">
+      <button class="btn gold" type="submit">Search the papers</button>
+    </div>
+  </form>
+
   <div class="pdf-note" hidden>
     <span class="pdf-note-mark">PDF</span>
     <span class="pdf-note-text">

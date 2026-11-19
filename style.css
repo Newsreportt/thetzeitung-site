@@ -696,9 +696,24 @@ body.tz-open .tz-veil { opacity: 1; pointer-events: auto; }
 .se-year { scroll-margin-top: 96px; }
 
 /* ---- from the cover finder on to the search that reads every page ---- */
-.se-offer {
-  margin: -18px 0 26px; padding: 13px 18px; border-left: 3px solid var(--gold);
-  background: var(--ivory); font-size: 15px; color: var(--ink-2);
+.se-ask {
+  display: flex; align-items: center; gap: 24px; margin: 0 0 26px; padding: 20px 26px;
+  background: var(--ivory); border: 1px solid var(--parchment-2); border-left: 4px solid var(--green);
+  border-radius: 4px;
 }
-.se-offer a { color: var(--forest); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
-.se-offer a:hover { color: var(--gold-deep); }
+.se-ask-say { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.se-ask-say > b { font-family: var(--display); font-size: 1.3rem; font-weight: 600; color: var(--forest); }
+.se-ask-say > span { font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+.se-ask-say i { font-style: italic; }
+.se-ask-go { flex: 0 0 auto; display: flex; align-items: stretch; gap: 10px; }
+.se-ask-go input {
+  width: 230px; padding: 12px 14px; border: 1px solid var(--parchment-2); border-radius: 3px;
+  background: #fff; font: inherit; font-size: 16px; color: var(--ink);
+}
+.se-ask-go input:focus { outline: none; border-color: var(--gold); }
+.se-ask-go .btn { white-space: nowrap; }
+@media (max-width: 860px) {
+  .se-ask { flex-wrap: wrap; gap: 14px; padding: 18px 20px; }
+  .se-ask-go { width: 100%; }
+  .se-ask-go input { flex: 1 1 auto; width: auto; }
+}
