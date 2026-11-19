@@ -588,13 +588,13 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
 /* the cart sits at the side of the page: always there once the shop is open, so a reader
    knows where the editions he presses are going */
 .tz-cart {
-  position: fixed; right: 24px; top: 50%; transform: translateY(-50%); z-index: 61;
+  position: fixed; right: 24px; bottom: 26px; z-index: 61;
   display: flex; align-items: center; gap: 10px; padding: 12px 18px 12px 15px;
   border-radius: 999px; border: 1px solid var(--gold); background: var(--green); color: #fff;
   cursor: pointer; box-shadow: 0 10px 28px rgba(10,46,30,.34);
   transition: transform .18s, box-shadow .18s, opacity .18s; opacity: .92;
 }
-.tz-cart:hover { opacity: 1; box-shadow: 0 12px 34px rgba(10,46,30,.46); transform: translateY(-50%) scale(1.05); }
+.tz-cart:hover { opacity: 1; box-shadow: 0 12px 34px rgba(10,46,30,.46); transform: scale(1.05); }
 .tz-cart-say { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15; }
 .tz-cart-n {
   font: 700 17px/1 var(--sans); color: var(--gold);
@@ -604,9 +604,9 @@ html:has(.archive) { scroll-behavior: auto; }     /* the archive is very long: j
 .tz-cart:not(.full) .tz-cart-n { display: none; }
 .tz-cart.bump { animation: tz-bump .42s ease; }
 @keyframes tz-bump {
-  0% { transform: translateY(-50%) scale(1); }
-  35% { transform: translateY(-50%) scale(1.18); }
-  100% { transform: translateY(-50%) scale(1); }
+  0% { transform: scale(1); }
+  35% { transform: scale(1.18); }
+  100% { transform: scale(1); }
 }
 .tz-veil {
   position: fixed; inset: 0; z-index: 62; background: rgba(10,46,30,.42);
@@ -651,7 +651,7 @@ body.tz-open .tz-veil { opacity: 1; pointer-events: auto; }
 }
 .tz-empty:hover { color: var(--ink); }
 @media (max-width: 640px) {
-  .tz-cart { right: 14px; top: auto; bottom: 18px; transform: none; padding: 10px 15px 10px 12px; }
+  .tz-cart { right: 14px; bottom: 18px; padding: 10px 15px 10px 12px; }
   .tz-cart:hover { transform: scale(1.05); }
   .tz-cart.bump { animation: tz-bump-flat .42s ease; }
 }
@@ -694,3 +694,11 @@ body.tz-open .tz-veil { opacity: 1; pointer-events: auto; }
 .se-jump-y:hover { border-color: var(--gold); background: #fff; }
 .se-jump-y i { font-style: normal; font-size: 11px; color: var(--ink-2); }
 .se-year { scroll-margin-top: 96px; }
+
+/* ---- from the cover finder on to the search that reads every page ---- */
+.se-offer {
+  margin: -18px 0 26px; padding: 13px 18px; border-left: 3px solid var(--gold);
+  background: var(--ivory); font-size: 15px; color: var(--ink-2);
+}
+.se-offer a { color: var(--forest); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+.se-offer a:hover { color: var(--gold-deep); }
